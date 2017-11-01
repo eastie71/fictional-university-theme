@@ -8,13 +8,23 @@
 <body <?php body_class(); ?>>
 	<header class="site-header">
 	    <div class="container">
+
 	      <h1 class="school-logo-text float-left"><a href="<?php echo site_url(); ?>"><strong>Fictional</strong> University</a></h1>
 	      <span class="js-search-trigger site-header__search-trigger"><i class="fa fa-search" aria-hidden="true"></i></span>
 	      <i class="site-header__menu-trigger fa fa-bars" aria-hidden="true"></i>
+
 	      <div class="site-header__menu group">
 	        <nav class="main-navigation">
 	          <ul>
-	            <li><a href="<?php echo site_url('/about-us'); ?>">About Us</a></li>
+	            <li 
+	            	<?php
+	            		// So here we are checking if the current page is the About Us page OR is a child of the About Us page
+	            		// If so, add the class current-menu-item - and hence the menu will be highlighted 
+	            		//if (is_page('about-us') or strpos(get_permalink(wp_get_post_parent_id(0)), 'about-us') !== false)
+	            		if (is_page('about-us') or (wp_get_post_parent_id(0) == get_id_by_slug('about-us')))
+	            			echo 'class="current-menu-item"';
+	            	?>>
+	            	<a href="<?php echo site_url('/about-us'); ?>">About Us</a></li>
 	            <li><a href="#">Programs</a></li>
 	            <li><a href="#">Events</a></li>
 	            <li><a href="#">Campuses</a></li>

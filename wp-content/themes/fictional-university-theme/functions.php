@@ -1,4 +1,12 @@
-<?php 
+<?php
+	function get_id_by_slug($page_slug) {
+	    $page = get_page_by_path($page_slug);
+	    if ($page) {
+	        return $page->ID;
+	    } else {
+	        return null;
+	    }
+	}  
 	function university_files()
 	{
 		wp_enqueue_script('main-university-js', get_theme_file_uri('js/scripts-bundled.js'), NULL, '1.0', true);
