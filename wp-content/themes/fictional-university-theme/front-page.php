@@ -43,29 +43,30 @@
     </div>
     <div class="full-width-split__two">
       <div class="full-width-split__inner">
-        <h2 class="headline headline--small-plus t-center">From Our Blogs</h2>
-
-        <div class="event-summary">
-          <a class="event-summary__date event-summary__date--beige t-center" href="#">
-            <span class="event-summary__month">Jan</span>
-            <span class="event-summary__day">20</span>  
-          </a>
-          <div class="event-summary__content">
-            <h5 class="event-summary__title headline headline--tiny"><a href="#">We Were Voted Best School</a></h5>
-            <p>For the 100th year in a row we are voted #1. <a href="#" class="nu gray">Read more</a></p>
-          </div>
-        </div>
-        <div class="event-summary">
-          <a class="event-summary__date event-summary__date--beige t-center" href="#">
-            <span class="event-summary__month">Feb</span>
-            <span class="event-summary__day">04</span>  
-          </a>
-          <div class="event-summary__content">
-            <h5 class="event-summary__title headline headline--tiny"><a href="#">Professors in the National Spotlight</a></h5>
-            <p>Two of our professors have been in national news lately. <a href="#" class="nu gray">Read more</a></p>
-          </div>
-        </div>
-        
+        <h2 class="headline headline--small-plus t-center">From Our Blog</h2>
+        <?php
+          // Perform a custom query - ie. last 2 quotes only.
+          $homepagePosts = new WP_Query(array(
+            'posts_per_page' => 2
+          ));
+          while ($homepagePosts->have_posts()) {
+            $homepagePosts->the_post(); 
+        ?>
+            <div class="event-summary">
+              <a class="event-summary__date event-summary__date--beige t-center" href="<?php the_permalink(); ?>">
+                <span class="event-summary__month"><?php the_time('M'); ?></span>
+                <span class="event-summary__day"><?php the_time('d'); ?></span>  
+              </a>
+              <div class="event-summary__content">
+                <h5 class="event-summary__title headline headline--tiny"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h5>
+                <p><?php echo wp_trim_words(get_the_content(), 18); ?><a href="<?php the_permalink(); ?>" class="nu gray"> Read more</a></p>
+              </div>
+            </div>
+        <?php
+          }
+          // Need to reset the post data after the custom query
+          wp_reset_postdata();
+        ?>
         <p class="t-center no-margin"><a href="#" class="btn btn--yellow">View All Blog Posts</a></p>
       </div>
     </div>
