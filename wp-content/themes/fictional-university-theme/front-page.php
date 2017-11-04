@@ -19,7 +19,7 @@
           $today = date('Ymd');
           // Perform a custom query - ie. last 2 events only.
           $homepageEvents = new WP_Query(array(
-            'posts_per_page' => -1,
+            'posts_per_page' => 2,
             'post_type' => 'event',
             // sort by event date in ascending order
             'meta_key' => 'event_date',

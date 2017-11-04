@@ -22,4 +22,28 @@
 
 	add_action('after_setup_theme', 'university_features');
 
+	function university_adjust_queries($query) {
+		// We only want to manipulate the events archive page - not the admin pages, and not custom queries
+		if (!is_admin() and is_post_type_archive('event') and is_main_query()) {
+			$today = date('Ymd');
+
+			// sort by event date in ascending order           
+			$query->set('meta_key', 'event_date');
+			$query->set('orderby', 'meta_value_num');
+			$query->set('order', 'ASC');
+			
+			// filter to event date greater than or equal to todays date
+            // custom event date field is stored as YYYYMMDD
+            $query->set('meta_query', array(
+              array(
+                'key' => 'event_date',
+                'compare' => '>=',
+                'value' => $today,
+                'type' => 'numeric'
+              )
+            ));
+		}
+		
+	}
+	add_action('pre_get_posts', 'university_adjust_queries')
 ?>
