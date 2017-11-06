@@ -24,7 +24,7 @@
 			// by default slug would be 'program' so override to 'programs' instead
 			'rewrite' => array('slug' => 'programs'),
 			// by default post types get title and editor, excerpt not required.
-			'supports' => array('title', 'editor',),
+			'supports' => array('title', 'editor'),
 			'public' => true,
 			'labels' => array(
 				'name' => 'Programs',
@@ -35,6 +35,21 @@
 			),
 			// Icon for the WP dashboard
 			'menu_icon' => 'dashicons-awards'		));
+
+		// Custom Professor Post Type
+		register_post_type('professor', array(
+			// by default post types get title and editor, excerpt not required.
+			'supports' => array('title', 'editor'),
+			'public' => true,
+			'labels' => array(
+				'name' => 'Professors',
+				'add_new_item' => 'Add New Professor',
+				'edit_item' => 'Edit Professor',
+				'all_items' => 'All Professors',
+				'singular_name' => 'Professor'
+			),
+			// Icon for the WP dashboard
+			'menu_icon' => 'dashicons-welcome-learn-more'		));
 	}
 	add_action('init', "university_post_types");
 ?>

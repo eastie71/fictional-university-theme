@@ -17,6 +17,39 @@
 		    </div>
 			<div class="generic-content"><?php the_content(); ?></div>
 			<?php
+ 					$relatedProfessors = new WP_Query(array(
+            'posts_per_page' => -1,
+            'post_type' => 'professor',
+            'orderby' => 'title',
+            'order' => 'ASC',
+            // filter to event date greater than or equal to todays date
+            // custom event date field is stored as YYYYMMDD
+            'meta_query' => array(
+              // look at the custom field and perform a wildcard type search (LIKE) for the current program ID (inside the array list - which is why it needs to be "quoted")
+              array(
+              	'key' => 'related_programs',
+              	'compare' => 'LIKE',
+              	'value' => '"'.get_the_ID().'"'
+              )
+            )
+          ));
+
+          echo '<hr class="section_break">';
+          echo '<h2 class="headline headline--medium"> '.get_the_title().' Professors</h2>';
+          if ($relatedProfessors->have_posts()) {
+	          while ($relatedProfessors->have_posts()) {
+	            $relatedProfessors->the_post();
+	        ?>
+	            <li><a href="<?php the_permalink(); ?>"><?php echo the_title(); ?></a></li>
+	        <?php
+	          } 
+	        } else {
+	        	echo "None Found.";
+	        }
+
+	        // Reset the global post option back to the default URL query
+	        wp_reset_postdata();
+
           $today = date('Ymd');
           // Perform a custom query - ie. last 2 events only.
           $homepageEvents = new WP_Query(array(
@@ -35,7 +68,7 @@
                 'value' => $today,
                 'type' => 'numeric'
               ),
-              // look at the custom field and perform a wildcard type search (LIKE) for the current event ID (inside the array list - which is why it needs to be "quoted")
+              // look at the custom field and perform a wildcard type search (LIKE) for the current program ID (inside the array list - which is why it needs to be "quoted")
               array(
               	'key' => 'related_programs',
               	'compare' => 'LIKE',
