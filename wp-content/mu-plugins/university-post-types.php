@@ -38,8 +38,8 @@
 
 		// Custom Professor Post Type
 		register_post_type('professor', array(
-			// by default post types get title and editor, excerpt not required.
-			'supports' => array('title', 'editor'),
+			// by default post types get title and editor - needed to add thumbnail for Professor image
+			'supports' => array('title', 'editor', 'thumbnail'),
 			'public' => true,
 			'labels' => array(
 				'name' => 'Professors',
