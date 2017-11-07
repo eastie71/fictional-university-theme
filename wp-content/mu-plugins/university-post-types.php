@@ -50,6 +50,24 @@
 			),
 			// Icon for the WP dashboard
 			'menu_icon' => 'dashicons-welcome-learn-more'		));
+
+		// Custom Campus Post Type
+		register_post_type('campus', array(
+			// by default post types get title and editor - add excerpt as well
+			'supports' => array('title', 'editor', 'excerpt'),
+			// by default slug would be 'program' so override to 'programs' instead
+			'rewrite' => array('slug' => 'campuses'),
+			'public' => true,
+			'has_archive' => true,
+			'labels' => array(
+				'name' => 'Campuses',
+				'add_new_item' => 'Add New Campus',
+				'edit_item' => 'Edit Campus',
+				'all_items' => 'All Campuses',
+				'singular_name' => 'Campus'
+			),
+			// Icon for the WP dashboard
+			'menu_icon' => 'dashicons-location-alt'		));
 	}
 	add_action('init', "university_post_types");
 ?>
