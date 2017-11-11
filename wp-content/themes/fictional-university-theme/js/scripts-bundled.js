@@ -10563,7 +10563,13 @@ var Search = function () {
 		this.openButton = (0, _jquery2.default)(".js-search-trigger");
 		this.closeButton = (0, _jquery2.default)(".search-overlay__close");
 		this.searchOverlay = (0, _jquery2.default)(".search-overlay");
+		this.searchField = (0, _jquery2.default)("#search-term");
+		this.searchResults = (0, _jquery2.default)("#search-overlay__results");
 		this.events();
+		this.isSearchOverlayOpen = false;
+		this.isSpinnerVisible = false;
+		this.previousSearchText;
+		this.typingTimer;
 	}
 
 	// 2) Events
@@ -10574,6 +10580,8 @@ var Search = function () {
 		value: function events() {
 			this.openButton.on("click", this.openOverlay.bind(this));
 			this.closeButton.on("click", this.closeOverlay.bind(this));
+			(0, _jquery2.default)(document).on("keydown", this.keyPressHandler.bind(this));
+			this.searchField.on("keyup", this.searchText.bind(this));
 		}
 
 		// 3) Methods (function, action...)
@@ -10582,11 +10590,56 @@ var Search = function () {
 		key: "openOverlay",
 		value: function openOverlay() {
 			this.searchOverlay.addClass("search-overlay--active");
+			// remove the scrolling of the page when search overlay modal opens
+			(0, _jquery2.default)("body").addClass("body-no-scroll");
+			this.isSearchOverlayOpen = true;
 		}
 	}, {
 		key: "closeOverlay",
 		value: function closeOverlay() {
 			this.searchOverlay.removeClass("search-overlay--active");
+			// re-enable the scrolling of the page when search overlay modal is closed
+			(0, _jquery2.default)("body").removeClass("body-no-scroll");
+			this.isSearchOverlayOpen = false;
+		}
+	}, {
+		key: "keyPressHandler",
+		value: function keyPressHandler(e) {
+			// Open the Search window if 's' key is pressed and NOT inside a text input field
+			if (e.keyCode == 83 && !this.isSearchOverlayOpen && (0, _jquery2.default)("input, textarea").is(':focus')) {
+				this.openOverlay();
+				// Close the search window if ESC key is pressed
+			} else if (e.keyCode == 27 && this.isSearchOverlayOpen) {
+				this.closeOverlay();
+			}
+		}
+	}, {
+		key: "searchText",
+		value: function searchText() {
+			if (this.searchField.val() != this.previousSearchText) {
+				clearTimeout(this.typingTimer);
+				if (this.searchField.val()) {
+					if (!this.isSpinnerVisible) {
+						this.searchResults.html('<div class="spinner-loader"></div>');
+						this.isSpinnerVisible = true;
+					}
+					this.typingTimer = setTimeout(this.getSearchResults.bind(this), 2000);
+				} else {
+					this.searchResults.html('');
+					this.isSpinnerVisible = false;
+				}
+			}
+			this.previousSearchText = this.searchField.val();
+		}
+	}, {
+		key: "getSearchResults",
+		value: function getSearchResults() {
+			_jquery2.default.getJSON('http://localhost:3000/wp-json/wp/v2/posts?search=' + this.searchField.val(), function (posts) {
+				alert(posts[0].title.rendered);
+			});
+
+			//this.searchResults.html("Search results will appear here...");
+			this.isSpinnerVisible = false;
 		}
 	}]);
 
