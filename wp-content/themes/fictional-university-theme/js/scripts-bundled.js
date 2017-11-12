@@ -10560,6 +10560,9 @@ var Search = function () {
 	function Search() {
 		_classCallCheck(this, Search);
 
+		// append the HTML associated with the Search overlay to the end of the html body
+		this.addSearchHTML();
+
 		this.openButton = (0, _jquery2.default)(".js-search-trigger");
 		this.closeButton = (0, _jquery2.default)(".search-overlay__close");
 		this.searchOverlay = (0, _jquery2.default)(".search-overlay");
@@ -10589,9 +10592,18 @@ var Search = function () {
 	}, {
 		key: "openOverlay",
 		value: function openOverlay() {
+			var _this = this;
+
 			this.searchOverlay.addClass("search-overlay--active");
 			// remove the scrolling of the page when search overlay modal opens
 			(0, _jquery2.default)("body").addClass("body-no-scroll");
+			// Clear the search field of any previous search entry
+			this.searchField.val('');
+			// Set the focus on to the search field after 301 miliseconds (allowing for overlay to load)
+			// Shorthand code here for an anonymous function using ES6 arrow function
+			setTimeout(function () {
+				return _this.searchField.focus();
+			}, 301);
 			this.isSearchOverlayOpen = true;
 		}
 	}, {
@@ -10606,7 +10618,7 @@ var Search = function () {
 		key: "keyPressHandler",
 		value: function keyPressHandler(e) {
 			// Open the Search window if 's' key is pressed and NOT inside a text input field
-			if (e.keyCode == 83 && !this.isSearchOverlayOpen && (0, _jquery2.default)("input, textarea").is(':focus')) {
+			if (e.keyCode == 83 && !this.isSearchOverlayOpen && !(0, _jquery2.default)("input, textarea").is(':focus')) {
 				this.openOverlay();
 				// Close the search window if ESC key is pressed
 			} else if (e.keyCode == 27 && this.isSearchOverlayOpen) {
@@ -10623,7 +10635,7 @@ var Search = function () {
 						this.searchResults.html('<div class="spinner-loader"></div>');
 						this.isSpinnerVisible = true;
 					}
-					this.typingTimer = setTimeout(this.getSearchResults.bind(this), 2000);
+					this.typingTimer = setTimeout(this.getSearchResults.bind(this), 750);
 				} else {
 					this.searchResults.html('');
 					this.isSpinnerVisible = false;
@@ -10634,12 +10646,27 @@ var Search = function () {
 	}, {
 		key: "getSearchResults",
 		value: function getSearchResults() {
-			_jquery2.default.getJSON('http://localhost:3000/wp-json/wp/v2/posts?search=' + this.searchField.val(), function (posts) {
-				alert(posts[0].title.rendered);
+			var _this2 = this;
+
+			// posts => is equivalent to function(posts) {}.bind()
+			_jquery2.default.getJSON(universityData.root_url + '/wp-json/wp/v2/posts?search=' + this.searchField.val(), function (posts) {
+				//alert(posts[0].title.rendered);
+				// Below is using 'template literals' for creating HTML, and anything within ${} is Javascript
+				// Cannot perform "if conditions" inside ${}, but can use ternary operator
+				// It checks if any results (posts) are found and displays the title with a link for each post found, 
+				// otherwise reports no results found
+				_this2.searchResults.html("\n\t\t\t\t<h2 class=\"search-overlay__section-title\">General Information</h2>\n\t\t\t\t" + (posts.length ? '<ul class="link-list min-list">' : '<p>No Search Results Found.</p>') + "\n\t\t\t\t\t" + posts.map(function (post) {
+					return "<li><a href='" + post.link + "'>" + post.title.rendered + "</a></li>";
+				}).join('') + "\n\t\t\t\t" + (posts.length ? '</ul>' : '') + "\n\t\t\t");
+				_this2.isSpinnerVisible = false;
 			});
 
 			//this.searchResults.html("Search results will appear here...");
-			this.isSpinnerVisible = false;
+		}
+	}, {
+		key: "addSearchHTML",
+		value: function addSearchHTML() {
+			(0, _jquery2.default)("body").append("\n\t\t\t<div class=\"search-overlay\">\n\t\t\t  <div class=\"search-overlay__top\">\n\t\t\t    <div class=\"container\">\n\t\t\t      <i class=\"fa fa-search search-overlay__icon\" aria-hidden=\"true\"></i>\n\t\t\t      <input id=\"search-term\" type=\"text\" class=\"search-term\" placeholder=\"Enter your search...\" autofocus=\"true\">\n\t\t\t      <i class=\"fa fa-window-close search-overlay__close\" aria-hidden=\"true\"></i>\n\t\t\t    </div>\n\t\t\t  </div>\n\t\t\t  <div class=\"container\">\n\t\t\t    <div id=\"search-overlay__results\"></div>\n\t\t\t  </div>\n\t\t\t</div>\n\t\t");
 		}
 	}]);
 
