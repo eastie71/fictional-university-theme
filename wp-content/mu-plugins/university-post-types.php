@@ -23,8 +23,9 @@
 			'has_archive' => true,
 			// by default slug would be 'program' so override to 'programs' instead
 			'rewrite' => array('slug' => 'programs'),
-			// by default post types get title and editor, excerpt not required.
-			'supports' => array('title', 'editor'),
+			// by default post types get title and editor - for program we do NOT want editor as we are
+			// using a custom field for the main body content
+			'supports' => array('title'),
 			'public' => true,
 			'labels' => array(
 				'name' => 'Programs',
