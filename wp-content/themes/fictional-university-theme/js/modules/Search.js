@@ -74,6 +74,41 @@ class Search {
 	}
 
 	getSearchResults() {
+		// (results) => is equivalent to function(results){}.bind() (ES6 arrow function)
+		$.getJSON(universityData.root_url + '/wp-json/university/v1/search?data=' + this.searchField.val(), (results) => {
+			// Below is using 'template literals' (``) for creating HTML, and anything within ${} is Javascript
+			// Cannot perform "if conditions" inside ${}, but can use ternary operator
+			// It checks if any results (posts) are found and displays the title with a link for each post found, 
+			// otherwise reports no results found
+			this.searchResults.html(`
+				<div class="row">
+					<div class="one-third">
+						<h2 class="search-overlay__section-title">General Information</h2>
+						${results.generalInfo.length ? '<ul class="link-list min-list">' : '<p>No General Results Found.</p>'}
+							${results.generalInfo.map(result => `<li><a href='${result.permalink}'>${result.title}</a> ${result.type == 'post' ? `by ${result.authorName}` : ''} </li>`).join('')}
+						${results.generalInfo.length ? '</ul>' : ''}
+					</div>
+					<div class="one-third">
+						<h2 class="search-overlay__section-title">Programs</h2>
+						${results.programs.length ? '<ul class="link-list min-list">' : `<p>No Programs Found. s<a href="${universityData.root_url}/programs">View All Programs</a></p>`}
+							${results.programs.map(result => `<li><a href='${result.permalink}'>${result.title}</a></li>`).join('')}
+						${results.programs.length ? '</ul>' : ''}
+						<h2 class="search-overlay__section-title">Professors</h2>
+					</div>
+					<div class="one-third">
+						<h2 class="search-overlay__section-title">Campuses</h2>
+						${results.campuses.length ? '<ul class="link-list min-list">' : `<p>No Campuses Found. <a href="${universityData.root_url}/campuses">View All Campusess</a></p>`}
+							${results.campuses.map(result => `<li><a href='${result.permalink}'>${result.title}</a></li>`).join('')}
+						${results.campuses.length ? '</ul>' : ''}
+						<h2 class="search-overlay__section-title">Events</h2>
+					</div>
+				</div>
+			`);
+			this.isSpinnerVisible = false;
+		});
+
+		// delete this code later
+/**
 		$.when(
 			$.getJSON(universityData.root_url + '/wp-json/wp/v2/posts?search=' + this.searchField.val()),
 			$.getJSON(universityData.root_url + '/wp-json/wp/v2/pages?search=' + this.searchField.val())
@@ -88,13 +123,14 @@ class Search {
 			this.searchResults.html(`
 				<h2 class="search-overlay__section-title">General Information</h2>
 				${combinedResults.length ? '<ul class="link-list min-list">' : '<p>No Search Results Found.</p>'}
-					${combinedResults.map(post => `<li><a href='${post.link}'>${post.title.rendered}</a></li>`).join('')}
+					${combinedResults.map(result => `<li><a href='${result.link}'>${result.title.rendered}</a> ${result.type == 'post' ? `by ${result.authorName}` : ''} </li>`).join('')}
 				${combinedResults.length ? '</ul>' : ''}
 			`);
 			this.isSpinnerVisible = false;
 		}, () => {
 			this.searchResults.html('<p>Unexpected error occurred. Please try again or contact Administrator.</p>')
 		});
+**/	
 	}
 
 	addSearchHTML() {
