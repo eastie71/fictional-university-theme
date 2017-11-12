@@ -90,17 +90,46 @@ class Search {
 					</div>
 					<div class="one-third">
 						<h2 class="search-overlay__section-title">Programs</h2>
-						${results.programs.length ? '<ul class="link-list min-list">' : `<p>No Programs Found. s<a href="${universityData.root_url}/programs">View All Programs</a></p>`}
+						${results.programs.length ? '<ul class="link-list min-list">' : `<p>No Programs Found. <a href="${universityData.root_url}/programs">View All Programs</a></p>`}
 							${results.programs.map(result => `<li><a href='${result.permalink}'>${result.title}</a></li>`).join('')}
 						${results.programs.length ? '</ul>' : ''}
+						
 						<h2 class="search-overlay__section-title">Professors</h2>
+						${results.professors.length ? '<ul class="professor-cards">' : '<p>No Professors Found.</p>'}
+							${results.professors.map(result => `
+								<li class="professor-card__list-item">
+	            					<a class="professor-card" href="${result.permalink}">
+	            						<img class="professor-card__image" src="${result.image}">
+	            						<span class="professor-card__name">${result.title}</span>
+	            					</a>
+	            				</li>
+							`).join('')}
+						${results.professors.length ? '</ul>' : ''}
 					</div>
 					<div class="one-third">
 						<h2 class="search-overlay__section-title">Campuses</h2>
 						${results.campuses.length ? '<ul class="link-list min-list">' : `<p>No Campuses Found. <a href="${universityData.root_url}/campuses">View All Campusess</a></p>`}
-							${results.campuses.map(result => `<li><a href='${result.permalink}'>${result.title}</a></li>`).join('')}
+							${results.campuses.map(result => `<li><a href='${result.permalink}'>${result.title}</a></li>`).join('')}				
 						${results.campuses.length ? '</ul>' : ''}
+						
 						<h2 class="search-overlay__section-title">Events</h2>
+						${results.events.length ? '' : `<p>No Events Found. <a href="${universityData.root_url}/events">View All Events</a></p>`}
+							${results.events.map(result => `
+								<div class="event-summary">
+								    <a class="event-summary__date t-center" href="${result.permalink}">
+								        <span class="event-summary__month">${result.month}</span>
+								        <span class="event-summary__day">${result.day}</span>  
+								    </a>
+								    <div class="event-summary__content">
+								        <h5 class="event-summary__title headline headline--tiny"><a href="${result.permalink}">${result.title}</a></h5>
+								        <p>
+								        	${result.excerpt}
+								            <a href="${result.permalink}" class="nu gray"> Learn more</a>
+								        </p>
+								    </div>
+								</div>
+							`).join('')}				
+		
 					</div>
 				</div>
 			`);
