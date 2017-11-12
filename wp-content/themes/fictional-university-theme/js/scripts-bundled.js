@@ -10648,20 +10648,22 @@ var Search = function () {
 		value: function getSearchResults() {
 			var _this2 = this;
 
-			// posts => is equivalent to function(posts) {}.bind()
-			_jquery2.default.getJSON(universityData.root_url + '/wp-json/wp/v2/posts?search=' + this.searchField.val(), function (posts) {
-				//alert(posts[0].title.rendered);
-				// Below is using 'template literals' for creating HTML, and anything within ${} is Javascript
+			_jquery2.default.when(_jquery2.default.getJSON(universityData.root_url + '/wp-json/wp/v2/posts?search=' + this.searchField.val()), _jquery2.default.getJSON(universityData.root_url + '/wp-json/wp/v2/pages?search=' + this.searchField.val())
+			// (posts, pages) => is equivalent to function(posts, pages){}.bind() (ES6 arrow function)
+			).then(function (posts, pages) {
+				// Element zero(0) of posts and pages contains the JSON data we need
+				var combinedResults = posts[0].concat(pages[0]);
+				// Below is using 'template literals' (``) for creating HTML, and anything within ${} is Javascript
 				// Cannot perform "if conditions" inside ${}, but can use ternary operator
 				// It checks if any results (posts) are found and displays the title with a link for each post found, 
 				// otherwise reports no results found
-				_this2.searchResults.html("\n\t\t\t\t<h2 class=\"search-overlay__section-title\">General Information</h2>\n\t\t\t\t" + (posts.length ? '<ul class="link-list min-list">' : '<p>No Search Results Found.</p>') + "\n\t\t\t\t\t" + posts.map(function (post) {
+				_this2.searchResults.html("\n\t\t\t\t<h2 class=\"search-overlay__section-title\">General Information</h2>\n\t\t\t\t" + (combinedResults.length ? '<ul class="link-list min-list">' : '<p>No Search Results Found.</p>') + "\n\t\t\t\t\t" + combinedResults.map(function (post) {
 					return "<li><a href='" + post.link + "'>" + post.title.rendered + "</a></li>";
-				}).join('') + "\n\t\t\t\t" + (posts.length ? '</ul>' : '') + "\n\t\t\t");
+				}).join('') + "\n\t\t\t\t" + (combinedResults.length ? '</ul>' : '') + "\n\t\t\t");
 				_this2.isSpinnerVisible = false;
+			}, function () {
+				_this2.searchResults.html('<p>Unexpected error occurred. Please try again or contact Administrator.</p>');
 			});
-
-			//this.searchResults.html("Search results will appear here...");
 		}
 	}, {
 		key: "addSearchHTML",

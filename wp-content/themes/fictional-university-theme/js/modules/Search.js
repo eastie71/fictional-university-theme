@@ -74,24 +74,27 @@ class Search {
 	}
 
 	getSearchResults() {
-		// posts => is equivalent to function(posts) {}.bind()
-		$.getJSON(universityData.root_url + '/wp-json/wp/v2/posts?search=' + this.searchField.val(), posts => {
-			//alert(posts[0].title.rendered);
-			// Below is using 'template literals' for creating HTML, and anything within ${} is Javascript
+		$.when(
+			$.getJSON(universityData.root_url + '/wp-json/wp/v2/posts?search=' + this.searchField.val()),
+			$.getJSON(universityData.root_url + '/wp-json/wp/v2/pages?search=' + this.searchField.val())
+			// (posts, pages) => is equivalent to function(posts, pages){}.bind() (ES6 arrow function)
+			).then((posts, pages) => {
+			// Element zero(0) of posts and pages contains the JSON data we need
+			var combinedResults = posts[0].concat(pages[0]);
+			// Below is using 'template literals' (``) for creating HTML, and anything within ${} is Javascript
 			// Cannot perform "if conditions" inside ${}, but can use ternary operator
 			// It checks if any results (posts) are found and displays the title with a link for each post found, 
 			// otherwise reports no results found
 			this.searchResults.html(`
 				<h2 class="search-overlay__section-title">General Information</h2>
-				${posts.length ? '<ul class="link-list min-list">' : '<p>No Search Results Found.</p>'}
-					${posts.map(post => `<li><a href='${post.link}'>${post.title.rendered}</a></li>`).join('')}
-				${posts.length ? '</ul>' : ''}
+				${combinedResults.length ? '<ul class="link-list min-list">' : '<p>No Search Results Found.</p>'}
+					${combinedResults.map(post => `<li><a href='${post.link}'>${post.title.rendered}</a></li>`).join('')}
+				${combinedResults.length ? '</ul>' : ''}
 			`);
 			this.isSpinnerVisible = false;
+		}, () => {
+			this.searchResults.html('<p>Unexpected error occurred. Please try again or contact Administrator.</p>')
 		});
-
-		//this.searchResults.html("Search results will appear here...");
-		
 	}
 
 	addSearchHTML() {
