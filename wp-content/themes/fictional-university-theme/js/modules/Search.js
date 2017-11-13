@@ -37,6 +37,8 @@ class Search {
 		// Shorthand code here for an anonymous function using ES6 arrow function
 		setTimeout( () => this.searchField.focus(), 301);
 		this.isSearchOverlayOpen = true;
+		// by returning false this prevents the "a" tag call to the link if js is enabled
+		return false;
 	}
 
 	closeOverlay() {

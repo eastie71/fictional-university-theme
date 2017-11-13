@@ -9,8 +9,8 @@
 				<p><a class="metabox__blog-home-link" href="<?php echo get_post_type_archive_link('program'); ?>"><i class="fa fa-home" aria-hidden="true"></i> All Programs</a> <span class="metabox__main"><?php the_title(); ?></span></p>
 		    </div>
 			<div class="generic-content"><?php the_field('main_body_content'); ?></div>
-					<?php
- 					$relatedProfessors = new WP_Query(array(
+			<?php
+ 			$relatedProfessors = new WP_Query(array(
             'posts_per_page' => -1,
             'post_type' => 'professor',
             'orderby' => 'title',
