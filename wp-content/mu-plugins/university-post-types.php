@@ -2,6 +2,11 @@
 	function university_post_types() {
 		// Custom Event Post Type
 		register_post_type('event', array(
+			// default for capability type is "post" - which means an editor will have access to this type
+			// unless you set a specific capability type (such as'event' here)
+			'capability_type' => 'event',
+			// without setting the map-meta-cap to true we would need to create our own custom logic for when the new capability is required. 
+			'map_meta_cap' => true,
 			'has_archive' => true,
 			// by default slug would be 'event' so override to 'events' instead
 			'rewrite' => array('slug' => 'events'),
@@ -54,6 +59,8 @@
 
 		// Custom Campus Post Type
 		register_post_type('campus', array(
+			'capability_type' => 'campus',
+			'map_meta_cap' => true,
 			// by default post types get title and editor - add excerpt as well
 			'supports' => array('title', 'editor', 'excerpt'),
 			// by default slug would be 'program' so override to 'programs' instead
@@ -69,6 +76,24 @@
 			),
 			// Icon for the WP dashboard
 			'menu_icon' => 'dashicons-location-alt'		));
+
+		// Custom Note Post Type
+		register_post_type('note', array(
+			'show_in_rest' => true,
+			// by default post types get title and editor
+			'supports' => array('title', 'editor'),
+			'public' => false,
+			// Show admin dashboard UI?
+			'show_ui' => true,
+			'labels' => array(
+				'name' => 'Notes',
+				'add_new_item' => 'Add New Note',
+				'edit_item' => 'Edit Note',
+				'all_items' => 'All Notes',
+				'singular_name' => 'Note'
+			),
+			// Icon for the WP dashboard
+			'menu_icon' => 'dashicons-welcome-write-blog'		));
 	}
 	add_action('init', "university_post_types");
 ?>

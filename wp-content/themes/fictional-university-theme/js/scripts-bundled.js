@@ -13649,7 +13649,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var mobileMenu = new _MobileMenu2.default();
 var heroSlider = new _HeroSlider2.default();
 var googleMap = new _GoogleMap2.default();
-//var search = new Search();
+var search = new _Search2.default();
 
 /***/ })
 /******/ ]);
