@@ -63,7 +63,9 @@
 		wp_enqueue_style('university_main_styles', get_stylesheet_uri());
 		// inside the main js file setup some global vars for quick access
 		wp_localize_script('main-university-js', 'universityData', array(
-			'root_url' => get_site_url()
+			'root_url' => get_site_url(),
+			// create a unique id for this session used for validation
+			'nonce' => wp_create_nonce('wp_rest')
 		));
 	}
 	add_action('wp_enqueue_scripts', 'university_files');
