@@ -10565,9 +10565,11 @@ var MyNotes = function () {
 	_createClass(MyNotes, [{
 		key: "events",
 		value: function events() {
-			(0, _jquery2.default)(".delete-note").on("click", this.deleteNote);
-			(0, _jquery2.default)(".edit-note").on("click", this.editNote.bind(this));
-			(0, _jquery2.default)(".update-note").on("click", this.updateNote.bind(this));
+			// if you click anywhere within the #my-notes ul, AND it matches the interior element (eg. ".delete-note") then set the callback function
+			(0, _jquery2.default)("#my-notes").on("click", ".delete-note", this.deleteNote);
+			(0, _jquery2.default)("#my-notes").on("click", ".edit-note", this.editNote.bind(this));
+			(0, _jquery2.default)("#my-notes").on("click", ".update-note", this.updateNote.bind(this));
+			(0, _jquery2.default)(".submit-note").on("click", this.createNote.bind(this));
 		}
 
 		// Methods here...
@@ -10620,6 +10622,36 @@ var MyNotes = function () {
 				},
 				error: function error(response) {
 					console.log("Update Note FAILED!");
+					console.log(response);
+				}
+			});
+		}
+	}, {
+		key: "createNote",
+		value: function createNote(e) {
+			var theNewNote = {
+				'title': (0, _jquery2.default)(".new-note-title").val(),
+				'content': (0, _jquery2.default)(".new-note-body").val(),
+				'status': 'publish'
+			};
+			_jquery2.default.ajax({
+				// Set the nonce for WP to authorize the update.
+				beforeSend: function beforeSend(xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', universityData.nonce);
+				},
+				url: universityData.root_url + '/wp-json/wp/v2/note/',
+				type: 'POST',
+				data: theNewNote,
+				success: function success(response) {
+					// clear the create new note fields
+					(0, _jquery2.default)(".new-note-title, .new-note-body").val('');
+					// For new note Prepend it to the my-notes list elements - hide it first, and then "slide down" note to appear
+					(0, _jquery2.default)("\n\t\t\t\t\t<li data-id=\"" + response.id + "\">\n\t\t\t\t\t\t<input readonly class=\"note-title-field\" type=\"text\" value=\"" + response.title.raw + "\">\n\t\t\t\t\t\t<span class=\"edit-note\"><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i> Edit</span>\n\t\t\t\t\t\t<span class=\"delete-note\"><i class=\"fa fa-trash-o\" aria-hidden=\"true\"></i> Delete</span>\n\t\t\t\t\t\t<textarea readonly class=\"note-body-field\">" + response.content.raw + "</textarea>\n\t\t\t\t\t\t<span class=\"update-note btn btn--blue btn--small\"><i class=\"fa fa-arrow-right\" aria-hidden=\"true\"></i> Save</span>\n\t\t\t\t\t</li>\n\t\t\t\t").prependTo('#my-notes').hide().slideDown();
+					console.log("Create Note is good!");
+					console.log(response);
+				},
+				error: function error(response) {
+					console.log("Create Note FAILED!");
 					console.log(response);
 				}
 			});

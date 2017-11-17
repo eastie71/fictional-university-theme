@@ -6,9 +6,11 @@ class MyNotes {
 	}
 
 	events() {
-		$(".delete-note").on("click", this.deleteNote);
-		$(".edit-note").on("click", this.editNote.bind(this));
-		$(".update-note").on("click", this.updateNote.bind(this));
+		// if you click anywhere within the #my-notes ul, AND it matches the interior element (eg. ".delete-note") then set the callback function
+		$("#my-notes").on("click", ".delete-note", this.deleteNote);
+		$("#my-notes").on("click", ".edit-note", this.editNote.bind(this));
+		$("#my-notes").on("click", ".update-note", this.updateNote.bind(this));
+		$(".submit-note").on("click", this.createNote.bind(this));
 	}
 
 	// Methods here...
@@ -55,6 +57,43 @@ class MyNotes {
 			},
 			error: (response) => {
 				console.log("Update Note FAILED!");
+				console.log(response);
+			}
+		});
+	}
+
+	createNote(e) {
+		var theNewNote = {
+			'title': $(".new-note-title").val(),
+			'content': $(".new-note-body").val(),
+			'status': 'publish'
+		}
+		$.ajax({
+			// Set the nonce for WP to authorize the update.
+			beforeSend: (xhr) => {
+				xhr.setRequestHeader('X-WP-Nonce', universityData.nonce);
+			},
+			url: universityData.root_url + '/wp-json/wp/v2/note/',
+			type: 'POST',
+			data: theNewNote,
+			success: (response) => {
+				// clear the create new note fields
+				$(".new-note-title, .new-note-body").val('');
+				// For new note Prepend it to the my-notes list elements - hide it first, and then "slide down" note to appear
+				$(`
+					<li data-id="${response.id}">
+						<input readonly class="note-title-field" type="text" value="${response.title.raw}">
+						<span class="edit-note"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</span>
+						<span class="delete-note"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</span>
+						<textarea readonly class="note-body-field">${response.content.raw}</textarea>
+						<span class="update-note btn btn--blue btn--small"><i class="fa fa-arrow-right" aria-hidden="true"></i> Save</span>
+					</li>
+				`).prependTo('#my-notes').hide().slideDown();
+				console.log("Create Note is good!");
+				console.log(response);
+			},
+			error: (response) => {
+				console.log("Create Note FAILED!");
 				console.log(response);
 			}
 		});
