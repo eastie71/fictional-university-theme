@@ -10566,7 +10566,8 @@ var MyNotes = function () {
 		key: "events",
 		value: function events() {
 			(0, _jquery2.default)(".delete-note").on("click", this.deleteNote);
-			(0, _jquery2.default)(".edit-note").on("click", this.editNote);
+			(0, _jquery2.default)(".edit-note").on("click", this.editNote.bind(this));
+			(0, _jquery2.default)(".update-note").on("click", this.updateNote.bind(this));
 		}
 
 		// Methods here...
@@ -10595,11 +10596,64 @@ var MyNotes = function () {
 			});
 		}
 	}, {
+		key: "updateNote",
+		value: function updateNote(e) {
+			var _this = this;
+
+			var this_note = (0, _jquery2.default)(e.target).parents("li");
+			var theUpdatedNote = {
+				'title': this_note.find(".note-title-field").val(),
+				'content': this_note.find(".note-body-field").val()
+			};
+			_jquery2.default.ajax({
+				// Set the nonce for WP to authorize the update.
+				beforeSend: function beforeSend(xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', universityData.nonce);
+				},
+				url: universityData.root_url + '/wp-json/wp/v2/note/' + this_note.data('id'),
+				type: 'POST',
+				data: theUpdatedNote,
+				success: function success(response) {
+					_this.makeNoteReadOnly(this_note);
+					console.log("Update Note is good!");
+					console.log(response);
+				},
+				error: function error(response) {
+					console.log("Update Note FAILED!");
+					console.log(response);
+				}
+			});
+		}
+	}, {
 		key: "editNote",
 		value: function editNote(e) {
 			var this_note = (0, _jquery2.default)(e.target).parents("li");
+
+			if (this_note.data("state") == "editable") {
+				// switch to readonly (ie. edit)
+				this.makeNoteReadOnly(this_note);
+			} else {
+				// switch to editable (ie. cancel)
+				this.makeNoteEditable(this_note);
+			}
+		}
+	}, {
+		key: "makeNoteEditable",
+		value: function makeNoteEditable(this_note) {
+			// If editing, then change the Edit button to a Cancel button
+			this_note.find(".edit-note").html('<i class="fa fa-times" aria-hidden="true"></i> Cancel');
 			this_note.find(".note-title-field, .note-body-field").removeAttr("readonly").addClass("note-active-field");
 			this_note.find(".update-note").addClass("update-note--visible");
+			this_note.data("state", "editable");
+		}
+	}, {
+		key: "makeNoteReadOnly",
+		value: function makeNoteReadOnly(this_note) {
+			// If canceling, then change the Cancel button to a Edit button
+			this_note.find(".edit-note").html('<i class="fa fa-pencil" aria-hidden="true"></i> Edit');
+			this_note.find(".note-title-field, .note-body-field").attr("readonly", "readonly").removeClass("note-active-field");
+			this_note.find(".update-note").removeClass("update-note--visible");
+			this_note.data("state", "cancel");
 		}
 	}]);
 
