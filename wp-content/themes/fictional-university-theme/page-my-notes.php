@@ -16,6 +16,7 @@
 					<input class="new-note-title" type="text" placeholder="Title">
 					<textarea class="new-note-body" placeholder="Your notes here..."></textarea>
 					<span class="submit-note">Create</span>
+					<span class="note-limit-message"></span>
 				</div>
 				<ul class="min-list link-list" id="my-notes">
 					<?php 

@@ -3,9 +3,14 @@
 
 	function university_custom_rest() {
 		register_rest_field('post', 'authorName', array(
-			'get_callback' => function() { return get_the_author();}
-
+			'get_callback' => function() { return get_the_author(); }
 		));
+		/*
+		Lecture 84 - I dont think this is needed.
+		register_rest_field('note', 'userNoteCount', array(
+			'get_callback' => function() { return count_user_posts(get_current_user_id(), 'note'); }
+		));
+		*/
 	}
 	add_action('rest_api_init', 'university_custom_rest');
 
@@ -158,8 +163,14 @@
 
 	// Force note posts to be private - this should be done on bankend PHP as JS could get hacked
 	// Also remove any HTML from the content
-	function forceNotePrivate($data) {
+	// Also limit number of Notes posted to $maxNotePosts
+	function validateNotePosts($data, $postarr) {
+		$maxNoPosts = 20;
 		if ($data['post_type'] == 'note') {
+			// The postarr ID will be empty on creating NEW post
+			if (count_user_posts(get_current_user_id(), 'note') > $maxNoPosts && !$postarr['ID']) {
+				die("Sorry, Note limit (".$maxNoPosts.") reached. Delete existing note to add this note.");
+			}
 			$data['post_content'] = sanitize_textarea_field($data['post_content']);
 			$data['post_title'] = sanitize_text_field($data['post_title']);
 		}
@@ -168,5 +179,8 @@
 		}
 		return $data;
 	}
-	add_filter('wp_insert_post_data', 'forceNotePrivate');
+	// The '2' in argument tells WP to pass 2 arguments (the postarr)
+	// The '10' represents the priority the function is run if you had multiple callbacks for the wp_insert_post_data call
+	// So '10' is just an arbitory number in this case
+	add_filter('wp_insert_post_data', 'validateNotePosts', 10, 2);
 ?>

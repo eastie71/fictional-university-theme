@@ -26,8 +26,11 @@ class MyNotes {
 			success: (response) => {
 				// jquery command to delete element from page a slide up in nice fashion...
 				this_note.slideUp();
+				// Remove the note limit message - as we just deleted a note
+				$(".note-limit-message").removeClass("active");
 				console.log("Delete Note is good!");
 				console.log(response);
+
 			},
 			error: (response) => {
 				console.log("Delete Note FAILED!");
@@ -93,6 +96,10 @@ class MyNotes {
 				console.log(response);
 			},
 			error: (response) => {
+				if (response.responseText) {
+					$(".note-limit-message").html(response.responseText);
+					$(".note-limit-message").addClass("active");
+				}
 				console.log("Create Note FAILED!");
 				console.log(response);
 			}
