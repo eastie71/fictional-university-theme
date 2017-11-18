@@ -31,6 +31,7 @@ dwsync.xml
 app/local.php
 app/wp-config.php
 app/wp-content/advanced-cache.php
+app/wp-content/ai1wm-backups/
 app/wp-content/backup-db/
 app/wp-content/backups/
 app/wp-content/blogs.dir/
