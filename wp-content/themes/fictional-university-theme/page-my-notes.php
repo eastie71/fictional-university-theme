@@ -13,8 +13,8 @@
 			<div class="container container--narrow page-section">
 				<div class="create-note">
 					<h2 class="headline headline--medium">Create New Note</h2>
-					<input class="new-note-title" type="text" placeholder="Title">
-					<textarea class="new-note-body" placeholder="Your notes here..."></textarea>
+					<input class="new-note-title" type="text" maxlength="50" placeholder="Title (max 50 characters)">
+					<textarea class="new-note-body" maxlength="500" placeholder="Your notes here (max 500 characters)..."></textarea>
 					<span class="submit-note">Create</span>
 					<span class="note-limit-message"></span>
 				</div>
@@ -30,10 +30,10 @@
 					?>
 							<li data-id="<?php the_ID(); ?>">
 								<!-- Private posts are prepended with "Private: ", so we want to remove that. -->
-								<input readonly class="note-title-field" type="text" value="<?php echo str_replace('Private: ', '', esc_attr(get_the_title())); ?>">
+								<input readonly class="note-title-field" type="text" maxlength="50" value="<?php echo str_replace('Private: ', '', esc_attr(get_the_title())); ?>">
 								<span class="edit-note"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</span>
 								<span class="delete-note"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</span>
-								<textarea readonly class="note-body-field"><?php echo esc_textarea(get_the_content()); ?></textarea>
+								<textarea readonly class="note-body-field" maxlength="500"><?php echo esc_textarea(get_the_content()); ?></textarea>
 								<span class="update-note btn btn--blue btn--small"><i class="fa fa-arrow-right" aria-hidden="true"></i> Save</span>
 							</li>
 					<?php

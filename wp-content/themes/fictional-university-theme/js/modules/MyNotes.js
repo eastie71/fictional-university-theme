@@ -85,10 +85,10 @@ class MyNotes {
 				// For new note Prepend it to the my-notes list elements - hide it first, and then "slide down" note to appear
 				$(`
 					<li data-id="${response.id}">
-						<input readonly class="note-title-field" type="text" value="${response.title.raw}">
+						<input readonly class="note-title-field" type="text" maxlength="50" value="${response.title.raw}">
 						<span class="edit-note"><i class="fa fa-pencil" aria-hidden="true"></i> Edit</span>
 						<span class="delete-note"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</span>
-						<textarea readonly class="note-body-field">${response.content.raw}</textarea>
+						<textarea readonly class="note-body-field" maxlength="500">${response.content.raw}</textarea>
 						<span class="update-note btn btn--blue btn--small"><i class="fa fa-arrow-right" aria-hidden="true"></i> Save</span>
 					</li>
 				`).prependTo('#my-notes').hide().slideDown();
