@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10494,6 +10494,113 @@ exports.default = HeroSlider;
 
 
 Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jquery = __webpack_require__(0);
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Like = function () {
+	function Like() {
+		_classCallCheck(this, Like);
+
+		this.events();
+	}
+
+	_createClass(Like, [{
+		key: 'events',
+		value: function events() {
+			(0, _jquery2.default)('.like-box').on("click", this.clickDespatcher.bind(this));
+		}
+
+		// Methods here...
+
+	}, {
+		key: 'clickDespatcher',
+		value: function clickDespatcher(e) {
+			// Make sure we are pointing to the relevant like-box 
+			// This code sets the var equal to closest like-box that was clicked.
+			var currentLikeBox = (0, _jquery2.default)(e.target).closest(".like-box");
+
+			// Always use the attr method to pull in newly loaded attributes
+			if (currentLikeBox.attr("data-exists") == 'yes') {
+				this.removeLike(currentLikeBox);
+			} else {
+				this.createLike(currentLikeBox);
+			}
+		}
+	}, {
+		key: 'createLike',
+		value: function createLike(currentLikeBox) {
+			_jquery2.default.ajax({
+				// Set the nonce for WP to authorize the update.
+				beforeSend: function beforeSend(xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', universityData.nonce);
+				},
+				url: universityData.root_url + '/wp-json/university/v1/manageLike',
+				type: 'POST',
+				data: { 'professor_id': currentLikeBox.data('prof-id') },
+				success: function success(response) {
+					currentLikeBox.attr('data-exists', 'yes');
+					var likeCount = parseInt(currentLikeBox.find(".like-count").html(), 10);
+					likeCount++;
+					currentLikeBox.find(".like-count").html(likeCount);
+					// Set the data-like attribute with the newly created like ID
+					currentLikeBox.attr("data-like", response);
+					console.log(response);
+				},
+				error: function error(response) {
+					console.log(response);
+				}
+			});
+		}
+	}, {
+		key: 'removeLike',
+		value: function removeLike(currentLikeBox) {
+			_jquery2.default.ajax({
+				// Set the nonce for WP to authorize the update.
+				beforeSend: function beforeSend(xhr) {
+					xhr.setRequestHeader('X-WP-Nonce', universityData.nonce);
+				},
+				url: universityData.root_url + '/wp-json/university/v1/manageLike',
+				type: 'DELETE',
+				data: { 'like': currentLikeBox.attr('data-like') },
+				success: function success(response) {
+					currentLikeBox.attr('data-exists', 'no');
+					var likeCount = parseInt(currentLikeBox.find(".like-count").html(), 10);
+					likeCount--;
+					currentLikeBox.find(".like-count").html(likeCount);
+					// Clear the data-like attribute for the deleted like ID
+					currentLikeBox.attr("data-like", '');
+					console.log(response);
+				},
+				error: function error(response) {
+					console.log(response);
+				}
+			});
+		}
+	}]);
+
+	return Like;
+}();
+
+exports.default = Like;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
@@ -10535,7 +10642,7 @@ var MobileMenu = function () {
 exports.default = MobileMenu;
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10701,7 +10808,7 @@ var MyNotes = function () {
 exports.default = MyNotes;
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10874,7 +10981,7 @@ var Search = function () {
 exports.default = Search;
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -13775,7 +13882,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13785,11 +13892,11 @@ var _jquery = __webpack_require__(0);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _slickCarousel = __webpack_require__(6);
+var _slickCarousel = __webpack_require__(7);
 
 var _slickCarousel2 = _interopRequireDefault(_slickCarousel);
 
-var _MobileMenu = __webpack_require__(3);
+var _MobileMenu = __webpack_require__(4);
 
 var _MobileMenu2 = _interopRequireDefault(_MobileMenu);
 
@@ -13801,26 +13908,31 @@ var _GoogleMap = __webpack_require__(1);
 
 var _GoogleMap2 = _interopRequireDefault(_GoogleMap);
 
-var _Search = __webpack_require__(5);
+var _Search = __webpack_require__(6);
 
 var _Search2 = _interopRequireDefault(_Search);
 
-var _MyNotes = __webpack_require__(4);
+var _MyNotes = __webpack_require__(5);
 
 var _MyNotes2 = _interopRequireDefault(_MyNotes);
+
+var _Like = __webpack_require__(3);
+
+var _Like2 = _interopRequireDefault(_Like);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Instantiate a new object using our modules/classes
-var mobileMenu = new _MobileMenu2.default();
+
 
 // Our modules / classes
 // 3rd party packages from NPM
-
+var mobileMenu = new _MobileMenu2.default();
 var heroSlider = new _HeroSlider2.default();
 var googleMap = new _GoogleMap2.default();
 var search = new _Search2.default();
 var mynotes = new _MyNotes2.default();
+var like = new _Like2.default();
 
 /***/ })
 /******/ ]);
