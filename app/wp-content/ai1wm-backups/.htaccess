@@ -1,0 +1,7 @@
+<IfModule mod_mime.c>
+AddType application/octet-stream .wpress
+</IfModule>
+<IfModule mod_dir.c>
+DirectoryIndex index.php
+</IfModule>
+Options -Indexes

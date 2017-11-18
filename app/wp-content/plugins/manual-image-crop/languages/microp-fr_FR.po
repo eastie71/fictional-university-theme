@@ -1,0 +1,167 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: mic\n"
+"POT-Creation-Date: 2014-05-13 22:40-0000\n"
+"PO-Revision-Date: 2014-06-18 15:40+0100\n"
+"Last-Translator: Gabriel Féron <gabriel.feron@lepape.com>\n"
+"Language-Team:  <feron.gabriel@gmail.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"Language: fr_FR\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: C:\\wamp\\www\\wordpress\\wp-content\\plugins\\manual-"
+"image-crop\n"
+
+#: manual-image-crop/lib/ManualImageCrop.php:58
+msgid "Crop"
+msgstr "Recadrage"
+
+#: manual-image-crop/lib/ManualImageCrop.php:67
+msgid "Crop featured image"
+msgstr "Recadrer l'image à la Une"
+
+#: manual-image-crop/lib/ManualImageCrop.php:94
+#: manual-image-crop/lib/ManualImageCrop.php:121
+msgid "Crop Image"
+msgstr "Recadrer l'image"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:31
+msgid "Pick the image size:"
+msgstr "Choisissez une taille&nbsp;:"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:41
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:115
+msgid "Thumbnail"
+msgstr "Miniature"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:42
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:116
+msgid "Medium"
+msgstr "Moyen"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:43
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:117
+msgid "Large"
+msgstr "Large"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:44
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:118
+msgid "Full Size"
+msgstr "Taille d'origine"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:142
+msgid "Original picture dimensions:"
+msgstr "Dimension originales&nbsp;:"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:143
+msgid "Target picture dimensions:"
+msgstr "Dimensions cibles&nbsp;:"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:143
+msgid "Soft proportional crop mode"
+msgstr "Recadrage proportionnel"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:143
+msgid "Hard crop mode"
+msgstr "Recadrage non proportionnel"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:147
+msgid "New image:"
+msgstr "Nouvelle image&nbsp;:"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:154
+msgid "Previous image:"
+msgstr "Image précédente&nbsp;:"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:162
+msgid "Crop it!"
+msgstr "Recadrer !"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:169
+msgid "Target JPEG Quality"
+msgstr "Qualité JPEG"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:170
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:154
+msgid "100 (best quality, biggest file)"
+msgstr "100 (qualité maximale, compression faible)"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:171
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:155
+msgid "80 (very high quality)"
+msgstr "80 (très haute qualité)"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:172
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:156
+msgid "70 (high quality)"
+msgstr "70 (haute qualité)"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:173
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:157
+msgid "60 (good)"
+msgstr "60 (bon)"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:174
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:158
+msgid "50 (average)"
+msgstr "50 (moyen)"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:175
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:159
+msgid "30 (low)"
+msgstr "30 (faible)"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:176
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:160
+msgid "10 (very low, smallest file)"
+msgstr "10 (basse qualité, compression forte)"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:183
+msgid "Generate Retina/HiDPI (@2x):"
+msgstr "Générer l'image Retina/HiDPI (@2x)"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:188
+msgid "The image has been cropped successfully"
+msgstr "L'image a été correctement recadrée"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:189
+msgid "An Error has occured. Please try again or contact plugin's author."
+msgstr ""
+"Une erreur est survenue. Merci de réessayer plus tard ou de contacter "
+"l'auteur du plugin."
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:232
+msgid "Compatible"
+msgstr "Compatible"
+
+#: manual-image-crop/lib/ManualImageCropEditorWindow.php:234
+msgid "Source too small"
+msgstr "Image source trop petite"
+
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:125
+msgid "Size"
+msgstr "Taille"
+
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:126
+msgid "Visible"
+msgstr "Visible"
+
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:127
+msgid "Default JPEG Quality"
+msgstr "Qualité JPEG par défaut"
+
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:128
+msgid "Custom Label"
+msgstr "Légende personnalisée"
+
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:150
+msgid "Yes"
+msgstr "Oui"
+
+#: manual-image-crop/lib/ManualImageCropSettingsPage.php:151
+msgid "No"
+msgstr "Non"
