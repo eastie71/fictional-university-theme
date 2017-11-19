@@ -37,7 +37,6 @@ app/wp-content/backups/
 app/wp-content/blogs.dir/
 app/wp-content/cache/
 app/wp-content/upgrade/
-app/wp-content/uploads/
 app/wp-content/wp-cache-config.php
 app/wp-content/plugins/hello.php
 app/.htaccess
