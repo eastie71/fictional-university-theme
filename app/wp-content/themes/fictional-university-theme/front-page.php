@@ -87,34 +87,31 @@
     </div>
   </div>
 
-  <div class="hero-slider">
-  <div class="hero-slider__slide" style="background-image: url(<?php echo get_theme_file_uri('/images/bus.jpg'); ?>);">
-    <div class="hero-slider__interior container">
-      <div class="hero-slider__overlay">
-        <h2 class="headline headline--medium t-center">Free Transportation</h2>
-        <p class="t-center">All students have free unlimited bus fare.</p>
-        <p class="t-center no-margin"><a href="#" class="btn btn--blue">Learn more</a></p>
+<div class="hero-slider">
+  <?php
+  // Perform a custom query for home page slides.
+    $homepageSlides = new WP_Query(array(
+      'post_type' => 'homeslide',
+      ));
+      while ($homepageSlides->have_posts()) {
+        $homepageSlides->the_post();
+        $sliderImage = get_field('hps_background_image');
+
+  ?>
+      <div class="hero-slider__slide" style="background-image: url(<?php echo $sliderImage['url']; ?>);">
+        <div class="hero-slider__interior container">
+          <div class="hero-slider__overlay">
+            <h2 class="headline headline--medium t-center"><?php echo get_the_title(); ?></h2>
+            <p class="t-center"><?php echo get_field('hps_subtitle'); ?></p>
+            <p class="t-center no-margin"><a href="<?php echo get_field('hps_button_link'); ?>" class="btn btn--blue"><?php echo get_field('hps_button_text'); ?></a></p>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <div class="hero-slider__slide" style="background-image: url(<?php echo get_theme_file_uri('/images/apples.jpg'); ?>);">
-    <div class="hero-slider__interior container">
-      <div class="hero-slider__overlay">
-        <h2 class="headline headline--medium t-center">An Apple a Day</h2>
-        <p class="t-center">Our dentistry program recommends eating apples.</p>
-        <p class="t-center no-margin"><a href="#" class="btn btn--blue">Learn more</a></p>
-      </div>
-    </div>
-  </div>
-  <div class="hero-slider__slide" style="background-image: url(<?php echo get_theme_file_uri('/images/bread.jpg'); ?>);">
-    <div class="hero-slider__interior container">
-      <div class="hero-slider__overlay">
-        <h2 class="headline headline--medium t-center">Free Food</h2>
-        <p class="t-center">Fictional University offers lunch plans for those in need.</p>
-        <p class="t-center no-margin"><a href="#" class="btn btn--blue">Learn more</a></p>
-      </div>
-    </div>
-  </div>
+  <?php      
+      }
+      // Need to reset the post data after the custom query
+      wp_reset_postdata(); 
+  ?>
 </div>
 
 <?php
