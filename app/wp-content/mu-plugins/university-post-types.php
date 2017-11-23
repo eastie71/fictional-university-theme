@@ -113,6 +113,24 @@
 			),
 			// Icon for the WP dashboard
 			'menu_icon' => 'dashicons-heart'		));
+
+		// Custom Home Page Slide Post Type
+		register_post_type('homeslide', array(
+			// by default slug would be 'event' so override to 'events' instead
+			'rewrite' => array('slug' => 'homeslide'),
+			// by default post types get title and editor - just need title ONLY
+			'supports' => array('title'),
+			'public' => false,
+			'show_ui' => true,
+			'labels' => array(
+				'name' => 'Home Page Slides',
+				'add_new_item' => 'Add New Home Page Slide',
+				'edit_item' => 'Edit Home Page Slide',
+				'all_items' => 'All Home Page Slides',
+				'singular_name' => 'Home Page Slide'
+			),
+			// Icon for the WP dashboard
+			'menu_icon' => 'dashicons-slides'		));
 	}
 	add_action('init', "university_post_types");
 ?>
