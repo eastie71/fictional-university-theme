@@ -89,7 +89,7 @@
 
 	function university_adjust_queries($query) {
 		// We only want to manipulate the events archive page - not the admin pages, and not custom queries
-		if (!is_admin() and is_post_type_archive('event') and is_main_query()) {
+		if (!is_admin() and is_post_type_archive('event') and $query->is_main_query()) {
 			$today = date('Ymd');
 
 			// sort by event date in ascending order           
