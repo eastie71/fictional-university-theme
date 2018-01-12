@@ -39,7 +39,6 @@ app/wp-content/cache/
 app/wp-content/upgrade/
 app/wp-content/wp-cache-config.php
 app/wp-content/plugins/hello.php
-app/.htaccess
 
 /.htaccess
 /license.txt
