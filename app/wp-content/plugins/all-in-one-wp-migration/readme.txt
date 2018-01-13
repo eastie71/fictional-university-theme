@@ -3,7 +3,7 @@ Contributors: yani.iliev, bangelov, pimjitsawang
 Tags: move, transfer, copy, migrate, backup, clone, restore, db migration, wordpress migration, website migration, database export, database import, apoyo, sauvegarde, di riserva, バックアップ
 Requires at least: 3.3
 Tested up to: 4.9
-Stable tag: 6.60
+Stable tag: 6.61
 License: GPLv2 or later
 
 Move, transfer, copy, migrate, and backup a site with 1-click. Quick, easy, and reliable.
@@ -52,6 +52,7 @@ Mobile device compatible: All in One WP Plugin is the first plugin to offer true
 * [URL](https://servmask.com/products/url-extension)
 * [OneDrive](https://servmask.com/products/onedrive-extension)
 * [Box](https://servmask.com/products/box-extension)
+* [Mega](https://servmask.com/products/mega-extension)
 
 = Supported hosting providers =
 **The plugin does not have any dependancies, making it compatible with all PHP hosting providers. We support a vast range of hosting providers. Some of the most popular include:**
@@ -93,6 +94,12 @@ Alternatively you can download the plugin using the download button on this page
 3. Plugin Menu
 
 == Changelog ==
+= 6.61 =
+**Added**
+
+* Disable wp-force-ssl plugin if current site is not SSL based on import
+* Support for Mega Extension
+
 = 6.60 =
 **Added**
 
