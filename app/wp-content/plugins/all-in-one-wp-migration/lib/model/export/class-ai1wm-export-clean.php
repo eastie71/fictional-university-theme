@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2017 ServMask Inc.
+ * Copyright (C) 2014-2020 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,10 +23,22 @@
  * ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	die( 'Kangaroos cannot jump here' );
+}
+
 class Ai1wm_Export_Clean {
 
 	public static function execute( $params ) {
+
+		// Delete storage files
 		Ai1wm_Directory::delete( ai1wm_storage_path( $params ) );
+
+		// Exit in console
+		if ( defined( 'WP_CLI' ) ) {
+			return $params;
+		}
+
 		exit;
 	}
 }

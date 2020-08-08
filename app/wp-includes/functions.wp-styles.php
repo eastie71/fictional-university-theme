@@ -37,18 +37,19 @@ function wp_styles() {
  * @since 2.6.0
  *
  * @param string|bool|array $handles Styles to be printed. Default 'false'.
- * @return array On success, a processed array of WP_Dependencies items; otherwise, an empty array.
+ * @return string[] On success, an array of handles of processed WP_Dependencies items; otherwise, an empty array.
  */
 function wp_print_styles( $handles = false ) {
-	if ( '' === $handles ) { // for wp_head
+	if ( '' === $handles ) { // For 'wp_head'.
 		$handles = false;
 	}
-	/**
-	 * Fires before styles in the $handles queue are printed.
-	 *
-	 * @since 2.6.0
-	 */
+
 	if ( ! $handles ) {
+		/**
+		 * Fires before styles in the $handles queue are printed.
+		 *
+		 * @since 2.6.0
+		 */
 		do_action( 'wp_print_styles' );
 	}
 
@@ -67,7 +68,7 @@ function wp_print_styles( $handles = false ) {
 /**
  * Add extra CSS styles to a registered stylesheet.
  *
- * Styles will only be added if the stylesheet in already in the queue.
+ * Styles will only be added if the stylesheet is already in the queue.
  * Accepts a string $data containing the CSS. If two or more CSS code blocks
  * are added to the same stylesheet $handle, they will be printed in the order
  * they were added, i.e. the latter added styles can redeclare the previous.
@@ -84,12 +85,16 @@ function wp_add_inline_style( $handle, $data ) {
 	_wp_scripts_maybe_doing_it_wrong( __FUNCTION__ );
 
 	if ( false !== stripos( $data, '</style>' ) ) {
-		_doing_it_wrong( __FUNCTION__, sprintf(
-			/* translators: 1: <style>, 2: wp_add_inline_style() */
-			__( 'Do not pass %1$s tags to %2$s.' ),
-			'<code>&lt;style&gt;</code>',
-			'<code>wp_add_inline_style()</code>'
-		), '3.7.0' );
+		_doing_it_wrong(
+			__FUNCTION__,
+			sprintf(
+				/* translators: 1: <style>, 2: wp_add_inline_style() */
+				__( 'Do not pass %1$s tags to %2$s.' ),
+				'<code>&lt;style&gt;</code>',
+				'<code>wp_add_inline_style()</code>'
+			),
+			'3.7.0'
+		);
 		$data = trim( preg_replace( '#<style[^>]*>(.*)</style>#is', '$1', $data ) );
 	}
 
@@ -106,8 +111,9 @@ function wp_add_inline_style( $handle, $data ) {
  * @since 4.3.0 A return value was added.
  *
  * @param string           $handle Name of the stylesheet. Should be unique.
- * @param string           $src    Full URL of the stylesheet, or path of the stylesheet relative to the WordPress root directory.
- * @param array            $deps   Optional. An array of registered stylesheet handles this stylesheet depends on. Default empty array.
+ * @param string|bool      $src    Full URL of the stylesheet, or path of the stylesheet relative to the WordPress root directory.
+ *                                 If source is set to false, stylesheet is an alias of other stylesheets it depends on.
+ * @param string[]         $deps   Optional. An array of registered stylesheet handles this stylesheet depends on. Default empty array.
  * @param string|bool|null $ver    Optional. String specifying stylesheet version number, if it has one, which is added to the URL
  *                                 as a query string for cache busting purposes. If version is set to false, a version
  *                                 number is automatically added equal to current installed WordPress version.
@@ -152,7 +158,7 @@ function wp_deregister_style( $handle ) {
  * @param string           $handle Name of the stylesheet. Should be unique.
  * @param string           $src    Full URL of the stylesheet, or path of the stylesheet relative to the WordPress root directory.
  *                                 Default empty.
- * @param array            $deps   Optional. An array of registered stylesheet handles this stylesheet depends on. Default empty array.
+ * @param string[]         $deps   Optional. An array of registered stylesheet handles this stylesheet depends on. Default empty array.
  * @param string|bool|null $ver    Optional. String specifying stylesheet version number, if it has one, which is added to the URL
  *                                 as a query string for cache busting purposes. If version is set to false, a version
  *                                 number is automatically added equal to current installed WordPress version.
@@ -167,7 +173,7 @@ function wp_enqueue_style( $handle, $src = '', $deps = array(), $ver = false, $m
 	$wp_styles = wp_styles();
 
 	if ( $src ) {
-		$_handle = explode('?', $handle);
+		$_handle = explode( '?', $handle );
 		$wp_styles->add( $_handle[0], $src, $deps, $ver, $media );
 	}
 	$wp_styles->enqueue( $handle );
@@ -216,7 +222,7 @@ function wp_style_is( $handle, $list = 'enqueued' ) {
  * 'alt'         bool        For rel="alternate stylesheet".
  * 'title'       string      For preferred/alternate stylesheets.
  *
- * @see WP_Dependency::add_data()
+ * @see WP_Dependencies::add_data()
  *
  * @since 3.6.0
  *

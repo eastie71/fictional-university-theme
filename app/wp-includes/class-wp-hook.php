@@ -64,22 +64,23 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	 *
 	 * @param string   $tag             The name of the filter to hook the $function_to_add callback to.
 	 * @param callable $function_to_add The callback to be run when the filter is applied.
-	 * @param int      $priority        The order in which the functions associated with a
-	 *                                  particular action are executed. Lower numbers correspond with
-	 *                                  earlier execution, and functions with the same priority are executed
-	 *                                  in the order in which they were added to the action.
+	 * @param int      $priority        The order in which the functions associated with a particular action
+	 *                                  are executed. Lower numbers correspond with earlier execution,
+	 *                                  and functions with the same priority are executed in the order
+	 *                                  in which they were added to the action.
 	 * @param int      $accepted_args   The number of arguments the function accepts.
 	 */
 	public function add_filter( $tag, $function_to_add, $priority, $accepted_args ) {
 		$idx = _wp_filter_build_unique_id( $tag, $function_to_add, $priority );
+
 		$priority_existed = isset( $this->callbacks[ $priority ] );
 
 		$this->callbacks[ $priority ][ $idx ] = array(
-			'function' => $function_to_add,
-			'accepted_args' => $accepted_args
+			'function'      => $function_to_add,
+			'accepted_args' => $accepted_args,
 		);
 
-		// if we're adding a new priority to the list, put them back in sorted order
+		// If we're adding a new priority to the list, put them back in sorted order.
 		if ( ! $priority_existed && count( $this->callbacks ) > 1 ) {
 			ksort( $this->callbacks, SORT_NUMERIC );
 		}
@@ -90,7 +91,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	}
 
 	/**
-	 * Handles reseting callback priority keys mid-iteration.
+	 * Handles resetting callback priority keys mid-iteration.
 	 *
 	 * @since 4.7.0
 	 *
@@ -134,7 +135,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 			// If we have a new priority that didn't exist, but ::apply_filters() or ::do_action() thinks it's the current priority...
 			if ( $new_priority === $this->current_priority[ $index ] && ! $priority_existed ) {
 				/*
-				 * ... and the new priority is the same as what $this->iterations thinks is the previous
+				 * ...and the new priority is the same as what $this->iterations thinks is the previous
 				 * priority, we need to move back to it.
 				 */
 
@@ -162,8 +163,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @param string   $tag                The filter hook to which the function to be removed is hooked. Used
-	 *                                     for building the callback ID when SPL is not available.
+	 * @param string   $tag                The filter hook to which the function to be removed is hooked.
 	 * @param callable $function_to_remove The callback to be removed from running when the filter is applied.
 	 * @param int      $priority           The exact priority used when adding the original filter callback.
 	 * @return bool Whether the callback existed before it was removed.
@@ -189,8 +189,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @param string        $tag               Optional. The name of the filter hook. Used for building
-	 *                                         the callback ID when SPL is not available. Default empty.
+	 * @param string        $tag               Optional. The name of the filter hook. Default empty.
 	 * @param callable|bool $function_to_check Optional. The callback to check for. Default false.
 	 * @return bool|int The priority of that hook is returned, or false if the function is not attached.
 	 */
@@ -243,7 +242,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 
 		if ( false === $priority ) {
 			$this->callbacks = array();
-		} else if ( isset( $this->callbacks[ $priority ] ) ) {
+		} elseif ( isset( $this->callbacks[ $priority ] ) ) {
 			unset( $this->callbacks[ $priority ] );
 		}
 
@@ -253,12 +252,13 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	}
 
 	/**
-	 * Calls the callback functions added to a filter hook.
+	 * Calls the callback functions that have been added to a filter hook.
 	 *
 	 * @since 4.7.0
 	 *
 	 * @param mixed $value The value to filter.
-	 * @param array $args  Arguments to pass to callbacks.
+	 * @param array $args  Additional parameters to pass to the callback functions.
+	 *                     This array is expected to include $value at index 0.
 	 * @return mixed The filtered value after all hooked functions are applied to it.
 	 */
 	public function apply_filters( $value, $args ) {
@@ -269,23 +269,24 @@ final class WP_Hook implements Iterator, ArrayAccess {
 		$nesting_level = $this->nesting_level++;
 
 		$this->iterations[ $nesting_level ] = array_keys( $this->callbacks );
-		$num_args = count( $args );
+		$num_args                           = count( $args );
 
 		do {
-			$this->current_priority[ $nesting_level ] = $priority = current( $this->iterations[ $nesting_level ] );
+			$this->current_priority[ $nesting_level ] = current( $this->iterations[ $nesting_level ] );
+			$priority                                 = $this->current_priority[ $nesting_level ];
 
 			foreach ( $this->callbacks[ $priority ] as $the_ ) {
-				if( ! $this->doing_action ) {
-					$args[ 0 ] = $value;
+				if ( ! $this->doing_action ) {
+					$args[0] = $value;
 				}
 
-				// Avoid the array_slice if possible.
-				if ( $the_['accepted_args'] == 0 ) {
-					$value = call_user_func_array( $the_['function'], array() );
+				// Avoid the array_slice() if possible.
+				if ( 0 == $the_['accepted_args'] ) {
+					$value = call_user_func( $the_['function'] );
 				} elseif ( $the_['accepted_args'] >= $num_args ) {
 					$value = call_user_func_array( $the_['function'], $args );
 				} else {
-					$value = call_user_func_array( $the_['function'], array_slice( $args, 0, (int)$the_['accepted_args'] ) );
+					$value = call_user_func_array( $the_['function'], array_slice( $args, 0, (int) $the_['accepted_args'] ) );
 				}
 			}
 		} while ( false !== next( $this->iterations[ $nesting_level ] ) );
@@ -299,11 +300,11 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	}
 
 	/**
-	 * Executes the callback functions hooked on a specific action hook.
+	 * Calls the callback functions that have been added to an action hook.
 	 *
 	 * @since 4.7.0
 	 *
-	 * @param mixed $args Arguments to pass to the hook callbacks.
+	 * @param array $args Parameters to pass to the callback functions.
 	 */
 	public function do_action( $args ) {
 		$this->doing_action = true;
@@ -323,7 +324,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	 * @param array $args Arguments to pass to the hook callbacks. Passed by reference.
 	 */
 	public function do_all_hook( &$args ) {
-		$nesting_level = $this->nesting_level++;
+		$nesting_level                      = $this->nesting_level++;
 		$this->iterations[ $nesting_level ] = array_keys( $this->callbacks );
 
 		do {
@@ -356,7 +357,6 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	 * Normalizes filters set up before WordPress has initialized to WP_Hook objects.
 	 *
 	 * @since 4.7.0
-	 * @static
 	 *
 	 * @param array $filters Filters to normalize.
 	 * @return WP_Hook[] Array of normalized filters.
@@ -390,7 +390,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @link https://secure.php.net/manual/en/arrayaccess.offsetexists.php
+	 * @link https://www.php.net/manual/en/arrayaccess.offsetexists.php
 	 *
 	 * @param mixed $offset An offset to check for.
 	 * @return bool True if the offset exists, false otherwise.
@@ -404,7 +404,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @link https://secure.php.net/manual/en/arrayaccess.offsetget.php
+	 * @link https://www.php.net/manual/en/arrayaccess.offsetget.php
 	 *
 	 * @param mixed $offset The offset to retrieve.
 	 * @return mixed If set, the value at the specified offset, null otherwise.
@@ -418,7 +418,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @link https://secure.php.net/manual/en/arrayaccess.offsetset.php
+	 * @link https://www.php.net/manual/en/arrayaccess.offsetset.php
 	 *
 	 * @param mixed $offset The offset to assign the value to.
 	 * @param mixed $value The value to set.
@@ -436,7 +436,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @link https://secure.php.net/manual/en/arrayaccess.offsetunset.php
+	 * @link https://www.php.net/manual/en/arrayaccess.offsetunset.php
 	 *
 	 * @param mixed $offset The offset to unset.
 	 */
@@ -449,7 +449,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @link https://secure.php.net/manual/en/iterator.current.php
+	 * @link https://www.php.net/manual/en/iterator.current.php
 	 *
 	 * @return array Of callbacks at current priority.
 	 */
@@ -462,7 +462,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @link https://secure.php.net/manual/en/iterator.next.php
+	 * @link https://www.php.net/manual/en/iterator.next.php
 	 *
 	 * @return array Of callbacks at next priority.
 	 */
@@ -475,7 +475,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @link https://secure.php.net/manual/en/iterator.key.php
+	 * @link https://www.php.net/manual/en/iterator.key.php
 	 *
 	 * @return mixed Returns current priority on success, or NULL on failure
 	 */
@@ -488,7 +488,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @link https://secure.php.net/manual/en/iterator.valid.php
+	 * @link https://www.php.net/manual/en/iterator.valid.php
 	 *
 	 * @return boolean
 	 */
@@ -501,7 +501,7 @@ final class WP_Hook implements Iterator, ArrayAccess {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @link https://secure.php.net/manual/en/iterator.rewind.php
+	 * @link https://www.php.net/manual/en/iterator.rewind.php
 	 */
 	public function rewind() {
 		reset( $this->callbacks );

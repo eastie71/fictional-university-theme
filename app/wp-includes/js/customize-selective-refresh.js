@@ -1,3 +1,7 @@
+/**
+ * @output wp-includes/js/customize-selective-refresh.js
+ */
+
 /* global jQuery, JSON, _customizePartialRefreshExports, console */
 
 /** @namespace wp.customize.selectiveRefresh */
@@ -116,7 +120,7 @@ wp.customize.selectiveRefresh = ( function( $, api ) {
 		 * @access public
 		 *
 		 * @param {Placement} placement The placement container element.
-		 * @returns {void}
+		 * @return {void}
 		 */
 		createEditShortcutForPlacement: function( placement ) {
 			var partial = this, $shortcut, $placementContainer, illegalAncestorSelector, illegalContainerSelector;
@@ -146,7 +150,7 @@ wp.customize.selectiveRefresh = ( function( $, api ) {
 		 *
 		 * @param {Placement} placement The placement for the partial.
 		 * @param {jQuery} $editShortcut The shortcut element as a jQuery object.
-		 * @returns {void}
+		 * @return {void}
 		 */
 		addEditShortcutToPlacement: function( placement, $editShortcut ) {
 			var $placementContainer = $( placement.container );
@@ -245,7 +249,7 @@ wp.customize.selectiveRefresh = ( function( $, api ) {
 		},
 
 		/**
-		 * Find all placements for this partial int he document.
+		 * Find all placements for this partial in the document.
 		 *
 		 * @since 4.5.0
 		 *
@@ -404,7 +408,7 @@ wp.customize.selectiveRefresh = ( function( $, api ) {
 		 * @param {Element|jQuery}        [placement.container]  - This param will be empty if there was no element matching the selector.
 		 * @param {string|object|boolean} placement.addedContent - Rendered HTML content, a data object for JS templates to render, or false if no render.
 		 * @param {object}                [placement.context]    - Optional context information about the container.
-		 * @returns {boolean} Whether the rendering was successful and the fallback was not invoked.
+		 * @return {boolean} Whether the rendering was successful and the fallback was not invoked.
 		 */
 		renderContent: function( placement ) {
 			var partial = this, content, newContainerElement;
@@ -438,7 +442,7 @@ wp.customize.selectiveRefresh = ( function( $, api ) {
 
 				if ( partial.params.containerInclusive ) {
 
-					// Note that content may be an empty string, and in this case jQuery will just remove the oldContainer
+					// Note that content may be an empty string, and in this case jQuery will just remove the oldContainer.
 					newContainerElement = $( content );
 
 					// Merge the new context on top of the old context.
@@ -486,6 +490,10 @@ wp.customize.selectiveRefresh = ( function( $, api ) {
 			 */
 			if ( wp.mediaelement ) {
 				wp.mediaelement.initialize();
+			}
+
+			if ( wp.playlist ) {
+				wp.playlist.initialize();
 			}
 
 			/**

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2017 ServMask Inc.
+ * Copyright (C) 2014-2020 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,10 @@
  * ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	die( 'Kangaroos cannot jump here' );
+}
+
 class Ai1wm_Database_Mysqli extends Ai1wm_Database {
 
 	/**
@@ -32,7 +36,14 @@ class Ai1wm_Database_Mysqli extends Ai1wm_Database {
 	 * @return resource
 	 */
 	public function query( $input ) {
-		return mysqli_query( $this->wpdb->dbh, $input, MYSQLI_STORE_RESULT );
+		if ( mysqli_real_query( $this->wpdb->dbh, $input ) ) {
+			// Copy results from the internal mysqlnd buffer into the PHP variables fetched
+			if ( defined( 'MYSQLI_STORE_RESULT_COPY_DATA' ) ) {
+				return mysqli_store_result( $this->wpdb->dbh, MYSQLI_STORE_RESULT_COPY_DATA );
+			}
+
+			return mysqli_store_result( $this->wpdb->dbh );
+		}
 	}
 
 	/**
@@ -48,7 +59,7 @@ class Ai1wm_Database_Mysqli extends Ai1wm_Database {
 	/**
 	 * Return the error code for the most recent function call
 	 *
-	 * @return int
+	 * @return integer
 	 */
 	public function errno() {
 		return mysqli_errno( $this->wpdb->dbh );
@@ -96,7 +107,7 @@ class Ai1wm_Database_Mysqli extends Ai1wm_Database {
 	 * Return the number for rows from MySQL results
 	 *
 	 * @param  resource $result MySQL resource
-	 * @return int
+	 * @return integer
 	 */
 	public function num_rows( $result ) {
 		return mysqli_num_rows( $result );
@@ -106,7 +117,7 @@ class Ai1wm_Database_Mysqli extends Ai1wm_Database {
 	 * Free MySQL result memory
 	 *
 	 * @param  resource $result MySQL resource
-	 * @return bool
+	 * @return boolean
 	 */
 	public function free_result( $result ) {
 		return mysqli_free_result( $result );

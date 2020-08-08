@@ -1,5 +1,13 @@
+/**
+ * @output wp-admin/js/widgets/text-widgets.js
+ */
+
 /* global tinymce, switchEditors */
 /* eslint consistent-this: [ "error", "control" ] */
+
+/**
+ * @namespace wp.textWidgets
+ */
 wp.textWidgets = ( function( $ ) {
 	'use strict';
 
@@ -8,14 +16,7 @@ wp.textWidgets = ( function( $ ) {
 		idBases: [ 'text' ]
 	};
 
-	/**
-	 * Text widget control.
-	 *
-	 * @class TextWidgetControl
-	 * @constructor
-	 * @abstract
-	 */
-	component.TextWidgetControl = Backbone.View.extend({
+	component.TextWidgetControl = Backbone.View.extend(/** @lends wp.textWidgets.TextWidgetControl.prototype */{
 
 		/**
 		 * View events.
@@ -25,12 +26,17 @@ wp.textWidgets = ( function( $ ) {
 		events: {},
 
 		/**
-		 * Initialize.
+		 * Text widget control.
+		 *
+		 * @constructs wp.textWidgets.TextWidgetControl
+		 * @augments   Backbone.View
+		 * @abstract
 		 *
 		 * @param {Object} options - Options.
 		 * @param {jQuery} options.el - Control field container element.
 		 * @param {jQuery} options.syncContainer - Container element where fields are synced for the server.
-		 * @returns {void}
+		 *
+		 * @return {void}
 		 */
 		initialize: function initialize( options ) {
 			var control = this;
@@ -99,7 +105,7 @@ wp.textWidgets = ( function( $ ) {
 		 * @since 4.8.1
 		 *
 		 * @param {Array} pointers Pointer IDs to dismiss.
-		 * @returns {void}
+		 * @return {void}
 		 */
 		dismissPointers: function dismissPointers( pointers ) {
 			_.each( pointers, function( pointer ) {
@@ -114,7 +120,7 @@ wp.textWidgets = ( function( $ ) {
 		 * Open available widgets panel.
 		 *
 		 * @since 4.8.1
-		 * @returns {void}
+		 * @return {void}
 		 */
 		openAvailableWidgetsPanel: function openAvailableWidgetsPanel() {
 			var sidebarControl;
@@ -139,7 +145,7 @@ wp.textWidgets = ( function( $ ) {
 		 * A field will only be updated if it is not currently focused, to avoid
 		 * overwriting content that the user is entering.
 		 *
-		 * @returns {void}
+		 * @return {void}
 		 */
 		updateFields: function updateFields() {
 			var control = this, syncInput;
@@ -162,7 +168,7 @@ wp.textWidgets = ( function( $ ) {
 		/**
 		 * Initialize editor.
 		 *
-		 * @returns {void}
+		 * @return {void}
 		 */
 		initializeEditor: function initializeEditor() {
 			var control = this, changeDebounceDelay = 1000, id, textarea, triggerChangeIfDirty, restoreTextMode = false, needsTextareaChangeTrigger = false, previousValue;
@@ -173,7 +179,7 @@ wp.textWidgets = ( function( $ ) {
 			/**
 			 * Trigger change if dirty.
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			triggerChangeIfDirty = function() {
 				var updateWidgetBuffer = 300; // See wp.customize.Widgets.WidgetControl._setupUpdateUI() which uses 250ms for updateWidgetDebounced.
@@ -219,7 +225,7 @@ wp.textWidgets = ( function( $ ) {
 			/**
 			 * Build (or re-build) the visual editor.
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			function buildEditor() {
 				var editor, onInit, showPointerElement;
@@ -268,7 +274,7 @@ wp.textWidgets = ( function( $ ) {
 				 * Show a pointer, focus on dismiss, and speak the contents for a11y.
 				 *
 				 * @param {jQuery} pointerElement Pointer element.
-				 * @returns {void}
+				 * @return {void}
 				 */
 				showPointerElement = function( pointerElement ) {
 					pointerElement.show();
@@ -357,6 +363,8 @@ wp.textWidgets = ( function( $ ) {
 	/**
 	 * Mapping of widget ID to instances of TextWidgetControl subclasses.
 	 *
+	 * @memberOf wp.textWidgets
+	 *
 	 * @type {Object.<string, wp.textWidgets.TextWidgetControl>}
 	 */
 	component.widgetControls = {};
@@ -364,9 +372,12 @@ wp.textWidgets = ( function( $ ) {
 	/**
 	 * Handle widget being added or initialized for the first time at the widget-added event.
 	 *
+	 * @memberOf wp.textWidgets
+	 *
 	 * @param {jQuery.Event} event - Event.
 	 * @param {jQuery}       widgetContainer - Widget container element.
-	 * @returns {void}
+	 *
+	 * @return {void}
 	 */
 	component.handleWidgetAdded = function handleWidgetAdded( event, widgetContainer ) {
 		var widgetForm, idBase, widgetControl, widgetId, animatedCheckDelay = 50, renderWhenAnimationDone, fieldContainer, syncContainer;
@@ -429,7 +440,9 @@ wp.textWidgets = ( function( $ ) {
 	/**
 	 * Setup widget in accessibility mode.
 	 *
-	 * @returns {void}
+	 * @memberOf wp.textWidgets
+	 *
+	 * @return {void}
 	 */
 	component.setupAccessibleMode = function setupAccessibleMode() {
 		var widgetForm, idBase, widgetControl, fieldContainer, syncContainer;
@@ -467,9 +480,11 @@ wp.textWidgets = ( function( $ ) {
 	 * the widgets admin screen and also via the 'widget-synced' event when making
 	 * a change to a widget in the customizer.
 	 *
+	 * @memberOf wp.textWidgets
+	 *
 	 * @param {jQuery.Event} event - Event.
 	 * @param {jQuery}       widgetContainer - Widget container element.
-	 * @returns {void}
+	 * @return {void}
 	 */
 	component.handleWidgetUpdated = function handleWidgetUpdated( event, widgetContainer ) {
 		var widgetForm, widgetId, widgetControl, idBase;
@@ -496,7 +511,9 @@ wp.textWidgets = ( function( $ ) {
 	 * When WordPress enqueues this script, it should have an inline script
 	 * attached which calls wp.textWidgets.init().
 	 *
-	 * @returns {void}
+	 * @memberOf wp.textWidgets
+	 *
+	 * @return {void}
 	 */
 	component.init = function init() {
 		var $document = $( document );

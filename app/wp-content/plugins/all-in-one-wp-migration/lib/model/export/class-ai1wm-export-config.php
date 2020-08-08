@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2017 ServMask Inc.
+ * Copyright (C) 2014-2020 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,19 +23,20 @@
  * ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	die( 'Kangaroos cannot jump here' );
+}
+
 class Ai1wm_Export_Config {
 
 	public static function execute( $params ) {
-		global $wp_version, $wpdb;
+		global $table_prefix, $wp_version, $wpdb;
 
 		// Set progress
-		Ai1wm_Status::info( __( 'Adding configuration to archive...', AI1WM_PLUGIN_NAME ) );
+		Ai1wm_Status::info( __( 'Preparing configuration file...', AI1WM_PLUGIN_NAME ) );
 
 		// Get options
 		$options = wp_load_alloptions();
-
-		// Set config
-		$config = array();
 
 		// Get database client
 		if ( empty( $wpdb->use_mysqli ) ) {
@@ -43,6 +44,8 @@ class Ai1wm_Export_Config {
 		} else {
 			$mysql = new Ai1wm_Database_Mysqli( $wpdb );
 		}
+
+		$config = array();
 
 		// Set site URL
 		$config['SiteURL'] = site_url();
@@ -70,7 +73,57 @@ class Ai1wm_Export_Config {
 			}
 		}
 
-		// Set no replace email
+		// Set no spam comments
+		if ( isset( $params['options']['no_spam_comments'] ) ) {
+			$config['NoSpamComments'] = true;
+		}
+
+		// Set no post revisions
+		if ( isset( $params['options']['no_post_revisions'] ) ) {
+			$config['NoPostRevisions'] = true;
+		}
+
+		// Set no media
+		if ( isset( $params['options']['no_media'] ) ) {
+			$config['NoMedia'] = true;
+		}
+
+		// Set no themes
+		if ( isset( $params['options']['no_themes'] ) ) {
+			$config['NoThemes'] = true;
+		}
+
+		// Set no inactive themes
+		if ( isset( $params['options']['no_inactive_themes'] ) ) {
+			$config['NoInactiveThemes'] = true;
+		}
+
+		// Set no must-use plugins
+		if ( isset( $params['options']['no_muplugins'] ) ) {
+			$config['NoMustUsePlugins'] = true;
+		}
+
+		// Set no plugins
+		if ( isset( $params['options']['no_plugins'] ) ) {
+			$config['NoPlugins'] = true;
+		}
+
+		// Set no inactive plugins
+		if ( isset( $params['options']['no_inactive_plugins'] ) ) {
+			$config['NoInactivePlugins'] = true;
+		}
+
+		// Set no cache
+		if ( isset( $params['options']['no_cache'] ) ) {
+			$config['NoCache'] = true;
+		}
+
+		// Set no database
+		if ( isset( $params['options']['no_database'] ) ) {
+			$config['NoDatabase'] = true;
+		}
+
+		// Set no email replace
 		if ( isset( $params['options']['no_email_replace'] ) ) {
 			$config['NoEmailReplace'] = true;
 		}
@@ -79,13 +132,13 @@ class Ai1wm_Export_Config {
 		$config['Plugin'] = array( 'Version' => AI1WM_VERSION );
 
 		// Set WordPress version and content
-		$config['WordPress'] = array( 'Version' => $wp_version, 'Content' => WP_CONTENT_DIR );
+		$config['WordPress'] = array( 'Version' => $wp_version, 'Content' => WP_CONTENT_DIR, 'Plugins' => WP_PLUGIN_DIR, 'Themes' => get_theme_root(), 'Uploads' => ai1wm_get_uploads_dir(), 'UploadsURL' => ai1wm_get_uploads_url() );
 
 		// Set database version
-		$config['Database'] = array( 'Version' => $mysql->version() );
+		$config['Database'] = array( 'Version' => $mysql->version(), 'Charset' => DB_CHARSET, 'Collate' => DB_COLLATE, 'Prefix' => $table_prefix );
 
 		// Set PHP version
-		$config['PHP'] = array( 'Version' => phpversion() );
+		$config['PHP'] = array( 'Version' => PHP_VERSION, 'System' => PHP_OS, 'Integer' => PHP_INT_SIZE );
 
 		// Set active plugins
 		$config['Plugins'] = array_values( array_diff( ai1wm_active_plugins(), ai1wm_active_servmask_plugins() ) );
@@ -96,18 +149,19 @@ class Ai1wm_Export_Config {
 		// Set active stylesheet
 		$config['Stylesheet'] = ai1wm_active_stylesheet();
 
+		// Set upload path
+		$config['Uploads'] = get_option( 'upload_path' );
+
+		// Set upload URL path
+		$config['UploadsURL'] = get_option( 'upload_url_path' );
+
 		// Save package.json file
 		$handle = ai1wm_open( ai1wm_package_path( $params ), 'w' );
 		ai1wm_write( $handle, json_encode( $config ) );
 		ai1wm_close( $handle );
 
-		// Add package.json file
-		$archive = new Ai1wm_Compressor( ai1wm_archive_path( $params ) );
-		$archive->add_file( ai1wm_package_path( $params ), AI1WM_PACKAGE_NAME );
-		$archive->close();
-
 		// Set progress
-		Ai1wm_Status::info( __( 'Done adding configuration to archive.', AI1WM_PLUGIN_NAME ) );
+		Ai1wm_Status::info( __( 'Done preparing configuration file.', AI1WM_PLUGIN_NAME ) );
 
 		return $params;
 	}

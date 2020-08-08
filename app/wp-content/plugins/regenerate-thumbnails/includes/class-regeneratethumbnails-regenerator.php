@@ -127,7 +127,11 @@ class RegenerateThumbnails_Regenerator {
 			return $this->fullsizepath;
 		}
 
-		$this->fullsizepath = get_attached_file( $this->attachment->ID );
+		if ( function_exists( 'wp_get_original_image_path' ) ) {
+			$this->fullsizepath = wp_get_original_image_path( $this->attachment->ID );
+		} else {
+			$this->fullsizepath = get_attached_file( $this->attachment->ID );
+		}
 
 		if ( false === $this->fullsizepath || ! file_exists( $this->fullsizepath ) ) {
 			$error = new WP_Error(
@@ -356,7 +360,18 @@ class RegenerateThumbnails_Regenerator {
 			}
 		}
 
-		return $sizes;
+		/**
+		 * Filters the list of missing thumbnail sizes if you want to add/remove any.
+		 *
+		 * @since 3.1.0
+		 *
+		 * @param array  $sizes             An associative array of image sizes that are missing.
+		 * @param array  $fullsize_metadata An associative array of fullsize image metadata: width, height, file.
+		 * @param object $this              The current instance of this class.
+		 *
+		 * @return array An associative array of image sizes.
+		 */
+		return apply_filters( 'regenerate_thumbnails_missing_thumbnails', $sizes, $fullsize_metadata, $this );
 	}
 
 	/**
@@ -553,7 +568,7 @@ class RegenerateThumbnails_Regenerator {
 
 		$metadata = wp_get_attachment_metadata( $this->attachment->ID );
 
-		if ( false === $metadata ) {
+		if ( false === $metadata || ! is_array( $metadata ) ) {
 			return new WP_Error(
 				'regenerate_thumbnails_regenerator_no_metadata',
 				__( 'Unable to load the metadata for this attachment.', 'regenerate-thumbnails' ),
@@ -574,29 +589,29 @@ class RegenerateThumbnails_Regenerator {
 
 		require_once( ABSPATH . '/wp-admin/includes/image.php' );
 
+		$preview = false;
 		if ( file_is_displayable_image( $fullsizepath ) ) {
 			$preview = wp_get_attachment_url( $this->attachment->ID );
 		} elseif (
+			is_array( $metadata['sizes'] ) &&
 			is_array( $metadata['sizes']['full'] ) &&
-			file_exists( str_replace(
-				basename( $fullsizepath ),
-				$metadata['sizes']['full']['file'],
-				$fullsizepath
-			) )
+			! empty( $metadata['sizes']['full']['file'] )
 		) {
 			$preview = str_replace(
-				basename( $fullsizepath ),
+				wp_basename( $fullsizepath ),
 				$metadata['sizes']['full']['file'],
 				wp_get_attachment_url( $this->attachment->ID )
 			);
-		} else {
-			$preview = false;
+
+			if ( ! file_exists( $preview ) ) {
+				$preview = false;
+			}
 		}
 
 		$response = array(
-			'name'               => $this->attachment->post_title,
+			'name'               => ( $this->attachment->post_title ) ? $this->attachment->post_title : sprintf( __( 'Attachment %d', 'regenerate-thumbnails' ), $this->attachment->ID ),
 			'preview'            => $preview,
-			'relative_path'      => _wp_get_attachment_relative_path( $fullsizepath ) . DIRECTORY_SEPARATOR . basename( $fullsizepath ),
+			'relative_path'      => _wp_get_attachment_relative_path( $fullsizepath ) . DIRECTORY_SEPARATOR . wp_basename( $fullsizepath ),
 			'edit_url'           => get_edit_post_link( $this->attachment->ID, 'raw' ),
 			'width'              => $width,
 			'height'             => $height,
@@ -626,14 +641,14 @@ class RegenerateThumbnails_Regenerator {
 				$thumbnail = $this->get_thumbnail( $editor, $width, $height, $size['width'], $size['height'], $size['crop'] );
 
 				if ( $thumbnail ) {
-					$size['filename']   = basename( $thumbnail['filename'] );
+					$size['filename']   = wp_basename( $thumbnail['filename'] );
 					$size['fileexists'] = file_exists( $thumbnail['filename'] );
 				} else {
 					$size['filename']   = false;
 					$size['fileexists'] = false;
 				}
 			} elseif ( ! empty( $metadata['sizes'][ $size['label'] ]['file'] ) ) {
-				$size['filename']   = basename( $metadata['sizes'][ $size['label'] ]['file'] );
+				$size['filename']   = wp_basename( $metadata['sizes'][ $size['label'] ]['file'] );
 				$size['fileexists'] = file_exists( $wp_upload_dir . $metadata['sizes'][ $size['label'] ]['file'] );
 			} else {
 				$size['filename']   = false;

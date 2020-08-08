@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2017 ServMask Inc.
+ * Copyright (C) 2014-2020 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,20 +23,19 @@
  * ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	die( 'Kangaroos cannot jump here' );
+}
+
 class Ai1wm_File_Index {
 
 	/**
-	 * Create a index.php file
+	 * Create index file
 	 *
-	 * The method will create index.php file with contents '<?php // silence is golden' without the single quotes
-	 * at the path specified by the argument.
-	 *
-	 * @param  string  $path Path to the index.php file
+	 * @param  string  $path Path to file
 	 * @return boolean
 	 */
 	public static function create( $path ) {
-		$contents = '<?php // silence is golden';
-
-		return Ai1wm_File::create( $path, $contents );
+		return Ai1wm_File::create( $path, 'Kangaroos cannot jump here' );
 	}
 }

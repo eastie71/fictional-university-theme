@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2017 ServMask Inc.
+ * Copyright (C) 2014-2020 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,10 @@
  * ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	die( 'Kangaroos cannot jump here' );
+}
+
 class Ai1wm_Export_Download {
 
 	public static function execute( $params ) {
@@ -30,7 +34,7 @@ class Ai1wm_Export_Download {
 		// Set progress
 		Ai1wm_Status::info( __( 'Renaming exported file...', AI1WM_PLUGIN_NAME ) );
 
-		// Close achive file
+		// Open the archive file for writing
 		$archive = new Ai1wm_Compressor( ai1wm_archive_path( $params ) );
 
 		// Append EOF block
@@ -49,6 +53,7 @@ class Ai1wm_Export_Download {
 			}
 
 			// Set archive details
+			$file = ai1wm_archive_name( $params );
 			$link = ai1wm_backup_url( $params );
 			$size = ai1wm_backup_size( $params );
 			$name = ai1wm_site_name( $blog_id );
@@ -57,13 +62,15 @@ class Ai1wm_Export_Download {
 			Ai1wm_Status::download(
 				sprintf(
 					__(
-						'<a href="%s" class="ai1wm-button-green ai1wm-emphasize">' .
+						'<a href="%s" class="ai1wm-button-green ai1wm-emphasize ai1wm-button-download" title="%s" download="%s">' .
 						'<span>Download %s</span>' .
 						'<em>Size: %s</em>' .
 						'</a>',
 						AI1WM_PLUGIN_NAME
 					),
 					$link,
+					$name,
+					$file,
 					$name,
 					$size
 				)

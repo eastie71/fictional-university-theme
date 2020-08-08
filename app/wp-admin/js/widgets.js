@@ -1,9 +1,13 @@
-/*global ajaxurl, isRtl */
-var wpWidgets;
+/**
+ * @output wp-admin/js/widgets.js
+ */
+
+/* global ajaxurl, isRtl, wpWidgets */
+
 (function($) {
 	var $document = $( document );
 
-wpWidgets = {
+window.wpWidgets = {
 	/**
 	 * A closed Sidebar that gets a Widget dragged over it.
 	 *
@@ -21,7 +25,8 @@ wpWidgets = {
 	l10n: {
 		save: '{save}',
 		saved: '{saved}',
-		saveAlert: '{saveAlert}'
+		saveAlert: '{saveAlert}',
+		widgetAdded: '{widgetAdded}'
 	},
 
 	/**
@@ -122,8 +127,7 @@ wpWidgets = {
 		});
 
 		$(document.body).bind('click.widgets-toggle', function(e) {
-			var target = $(e.target),
-				css = { 'z-index': 100 },
+			var target = $(e.target), css = {},
 				widget, inside, targetWidth, widgetWidth, margin, saveButton, widgetId,
 				toggleBtn = target.closest( '.widget' ).find( '.widget-top button.widget-action' );
 
@@ -176,19 +180,16 @@ wpWidgets = {
 						widget.removeClass( 'open' );
 					});
 				}
-				e.preventDefault();
 			} else if ( target.hasClass('widget-control-save') ) {
 				wpWidgets.save( target.closest('div.widget'), 0, 1, 0 );
 				e.preventDefault();
 			} else if ( target.hasClass('widget-control-remove') ) {
 				wpWidgets.save( target.closest('div.widget'), 1, 1, 0 );
-				e.preventDefault();
 			} else if ( target.hasClass('widget-control-close') ) {
 				widget = target.closest('div.widget');
 				widget.removeClass( 'open' );
 				toggleBtn.attr( 'aria-expanded', 'false' );
 				wpWidgets.close( widget );
-				e.preventDefault();
 			} else if ( target.attr( 'id' ) === 'inactive-widgets-control-remove' ) {
 				wpWidgets.removeInactiveWidgets();
 				e.preventDefault();
@@ -210,7 +211,7 @@ wpWidgets = {
 			handle: '> .widget-top > .widget-title',
 			distance: 2,
 			helper: 'clone',
-			zIndex: 100,
+			zIndex: 101,
 			containment: '#wpwrap',
 			refreshPositions: true,
 			start: function( event, ui ) {
@@ -220,9 +221,9 @@ wpWidgets = {
 				the_id = this.id;
 
 				if ( chooser.length ) {
-					// Hide the chooser and move it out of the widget
+					// Hide the chooser and move it out of the widget.
 					$( '#wpbody-content' ).append( chooser.hide() );
-					// Delete the cloned chooser from the drag helper
+					// Delete the cloned chooser from the drag helper.
 					ui.helper.find('.widgets-chooser').remove();
 					self.clearWidgetSelection();
 				}
@@ -244,6 +245,8 @@ wpWidgets = {
 
 			/**
 			 * Open Sidebar when a Widget gets dragged over it.
+			 *
+			 * @ignore
 			 *
 			 * @param {object} event jQuery event object.
 			 */
@@ -267,6 +270,8 @@ wpWidgets = {
 
 			/**
 			 * Close Sidebar when the Widget gets dragged out of it.
+			 *
+			 * @ignore
 			 *
 			 * @param {object} event jQuery event object.
 			 */
@@ -315,7 +320,7 @@ wpWidgets = {
 				wpWidgets.hoveredSidebar = null;
 
 				if ( $widget.hasClass('deleting') ) {
-					wpWidgets.save( $widget, 1, 0, 1 ); // delete widget
+					wpWidgets.save( $widget, 1, 0, 1 ); // Delete widget.
 					$widget.remove();
 					return;
 				}
@@ -357,7 +362,7 @@ wpWidgets = {
 
 					$children = $sidebar.children('.widget');
 
-					// Make sure the dropped widget is at the top
+					// Make sure the dropped widget is at the top.
 					if ( $children.length > 1 ) {
 						child = $children.get(0);
 						item = $widget.get(0);
@@ -380,14 +385,14 @@ wpWidgets = {
 			},
 
 			deactivate: function() {
-				// Remove all min-height added on "start"
+				// Remove all min-height added on "start".
 				$(this).css( 'min-height', '' ).parent().removeClass( 'widget-hover' );
 			},
 
 			receive: function( event, ui ) {
 				var $sender = $( ui.sender );
 
-				// Don't add more widgets to orphaned sidebars
+				// Don't add more widgets to orphaned sidebars.
 				if ( this.id.indexOf('orphaned_widgets') > -1 ) {
 					$sender.sortable('cancel');
 					return;
@@ -425,44 +430,62 @@ wpWidgets = {
 			}
 		});
 
-		// Area Chooser
+		// Area Chooser.
 		$( '#widgets-right .widgets-holder-wrap' ).each( function( index, element ) {
 			var $element = $( element ),
 				name = $element.find( '.sidebar-name h2' ).text(),
+				ariaLabel = $element.find( '.sidebar-name' ).data( 'add-to' ),
 				id = $element.find( '.widgets-sortables' ).attr( 'id' ),
-				li = $('<li tabindex="0">').text( $.trim( name ) );
+				li = $( '<li>' ),
+				button = $( '<button>', {
+					type: 'button',
+					'aria-pressed': 'false',
+					'class': 'widgets-chooser-button',
+					'aria-label': ariaLabel
+				} ).text( $.trim( name ) );
+
+			li.append( button );
 
 			if ( index === 0 ) {
 				li.addClass( 'widgets-chooser-selected' );
+				button.attr( 'aria-pressed', 'true' );
 			}
 
 			selectSidebar.append( li );
 			li.data( 'sidebarId', id );
 		});
 
-		$( '#available-widgets .widget .widget-title' ).on( 'click.widgets-chooser', function() {
-			var $widget = $(this).closest( '.widget' );
+		$( '#available-widgets .widget .widget-top' ).on( 'click.widgets-chooser', function() {
+			var $widget = $( this ).closest( '.widget' ),
+				toggleButton = $( this ).find( '.widget-action' ),
+				chooserButtons = selectSidebar.find( '.widgets-chooser-button' );
 
 			if ( $widget.hasClass( 'widget-in-question' ) || $( '#widgets-left' ).hasClass( 'chooser' ) ) {
+				toggleButton.attr( 'aria-expanded', 'false' );
 				self.closeChooser();
 			} else {
-				// Open the chooser
+				// Open the chooser.
 				self.clearWidgetSelection();
 				$( '#widgets-left' ).addClass( 'chooser' );
+				// Add CSS class and insert the chooser after the widget description.
 				$widget.addClass( 'widget-in-question' ).children( '.widget-description' ).after( chooser );
-
+				// Open the chooser with a slide down animation.
 				chooser.slideDown( 300, function() {
-					selectSidebar.find('.widgets-chooser-selected').focus();
+					// Update the toggle button aria-expanded attribute after previous DOM manipulations.
+					toggleButton.attr( 'aria-expanded', 'true' );
 				});
 
-				selectSidebar.find( 'li' ).on( 'focusin.widgets-chooser', function() {
-					selectSidebar.find('.widgets-chooser-selected').removeClass( 'widgets-chooser-selected' );
-					$(this).addClass( 'widgets-chooser-selected' );
+				chooserButtons.on( 'click.widgets-chooser', function() {
+					selectSidebar.find( '.widgets-chooser-selected' ).removeClass( 'widgets-chooser-selected' );
+					chooserButtons.attr( 'aria-pressed', 'false' );
+					$( this )
+						.attr( 'aria-pressed', 'true' )
+						.closest( 'li' ).addClass( 'widgets-chooser-selected' );
 				} );
 			}
 		});
 
-		// Add event handlers
+		// Add event handlers.
 		chooser.on( 'click.widgets-chooser', function( event ) {
 			var $target = $( event.target );
 
@@ -473,15 +496,7 @@ wpWidgets = {
 				self.closeChooser();
 			}
 		}).on( 'keyup.widgets-chooser', function( event ) {
-			if ( event.which === $.ui.keyCode.ENTER ) {
-				if ( $( event.target ).hasClass( 'widgets-chooser-cancel' ) ) {
-					// Close instead of adding when pressing Enter on the Cancel button
-					self.closeChooser();
-				} else {
-					self.addWidget( chooser );
-					self.closeChooser();
-				}
-			} else if ( event.which === $.ui.keyCode.ESCAPE ) {
+			if ( event.which === $.ui.keyCode.ESCAPE ) {
 				self.closeChooser();
 			}
 		});
@@ -513,9 +528,10 @@ wpWidgets = {
 	save : function( widget, del, animate, order ) {
 		var self = this, data, a,
 			sidebarId = widget.closest( 'div.widgets-sortables' ).attr( 'id' ),
-			form = widget.find( 'form' );
+			form = widget.find( 'form' ),
+			isAdd = widget.find( 'input.add_new' ).val();
 
-		if ( ! del && form.prop( 'checkValidity' ) && ! form[0].checkValidity() ) {
+		if ( ! del && ! isAdd && form.prop( 'checkValidity' ) && ! form[0].checkValidity() ) {
 			return;
 		}
 
@@ -645,7 +661,7 @@ wpWidgets = {
 		add = widget.find( 'input.add_new' ).val();
 		n = widget.find( 'input.multi_number' ).val();
 
-		// Remove the cloned chooser from the widget
+		// Remove the cloned chooser from the widget.
 		widget.find('.widgets-chooser').remove();
 
 		if ( 'multi' === add ) {
@@ -672,7 +688,7 @@ wpWidgets = {
 		sidebar.sortable('refresh');
 
 		wpWidgets.save( widget, 0, 0, 1 );
-		// No longer "new" widget
+		// No longer "new" widget.
 		widget.find( 'input.add_new' ).val('');
 
 		$document.trigger( 'widget-added', [ widget ] );
@@ -700,15 +716,20 @@ wpWidgets = {
 			// Cannot use a callback in the animation above as it fires twice,
 			// have to queue this "by hand".
 			widget.find( '.widget-title' ).trigger('click');
+			// At the end of the animation, announce the widget has been added.
+			window.wp.a11y.speak( wpWidgets.l10n.widgetAdded, 'assertive' );
 		}, 250 );
 	},
 
 	closeChooser: function() {
-		var self = this;
+		var self = this,
+			widgetInQuestion = $( '#available-widgets .widget-in-question' );
 
 		$( '.widgets-chooser' ).slideUp( 200, function() {
 			$( '#wpbody-content' ).append( this );
 			self.clearWidgetSelection();
+			// Move focus back to the toggle button.
+			widgetInQuestion.find( '.widget-action' ).attr( 'aria-expanded', 'false' ).focus();
 		});
 	},
 

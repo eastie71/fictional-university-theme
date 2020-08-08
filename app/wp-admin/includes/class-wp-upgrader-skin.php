@@ -25,25 +25,29 @@ class WP_Upgrader_Skin {
 	 * @since 2.8.0
 	 * @var string|bool|WP_Error
 	 */
-	public $result = false;
+	public $result  = false;
 	public $options = array();
 
 	/**
-	 *
 	 * @param array $args
 	 */
-	public function __construct($args = array()) {
-		$defaults = array( 'url' => '', 'nonce' => '', 'title' => '', 'context' => false );
-		$this->options = wp_parse_args($args, $defaults);
+	public function __construct( $args = array() ) {
+		$defaults      = array(
+			'url'     => '',
+			'nonce'   => '',
+			'title'   => '',
+			'context' => false,
+		);
+		$this->options = wp_parse_args( $args, $defaults );
 	}
 
 	/**
-	 *
 	 * @param WP_Upgrader $upgrader
 	 */
-	public function set_upgrader(&$upgrader) {
-		if ( is_object($upgrader) )
+	public function set_upgrader( &$upgrader ) {
+		if ( is_object( $upgrader ) ) {
 			$this->upgrader =& $upgrader;
+		}
 		$this->add_strings();
 	}
 
@@ -72,20 +76,20 @@ class WP_Upgrader_Skin {
 	 *
 	 * @see request_filesystem_credentials()
 	 *
-	 * @param bool   $error                        Optional. Whether the current request has failed to connect.
-	 *                                             Default false.
-	 * @param string $context                      Optional. Full path to the directory that is tested
-	 *                                             for being writable. Default empty.
-	 * @param bool   $allow_relaxed_file_ownership Optional. Whether to allow Group/World writable. Default false.
-	 * @return bool False on failure, true on success.
+	 * @param bool|WP_Error $error                        Optional. Whether the current request has failed to connect,
+	 *                                                    or an error object. Default false.
+	 * @param string        $context                      Optional. Full path to the directory that is tested
+	 *                                                    for being writable. Default empty.
+	 * @param bool          $allow_relaxed_file_ownership Optional. Whether to allow Group/World writable. Default false.
+	 * @return bool True on success, false on failure.
 	 */
 	public function request_filesystem_credentials( $error = false, $context = '', $allow_relaxed_file_ownership = false ) {
 		$url = $this->options['url'];
 		if ( ! $context ) {
 			$context = $this->options['context'];
 		}
-		if ( !empty($this->options['nonce']) ) {
-			$url = wp_nonce_url($url, $this->options['nonce']);
+		if ( ! empty( $this->options['nonce'] ) ) {
+			$url = wp_nonce_url( $url, $this->options['nonce'] );
 		}
 
 		$extra_fields = array();
@@ -115,44 +119,45 @@ class WP_Upgrader_Skin {
 	}
 
 	/**
-	 *
 	 * @param string|WP_Error $errors
 	 */
-	public function error($errors) {
-		if ( ! $this->done_header )
+	public function error( $errors ) {
+		if ( ! $this->done_header ) {
 			$this->header();
-		if ( is_string($errors) ) {
-			$this->feedback($errors);
-		} elseif ( is_wp_error($errors) && $errors->get_error_code() ) {
+		}
+		if ( is_string( $errors ) ) {
+			$this->feedback( $errors );
+		} elseif ( is_wp_error( $errors ) && $errors->has_errors() ) {
 			foreach ( $errors->get_error_messages() as $message ) {
-				if ( $errors->get_error_data() && is_string( $errors->get_error_data() ) )
-					$this->feedback($message . ' ' . esc_html( strip_tags( $errors->get_error_data() ) ) );
-				else
-					$this->feedback($message);
+				if ( $errors->get_error_data() && is_string( $errors->get_error_data() ) ) {
+					$this->feedback( $message . ' ' . esc_html( strip_tags( $errors->get_error_data() ) ) );
+				} else {
+					$this->feedback( $message );
+				}
 			}
 		}
 	}
 
 	/**
-	 *
 	 * @param string $string
+	 * @param mixed  ...$args Optional text replacements.
 	 */
-	public function feedback($string) {
-		if ( isset( $this->upgrader->strings[$string] ) )
-			$string = $this->upgrader->strings[$string];
+	public function feedback( $string, ...$args ) {
+		if ( isset( $this->upgrader->strings[ $string ] ) ) {
+			$string = $this->upgrader->strings[ $string ];
+		}
 
-		if ( strpos($string, '%') !== false ) {
-			$args = func_get_args();
-			$args = array_splice($args, 1);
+		if ( strpos( $string, '%' ) !== false ) {
 			if ( $args ) {
-				$args = array_map( 'strip_tags', $args );
-				$args = array_map( 'esc_html', $args );
-				$string = vsprintf($string, $args);
+				$args   = array_map( 'strip_tags', $args );
+				$args   = array_map( 'esc_html', $args );
+				$string = vsprintf( $string, $args );
 			}
 		}
-		if ( empty($string) )
+		if ( empty( $string ) ) {
 			return;
-		show_message($string);
+		}
+		show_message( $string );
 	}
 
 	/**
@@ -185,7 +190,7 @@ class WP_Upgrader_Skin {
 		} else {
 			echo '<script type="text/javascript">
 					(function( wp ) {
-						if ( wp && wp.updates.decrementCount ) {
+						if ( wp && wp.updates && wp.updates.decrementCount ) {
 							wp.updates.decrementCount( "' . $type . '" );
 						}
 					})( window.wp );

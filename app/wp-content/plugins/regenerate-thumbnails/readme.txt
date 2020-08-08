@@ -2,9 +2,9 @@
 Contributors: Viper007Bond
 Tags: thumbnail, thumbnails, post thumbnail, post thumbnails
 Requires at least: 4.7
-Tested up to: 4.9
+Tested up to: 5.3
 Requires PHP: 5.2.4
-Stable tag: trunk
+Stable tag: 3.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,7 +20,11 @@ This is useful for situations such as:
 * You've changed the dimensions of an existing thumbnail size, for example via Settings → Media.
 * You've switched to a new WordPress theme that uses featured images of a different size.
 
-It also offers the ability to delete old, unused thumbnails as well as update the content of posts to use the new thumbnail sizes.
+It also offers the ability to delete old, unused thumbnails in order to free up server space.
+
+= In Memory of Alex Mills =
+
+In February 2019 Alex Mills, the author of this plugin, [passed away](https://alex.blog/2019/02/27/from-alexs-family/). He leaves behind a number of plugins which will be maintained by Automattic and members of the WordPress community. If this plugin is useful to you please consider donating to the Oregon Health and Science University. You can find more information [here](https://alex.blog/2019/03/13/in-memory-of-alex-donation-link-update/).
 
 = Alternatives =
 
@@ -42,7 +46,7 @@ I personally use Photon on my own website.
 
 Support for this plugin is provided via the [WordPress.org forums](https://wordpress.org/support/plugin/regenerate-thumbnails).
 
-The source code for this plugin is available on [GitHub](https://github.com/Viper007Bond/regenerate-thumbnails).
+The source code for this plugin is available on [GitHub](https://github.com/automattic/regenerate-thumbnails).
 
 == Installation ==
 
@@ -51,6 +55,12 @@ The source code for this plugin is available on [GitHub](https://github.com/Vipe
 3. Click install.
 4. Click activate.
 5. Navigate to Tools → Regenerate Thumbnails.
+
+== Frequently Asked Questions ==
+
+= Is this plugin [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation) compliant? =
+
+This plugin does not log nor transmit any user data. Infact it doesn't even do anything on the user-facing part of your website, only in the admin area. This means it should be compliant but I'm not a lawyer.
 
 == Screenshots ==
 
@@ -61,6 +71,30 @@ The source code for this plugin is available on [GitHub](https://github.com/Vipe
 5. They can also be regenerated from the edit attachment screen.
 
 == ChangeLog ==
+
+= Version 3.1.3 =
+
+* Update plugin dependencies to the latest version.
+
+= Version 3.1.2 =
+* Use wp_get_original_image_path() in WordPress 5.3
+
+= Version 3.1.1 =
+
+* Minor fix to avoid a divide by zero error when displaying thumbnail filenames.
+
+= Version 3.1.0 =
+
+* Bring back the ability to delete old, unregistered thumbnail sizes. Support for updating post contents is still disabled (too buggy).
+* Various code improvements including string localization disambiguation.
+
+= Version 3.0.2 =
+
+* Fix slowdown in certain cases in the media library.
+* Fix not being able to regenerate existing thumbnails for single images. Props @idofri.
+* Fix JavaScript error that could occur if the REST API response was unexpected (empty or PHP error).
+* Fix bug related to multibyte filenames.
+* If an image is used as the featured image on multiple posts, only regenerate it once instead of once per post.
 
 = Version 3.0.1 =
 
@@ -149,3 +183,6 @@ Lots of new features!
 = Version 1.0.0 =
 
 * Initial release.
+
+= Upgrade Notice =
+Support for WordPress 5.3

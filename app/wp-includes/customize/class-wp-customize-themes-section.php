@@ -54,8 +54,8 @@ class WP_Customize_Themes_Section extends WP_Customize_Section {
 	 * @return array Exported parameters.
 	 */
 	public function json() {
-		$exported = parent::json();
-		$exported['action'] = $this->action;
+		$exported                = parent::json();
+		$exported['action']      = $this->action;
 		$exported['filter_type'] = $this->filter_type;
 
 		return $exported;
@@ -72,7 +72,7 @@ class WP_Customize_Themes_Section extends WP_Customize_Section {
 		?>
 		<li id="accordion-section-{{ data.id }}" class="theme-section">
 			<button type="button" class="customize-themes-section-title themes-section-{{ data.id }}">{{ data.title }}</button>
-			<?php if ( current_user_can( 'install_themes' ) || is_multisite() ) : // @todo: upload support ?>
+			<?php if ( current_user_can( 'install_themes' ) || is_multisite() ) : // @todo Upload support. ?>
 			<?php endif; ?>
 			<div class="customize-themes-section themes-section-{{ data.id }} control-section-content themes-php">
 				<div class="theme-overlay" tabindex="0" role="dialog" aria-label="<?php esc_attr_e( 'Theme Details' ); ?>"></div>
@@ -81,14 +81,25 @@ class WP_Customize_Themes_Section extends WP_Customize_Section {
 						<?php $this->filter_bar_content_template(); ?>
 					</div>
 					<?php $this->filter_drawer_content_template(); ?>
-					<div class="error unexpected-error" style="display: none; "><p><?php _e( 'An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="https://wordpress.org/support/">support forums</a>.' ); ?></p></div>
+					<div class="error unexpected-error" style="display: none; ">
+						<p>
+							<?php
+							printf(
+								/* translators: %s: Support forums URL. */
+								__( 'An unexpected error occurred. Something may be wrong with WordPress.org or this server&#8217;s configuration. If you continue to have problems, please try the <a href="%s">support forums</a>.' ),
+								__( 'https://wordpress.org/support/forums/' )
+							);
+							?>
+						</p>
+					</div>
 					<ul class="themes">
 					</ul>
 					<p class="no-themes"><?php _e( 'No themes found. Try a different search.' ); ?></p>
 					<p class="no-themes-local">
 						<?php
-						/* translators: %s: "Search WordPress.org themes" button */
-						printf( __( 'No themes found. Try a different search, or %s.' ),
+						printf(
+							/* translators: %s: "Search WordPress.org themes" button text. */
+							__( 'No themes found. Try a different search, or %s.' ),
 							sprintf( '<button type="button" class="button-link search-dotorg-themes">%s</button>', __( 'Search WordPress.org themes' ) )
 						);
 						?>
@@ -121,7 +132,7 @@ class WP_Customize_Themes_Section extends WP_Customize_Section {
 			<button type="button" class="button feature-filter-toggle">
 				<span class="filter-count-0"><?php _e( 'Filter themes' ); ?></span><span class="filter-count-filters">
 				<?php
-				/* translators: %s: number of filters selected. */
+				/* translators: %s: Number of filters selected. */
 				printf( __( 'Filter themes (%s)' ), '<span class="theme-filter-count">0</span>' );
 				?>
 				</span>
@@ -137,7 +148,7 @@ class WP_Customize_Themes_Section extends WP_Customize_Section {
 		<div class="filter-themes-count">
 			<span class="themes-displayed">
 				<?php
-				/* translators: %s: number of themes displayed. */
+				/* translators: %s: Number of themes displayed. */
 				echo sprintf( __( '%s themes' ), '<span class="theme-count">0</span>' );
 				?>
 			</span>
@@ -153,7 +164,7 @@ class WP_Customize_Themes_Section extends WP_Customize_Section {
 	 * @since 4.9.0
 	 */
 	protected function filter_drawer_content_template() {
-		$feature_list = get_theme_feature_list( false ); // @todo: Use the .org API instead of the local core feature list. The .org API is currently outdated and will be reconciled when the .org themes directory is next redesigned.
+		$feature_list = get_theme_feature_list( false ); // @todo Use the .org API instead of the local core feature list. The .org API is currently outdated and will be reconciled when the .org themes directory is next redesigned.
 		?>
 		<# if ( 'wporg' === data.action ) { #>
 			<div class="filter-drawer filter-details">
@@ -163,7 +174,7 @@ class WP_Customize_Themes_Section extends WP_Customize_Section {
 						<div class="filter-group-feature">
 							<?php foreach ( $features as $feature => $feature_name ) : ?>
 								<input type="checkbox" id="filter-id-<?php echo esc_attr( $feature ); ?>" value="<?php echo esc_attr( $feature ); ?>" />
-								<label for="filter-id-<?php echo esc_attr( $feature ); ?>"><?php echo esc_html( $feature_name ); ?></label><br>
+								<label for="filter-id-<?php echo esc_attr( $feature ); ?>"><?php echo esc_html( $feature_name ); ?></label>
 							<?php endforeach; ?>
 						</div>
 					</fieldset>

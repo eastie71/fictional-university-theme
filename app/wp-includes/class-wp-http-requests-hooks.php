@@ -36,7 +36,7 @@ class WP_HTTP_Requests_Hooks extends Requests_Hooks {
 	 * @param array $request Request data in WP_Http format.
 	 */
 	public function __construct( $url, $request ) {
-		$this->url = $url;
+		$this->url     = $url;
 		$this->request = $request;
 	}
 
@@ -50,7 +50,7 @@ class WP_HTTP_Requests_Hooks extends Requests_Hooks {
 	public function dispatch( $hook, $parameters = array() ) {
 		$result = parent::dispatch( $hook, $parameters );
 
-		// Handle back-compat actions
+		// Handle back-compat actions.
 		switch ( $hook ) {
 			case 'curl.before_send':
 				/** This action is documented in wp-includes/class-wp-http-curl.php */
@@ -69,7 +69,7 @@ class WP_HTTP_Requests_Hooks extends Requests_Hooks {
 		 * @param array $request Request data in WP_Http format.
 		 * @param string $url URL to request.
 		 */
-		do_action_ref_array( "requests-{$hook}", $parameters, $this->request, $this->url );
+		do_action_ref_array( "requests-{$hook}", $parameters, $this->request, $this->url ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
 
 		return $result;
 	}

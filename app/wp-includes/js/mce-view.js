@@ -1,3 +1,7 @@
+/**
+ * @output wp-includes/js/mce-view.js
+ */
+
 /* global tinymce */
 
 /*
@@ -440,12 +444,16 @@
 					'<div class="wpview wpview-wrap" data-wpview-text="' + this.encodedText + '" data-wpview-type="' + this.type + '" contenteditable="false"></div>'
 				);
 
-				editor.$( node ).replaceWith( $viewNode );
+				editor.undoManager.ignore( function() {
+					editor.$( node ).replaceWith( $viewNode );
+				} );
 
 				if ( selected ) {
 					setTimeout( function() {
-						editor.selection.select( $viewNode[0] );
-						editor.selection.collapse();
+						editor.undoManager.ignore( function() {
+							editor.selection.select( $viewNode[0] );
+							editor.selection.collapse();
+						} );
 					} );
 				}
 			} );
@@ -557,10 +565,12 @@
 					dom.add( node, 'span', { 'class': 'wpview-end' } );
 				} );
 
-				// Bail if the iframe node is not attached to the DOM.
-				// Happens when the view is dragged in the editor.
-				// There is a browser restriction when iframes are moved in the DOM. They get emptied.
-				// The iframe will be rerendered after dropping the view node at the new location.
+				/*
+				 * Bail if the iframe node is not attached to the DOM.
+				 * Happens when the view is dragged in the editor.
+				 * There is a browser restriction when iframes are moved in the DOM. They get emptied.
+				 * The iframe will be rerendered after dropping the view node at the new location.
+				 */
 				if ( ! iframe.contentWindow ) {
 					return;
 				}
@@ -863,7 +873,7 @@
 
 			// Obtain the target width for the embed.
 			if ( self.editor ) {
-				maxwidth = self.editor.iframeElement.clientWidth - 20; // Minus the sum of horizontal margins and borders.
+				maxwidth = self.editor.getBody().clientWidth;
 			}
 
 			wp.ajax.post( this.action, {
@@ -957,8 +967,9 @@
 
 	views.register( 'embedURL', _.extend( {}, embed, {
 		match: function( content ) {
-			var re = /(^|<p>)(https?:\/\/[^\s"]+?)(<\/p>\s*|$)/gi,
-				match = re.exec( content );
+			// There may be a "bookmark" node next to the URL...
+			var re = /(^|<p>(?:<span data-mce-type="bookmark"[^>]+>\s*<\/span>)?)(https?:\/\/[^\s"]+?)((?:<span data-mce-type="bookmark"[^>]+>\s*<\/span>)?<\/p>\s*|$)/gi;
+			var match = re.exec( content );
 
 			if ( match ) {
 				return {

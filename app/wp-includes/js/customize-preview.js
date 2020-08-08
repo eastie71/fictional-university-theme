@@ -1,5 +1,7 @@
 /*
  * Script run inside a Customizer preview frame.
+ *
+ * @output wp-includes/js/customize-preview.js
  */
 (function( exports, $ ){
 	var api = wp.customize,
@@ -26,7 +28,7 @@
 		 * @access private
 		 *
 		 * @param {string} url URL.
-		 * @returns {string} URL with customized state.
+		 * @return {string} URL with customized state.
 		 */
 		injectUrlWithState = function( url ) {
 			var urlParser, oldQueryParams, newQueryParams;
@@ -230,12 +232,12 @@
 	 *
 	 * @since 4.7.0
 	 * @access protected
-	 *
 	 * @access private
-	 * @returns {void}
+	 *
+	 * @return {void}
 	 */
 	api.addLinkPreviewing = function addLinkPreviewing() {
-		var linkSelectors = 'a[href], area';
+		var linkSelectors = 'a[href], area[href]';
 
 		// Inject links into initial document.
 		$( document.body ).find( linkSelectors ).each( function() {
@@ -276,7 +278,7 @@
 	 * @param {string} element.host Host.
 	 * @param {object} [options]
 	 * @param {object} [options.allowAdminAjax=false] Allow admin-ajax.php requests.
-	 * @returns {boolean} Is appropriate for changeset link.
+	 * @return {boolean} Is appropriate for changeset link.
 	 */
 	api.isLinkPreviewable = function isLinkPreviewable( element, options ) {
 		var matchesAllowedUrl, parsedAllowedUrl, args, elementHost;
@@ -330,10 +332,15 @@
 	 * @param {string} element.search Query string.
 	 * @param {string} element.host Host.
 	 * @param {string} element.protocol Protocol.
-	 * @returns {void}
+	 * @return {void}
 	 */
 	api.prepareLinkPreview = function prepareLinkPreview( element ) {
 		var queryParams, $element = $( element );
+
+        // Skip elements with no href attribute. Check first to avoid more expensive checks down the road.
+        if ( ! element.hasAttribute( 'href' ) ) {
+            return;
+        }
 
 		// Skip links in admin bar.
 		if ( $element.closest( '#wpadminbar' ).length ) {
@@ -350,7 +357,7 @@
 			element.protocol = 'https:';
 		}
 
-		// Ignore links with class wp-playlist-caption
+		// Ignore links with class wp-playlist-caption.
 		if ( $element.hasClass( 'wp-playlist-caption' ) ) {
 			return;
 		}
@@ -377,11 +384,6 @@
 			queryParams.customize_messenger_channel = api.settings.channel;
 		}
 		element.search = $.param( queryParams );
-
-		// Prevent links from breaking out of preview iframe.
-		if ( api.settings.channel ) {
-			element.target = '_self';
-		}
 	};
 
 	/**
@@ -402,7 +404,7 @@
 		 * @param {string} options.url URL.
 		 * @param {object} originalOptions Original options.
 		 * @param {XMLHttpRequest} xhr XHR.
-		 * @returns {void}
+		 * @return {void}
 		 */
 		var prefilterAjax = function( options, originalOptions, xhr ) {
 			var urlParser, queryParams, requestMethod, dirtyValues = {};
@@ -468,7 +470,7 @@
 	 * @since 4.7.0
 	 * @access protected
 	 *
-	 * @returns {void}
+	 * @return {void}
 	 */
 	api.addFormPreviewing = function addFormPreviewing() {
 
@@ -500,7 +502,7 @@
 	 * @access protected
 	 *
 	 * @param {HTMLFormElement} form Form.
-	 * @returns {void}
+	 * @return {void}
 	 */
 	api.prepareFormPreview = function prepareFormPreview( form ) {
 		var urlParser, stateParams = {};
@@ -624,7 +626,7 @@
 		 * Preview changes to custom logo.
 		 *
 		 * @param {number} attachmentId Attachment ID for custom logo.
-		 * @returns {void}
+		 * @return {void}
 		 */
 		custom_logo: function( attachmentId ) {
 			$( 'body' ).toggleClass( 'wp-custom-logo', !! attachmentId );
@@ -634,7 +636,7 @@
 		 * Preview changes to custom css.
 		 *
 		 * @param {string} value Custom CSS..
-		 * @returns {void}
+		 * @return {void}
 		 */
 		custom_css: function( value ) {
 			$( '#wp-custom-css' ).text( value );
@@ -643,7 +645,7 @@
 		/**
 		 * Preview changes to any of the background settings.
 		 *
-		 * @returns {void}
+		 * @return {void}
 		 */
 		background: function() {
 			var css = '', settings = {};
@@ -773,13 +775,13 @@
 		 * Handle update to changeset UUID.
 		 *
 		 * @param {string} uuid - UUID.
-		 * @returns {void}
+		 * @return {void}
 		 */
 		handleUpdatedChangesetUuid = function( uuid ) {
 			api.settings.changeset.uuid = uuid;
 
 			// Update UUIDs in links and forms.
-			$( document.body ).find( 'a[href], area' ).each( function() {
+			$( document.body ).find( 'a[href], area[href]' ).each( function() {
 				api.prepareLinkPreview( this );
 			} );
 			$( document.body ).find( 'form' ).each( function() {
@@ -813,7 +815,7 @@
 
 			api.settings.changeset.autosaved = true; // Start deferring to any autosave once changeset is updated.
 
-			$( document.body ).find( 'a[href], area' ).each( function() {
+			$( document.body ).find( 'a[href], area[href]' ).each( function() {
 				api.prepareLinkPreview( this );
 			} );
 			$( document.body ).find( 'form' ).each( function() {

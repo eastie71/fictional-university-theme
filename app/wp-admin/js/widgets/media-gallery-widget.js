@@ -1,3 +1,7 @@
+/**
+ * @output wp-admin/js/widgets/media-gallery-widget.js
+ */
+
 /* eslint consistent-this: [ "error", "control" ] */
 (function( component ) {
 	'use strict';
@@ -8,16 +12,16 @@
 	 * Custom gallery details frame.
 	 *
 	 * @since 4.9.0
-	 * @class GalleryDetailsMediaFrame
-	 * @constructor
+	 * @class    wp.mediaWidgets~GalleryDetailsMediaFrame
+	 * @augments wp.media.view.MediaFrame.Post
 	 */
-	GalleryDetailsMediaFrame = wp.media.view.MediaFrame.Post.extend( {
+	GalleryDetailsMediaFrame = wp.media.view.MediaFrame.Post.extend(/** @lends wp.mediaWidgets~GalleryDetailsMediaFrame.prototype */{
 
 		/**
 		 * Create the default states.
 		 *
 		 * @since 4.9.0
-		 * @returns {void}
+		 * @return {void}
 		 */
 		createStates: function createStates() {
 			this.states.add([
@@ -53,21 +57,13 @@
 	 * See WP_Widget_Gallery::enqueue_admin_scripts() for amending prototype from PHP exports.
 	 *
 	 * @since 4.9.0
-	 * @class GalleryWidgetModel
-	 * @constructor
+	 *
+	 * @class    wp.mediaWidgets.modelConstructors.media_gallery
+	 * @augments wp.mediaWidgets.MediaWidgetModel
 	 */
-	GalleryWidgetModel = component.MediaWidgetModel.extend( {} );
+	GalleryWidgetModel = component.MediaWidgetModel.extend(/** @lends wp.mediaWidgets.modelConstructors.media_gallery.prototype */{} );
 
-	/**
-	 * Gallery widget control.
-	 *
-	 * See WP_Widget_Gallery::enqueue_admin_scripts() for amending prototype from PHP exports.
-	 *
-	 * @since 4.9.0
-	 * @class GalleryWidgetControl
-	 * @constructor
-	 */
-	GalleryWidgetControl = component.MediaWidgetControl.extend( {
+	GalleryWidgetControl = component.MediaWidgetControl.extend(/** @lends wp.mediaWidgets.controlConstructors.media_gallery.prototype */{
 
 		/**
 		 * View events.
@@ -80,14 +76,19 @@
 		} ),
 
 		/**
-		 * Initialize.
+		 * Gallery widget control.
+		 *
+		 * See WP_Widget_Gallery::enqueue_admin_scripts() for amending prototype from PHP exports.
+		 *
+		 * @constructs wp.mediaWidgets.controlConstructors.media_gallery
+		 * @augments   wp.mediaWidgets.MediaWidgetControl
 		 *
 		 * @since 4.9.0
 		 * @param {Object}         options - Options.
 		 * @param {Backbone.Model} options.model - Model.
 		 * @param {jQuery}         options.el - Control field container element.
 		 * @param {jQuery}         options.syncContainer - Container element where fields are synced for the server.
-		 * @returns {void}
+		 * @return {void}
 		 */
 		initialize: function initialize( options ) {
 			var control = this;
@@ -121,7 +122,7 @@
 		 * Update the selected attachments if necessary.
 		 *
 		 * @since 4.9.0
-		 * @returns {void}
+		 * @return {void}
 		 */
 		updateSelectedAttachments: function updateSelectedAttachments() {
 			var control = this, newIds, oldIds, removedIds, addedIds, addedQuery;
@@ -154,7 +155,7 @@
 		 * Render preview.
 		 *
 		 * @since 4.9.0
-		 * @returns {void}
+		 * @return {void}
 		 */
 		renderPreview: function renderPreview() {
 			var control = this, previewContainer, previewTemplate, data;
@@ -175,7 +176,7 @@
 		 * Determine whether there are selected attachments.
 		 *
 		 * @since 4.9.0
-		 * @returns {boolean} Selected.
+		 * @return {boolean} Selected.
 		 */
 		isSelected: function isSelected() {
 			var control = this;
@@ -191,7 +192,7 @@
 		 * Open the media select frame to edit images.
 		 *
 		 * @since 4.9.0
-		 * @returns {void}
+		 * @return {void}
 		 */
 		editMedia: function editMedia() {
 			var control = this, selection, mediaFrame, mediaFrameProps;
@@ -254,7 +255,7 @@
 		 * Open the media select frame to chose an item.
 		 *
 		 * @since 4.9.0
-		 * @returns {void}
+		 * @return {void}
 		 */
 		selectMedia: function selectMedia() {
 			var control = this, selection, mediaFrame, mediaFrameProps;
@@ -320,7 +321,7 @@
 		 *
 		 * @since 4.9.0
 		 * @param {wp.media.models.Attachment} attachment - Attachment.
-		 * @returns {void}
+		 * @return {void}
 		 */
 		handleAttachmentDestroy: function handleAttachmentDestroy( attachment ) {
 			var control = this;

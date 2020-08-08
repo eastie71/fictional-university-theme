@@ -1,7 +1,11 @@
+/**
+ * @output wp-admin/js/comment.js
+ */
+
 /* global postboxes, commentL10n */
 
 /**
- * @summary Binds to the document ready event.
+ * Binds to the document ready event.
  *
  * @since 2.5.0
  *
@@ -18,12 +22,12 @@ jQuery(document).ready( function($) {
 		$edittimestamp = $timestampdiv.siblings( 'a.edit-timestamp' );
 
 	/**
-	 * @summary Adds event that opens the time stamp form if the form is hidden.
+	 * Adds event that opens the time stamp form if the form is hidden.
 	 *
 	 * @listens $edittimestamp:click
 	 *
 	 * @param {Event} event The event object.
-	 * @returns {void}
+	 * @return {void}
 	 */
 	$edittimestamp.click( function( event ) {
 		if ( $timestampdiv.is( ':hidden' ) ) {
@@ -37,12 +41,12 @@ jQuery(document).ready( function($) {
 	});
 
 	/**
-	 * @summary Resets the time stamp values when the cancel button is clicked.
+	 * Resets the time stamp values when the cancel button is clicked.
 	 *
 	 * @listens .cancel-timestamp:click
 	 *
 	 * @param {Event} event The event object.
-	 * @returns {void}
+	 * @return {void}
 	 */
 
 	$timestampdiv.find('.cancel-timestamp').click( function( event ) {
@@ -59,14 +63,14 @@ jQuery(document).ready( function($) {
 	});
 
 	/**
-	 * @summary Sets the time stamp values when the ok button is clicked.
+	 * Sets the time stamp values when the ok button is clicked.
 	 *
 	 * @listens .save-timestamp:click
 	 *
 	 * @param {Event} event The event object.
-	 * @returns {void}
+	 * @return {void}
 	 */
-	$timestampdiv.find('.save-timestamp').click( function( event ) { // crazyhorse - multiple ok cancels
+	$timestampdiv.find('.save-timestamp').click( function( event ) { // Crazyhorse - multiple OK cancels.
 		var aa = $('#aa').val(), mm = $('#mm').val(), jj = $('#jj').val(), hh = $('#hh').val(), mn = $('#mn').val(),
 			newD = new Date( aa, mm - 1, jj, hh, mn );
 

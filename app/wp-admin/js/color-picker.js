@@ -1,3 +1,7 @@
+/**
+ * @output wp-admin/js/color-picker.js
+ */
+
 /* global wpColorPickerL10n */
 ( function( $, undef ) {
 
@@ -10,13 +14,13 @@
 		_wrappingLabelText = '<span class="screen-reader-text"></span>';
 
 	/**
-	 * @summary Creates a jQuery UI color picker.
-	 *
 	 * Creates a jQuery UI color picker that is used in the theme customizer.
+	 *
+	 * @class $.widget.wp.wpColorPicker
 	 *
 	 * @since 3.5.0
 	 */
-	ColorPicker = {
+	ColorPicker = /** @lends $.widget.wp.wpColorPicker.prototype */{
 		options: {
 			defaultColor: false,
 			change: false,
@@ -29,13 +33,12 @@
 			slider: 'horizontal'
 		},
 		/**
-		 * @summary Creates a color picker that only allows you to adjust the hue.
+		 * Creates a color picker that only allows you to adjust the hue.
 		 *
 		 * @since 3.5.0
-		 *
 		 * @access private
 		 *
-		 * @returns {void}
+		 * @return {void}
 		 */
 		_createHueOnly: function() {
 			var self = this,
@@ -54,12 +57,14 @@
 				hide: false,
 				color: color,
 				/**
-				 * @summary Handles the onChange event if one has been defined in the options.
+				 * Handles the onChange event if one has been defined in the options.
+				 *
+				 * @ignore
 				 *
 				 * @param {Event} event    The event that's being called.
 				 * @param {HTMLElement} ui The HTMLElement containing the color picker.
 				 *
-				 * @returns {void}
+				 * @return {void}
 				 */
 				change: function( event, ui ) {
 					if ( $.isFunction( self.options.change ) ) {
@@ -71,15 +76,12 @@
 			} );
 		},
 		/**
-		 * @summary Creates the color picker.
-		 *
 		 * Creates the color picker, sets default values, css classes and wraps it all in HTML.
 		 *
 		 * @since 3.5.0
-		 *
 		 * @access private
 		 *
-		 * @returns {void}
+		 * @return {void}
 		 */
 		_create: function() {
 			// Return early if Iris support is missing.
@@ -172,17 +174,17 @@
 				mode: self.options.mode,
 				palettes: self.options.palettes,
 				/**
-				 * @summary Handles the onChange event if one has been defined in the options.
-				 *
 				 * Handles the onChange event if one has been defined in the options and additionally
 				 * sets the background color for the toggler element.
 				 *
 				 * @since 3.5.0
 				 *
+				 * @ignore
+				 *
 				 * @param {Event} event    The event that's being called.
 				 * @param {HTMLElement} ui The HTMLElement containing the color picker.
 				 *
-				 * @returns {void}
+				 * @return {void}
 				 */
 				change: function( event, ui ) {
 					self.toggler.css( { backgroundColor: ui.color.toString() } );
@@ -202,34 +204,33 @@
 			}
 		},
 		/**
-		 * @summary Binds event listeners to the color picker.
+		 * Binds event listeners to the color picker.
 		 *
 		 * @since 3.5.0
-		 *
 		 * @access private
 		 *
-		 * @returns {void}
+		 * @return {void}
 		 */
 		_addListeners: function() {
 			var self = this;
 
 			/**
-			 * @summary Prevent any clicks inside this widget from leaking to the top and closing it.
+			 * Prevent any clicks inside this widget from leaking to the top and closing it.
 			 *
 			 * @since 3.5.0
 			 *
 			 * @param {Event} event The event that's being called.
 			 *
-			 * @returs {void}
+			 * @return {void}
 			 */
 			self.wrap.on( 'click.wpcolorpicker', function( event ) {
 				event.stopPropagation();
 			});
 
 			/**
-			 * @summary Open or close the color picker depending on the class.
+			 * Open or close the color picker depending on the class.
 			 *
-			 * @since 3.5
+			 * @since 3.5.0
 			 */
 			self.toggler.click( function(){
 				if ( self.toggler.hasClass( 'wp-picker-open' ) ) {
@@ -240,8 +241,6 @@
 			});
 
 			/**
-			 * @summary Checks if value is empty when changing the color in the color picker.
-			 *
 			 * Checks if value is empty when changing the color in the color picker.
 			 * If so, the background color is cleared.
 			 *
@@ -249,7 +248,7 @@
 			 *
 			 * @param {Event} event The event that's being called.
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			self.element.change( function( event ) {
 				var me = $( this ),
@@ -265,15 +264,13 @@
 			});
 
 			/**
-			 * @summary Enables the user to clear or revert the color in the color picker.
-			 *
 			 * Enables the user to either clear the color in the color picker or revert back to the default color.
 			 *
 			 * @since 3.5.0
 			 *
 			 * @param {Event} event The event that's being called.
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			self.button.click( function( event ) {
 				var me = $( this );
@@ -289,11 +286,11 @@
 			});
 		},
 		/**
-		 * @summary Opens the color picker dialog.
+		 * Opens the color picker dialog.
 		 *
 		 * @since 3.5.0
 		 *
-		 * @returns {void}
+		 * @return {void}
 		 */
 		open: function() {
 			this.element.iris( 'toggle' );
@@ -305,11 +302,11 @@
 			$( 'body' ).trigger( 'click.wpcolorpicker' ).on( 'click.wpcolorpicker', this.close );
 		},
 		/**
-		 * @summary Closes the color picker dialog.
+		 * Closes the color picker dialog.
 		 *
 		 * @since 3.5.0
 		 *
-		 * @returns {void}
+		 * @return {void}
 		 */
 		close: function() {
 			this.element.iris( 'toggle' );
@@ -321,15 +318,13 @@
 			$( 'body' ).off( 'click.wpcolorpicker', this.close );
 		},
 		/**
-		 * @summary Returns iris object or sets new color.
-		 *
 		 * Returns the iris object if no new color is provided. If a new color is provided, it sets the new color.
 		 *
 		 * @param newColor {string|*} The new color to use. Can be undefined.
 		 *
 		 * @since 3.5.0
 		 *
-		 * @returns {string} The element's color
+		 * @return {string} The element's color.
 		 */
 		color: function( newColor ) {
 			if ( newColor === undef ) {
@@ -338,8 +333,6 @@
 			this.element.iris( 'option', 'color', newColor );
 		},
 		/**
-		 * @summary Returns iris object or sets new default color.
-		 *
 		 * Returns the iris object if no new default color is provided.
 		 * If a new default color is provided, it sets the new default color.
 		 *
@@ -347,7 +340,7 @@
 		 *
 		 * @since 3.5.0
 		 *
-		 * @returns {boolean|string} The element's color.
+		 * @return {boolean|string} The element's color.
 		 */
 		defaultColor: function( newDefaultColor ) {
 			if ( newDefaultColor === undef ) {

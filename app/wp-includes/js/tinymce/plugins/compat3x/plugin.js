@@ -44,7 +44,7 @@
     this.add = function (callback, scope, prepend) {
       log('<target>.on' + newEventName + ".add(..)");
 
-      // Convert callback({arg1:x, arg2:x}) -> callback(arg1, arg2)
+      // Convert callback({arg1:x, arg2:x}) -> callback(arg1, arg2).
       function patchedEventCallback(e) {
         var callbackArgs = [];
 
@@ -52,7 +52,7 @@
           argsMap = argsMap.split(" ");
         }
 
-        if (argsMap && typeof argsMap != "function") {
+        if (argsMap && typeof argsMap !== "function") {
           for (var i = 0; i < argsMap.length; i++) {
             callbackArgs.push(e[argsMap[i]]);
           }
@@ -287,7 +287,10 @@
     });
   }
 
-  tinymce.on('SetupEditor', patchEditor);
+  tinymce.on('SetupEditor', function (e) {
+    patchEditor(e.editor);
+  });
+
   tinymce.PluginManager.add("compat3x", patchEditor);
 
   tinymce.addI18n = function (prefix, o) {

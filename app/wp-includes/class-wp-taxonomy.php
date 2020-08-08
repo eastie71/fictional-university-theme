@@ -30,12 +30,17 @@ final class WP_Taxonomy {
 	public $label;
 
 	/**
-	 * An array of labels for this taxonomy.
+	 * Labels object for this taxonomy.
+	 *
+	 * If not set, tag labels are inherited for non-hierarchical types
+	 * and category labels for hierarchical ones.
+	 *
+	 * @see get_taxonomy_labels()
 	 *
 	 * @since 4.7.0
 	 * @var object
 	 */
-	public $labels = array();
+	public $labels;
 
 	/**
 	 * A short descriptive summary of what the taxonomy is for.
@@ -128,6 +133,14 @@ final class WP_Taxonomy {
 	public $meta_box_cb = null;
 
 	/**
+	 * The callback function for sanitizing taxonomy data saved from a meta box.
+	 *
+	 * @since 5.1.0
+	 * @var callable
+	 */
+	public $meta_box_sanitize_cb = null;
+
+	/**
 	 * An array of object types this taxonomy is registered for.
 	 *
 	 * @since 4.7.0
@@ -139,7 +152,7 @@ final class WP_Taxonomy {
 	 * Capabilities for this taxonomy.
 	 *
 	 * @since 4.7.0
-	 * @var array
+	 * @var object
 	 */
 	public $cap;
 
@@ -209,7 +222,7 @@ final class WP_Taxonomy {
 	 *
 	 * @since 4.7.0
 	 *
-	 * @global WP $wp WP instance.
+	 * @global WP $wp Current WordPress environment instance.
 	 *
 	 * @param string       $taxonomy    Taxonomy key, must not exceed 32 characters.
 	 * @param array|string $object_type Name of the object type for the taxonomy object.
@@ -238,9 +251,9 @@ final class WP_Taxonomy {
 		 *
 		 * @since 4.4.0
 		 *
-		 * @param array  $args        Array of arguments for registering a taxonomy.
-		 * @param string $taxonomy    Taxonomy key.
-		 * @param array  $object_type Array of names of object types for the taxonomy.
+		 * @param array    $args        Array of arguments for registering a taxonomy.
+		 * @param string   $taxonomy    Taxonomy key.
+		 * @param string[] $object_type Array of names of object types for the taxonomy.
 		 */
 		$args = apply_filters( 'register_taxonomy_args', $args, $this->name, (array) $object_type );
 
@@ -257,6 +270,7 @@ final class WP_Taxonomy {
 			'show_in_quick_edit'    => null,
 			'show_admin_column'     => false,
 			'meta_box_cb'           => null,
+			'meta_box_sanitize_cb'  => null,
 			'capabilities'          => array(),
 			'rewrite'               => true,
 			'query_var'             => $this->name,
@@ -269,7 +283,7 @@ final class WP_Taxonomy {
 
 		$args = array_merge( $defaults, $args );
 
-		// If not set, default to the setting for public.
+		// If not set, default to the setting for 'public'.
 		if ( null === $args['publicly_queryable'] ) {
 			$args['publicly_queryable'] = $args['public'];
 		}
@@ -281,43 +295,46 @@ final class WP_Taxonomy {
 				$args['query_var'] = sanitize_title_with_dashes( $args['query_var'] );
 			}
 		} else {
-			// Force query_var to false for non-public taxonomies.
+			// Force 'query_var' to false for non-public taxonomies.
 			$args['query_var'] = false;
 		}
 
 		if ( false !== $args['rewrite'] && ( is_admin() || '' != get_option( 'permalink_structure' ) ) ) {
-			$args['rewrite'] = wp_parse_args( $args['rewrite'], array(
-				'with_front'   => true,
-				'hierarchical' => false,
-				'ep_mask'      => EP_NONE,
-			) );
+			$args['rewrite'] = wp_parse_args(
+				$args['rewrite'],
+				array(
+					'with_front'   => true,
+					'hierarchical' => false,
+					'ep_mask'      => EP_NONE,
+				)
+			);
 
 			if ( empty( $args['rewrite']['slug'] ) ) {
 				$args['rewrite']['slug'] = sanitize_title_with_dashes( $this->name );
 			}
 		}
 
-		// If not set, default to the setting for public.
+		// If not set, default to the setting for 'public'.
 		if ( null === $args['show_ui'] ) {
 			$args['show_ui'] = $args['public'];
 		}
 
-		// If not set, default to the setting for show_ui.
+		// If not set, default to the setting for 'show_ui'.
 		if ( null === $args['show_in_menu'] || ! $args['show_ui'] ) {
 			$args['show_in_menu'] = $args['show_ui'];
 		}
 
-		// If not set, default to the setting for public.
+		// If not set, default to the setting for 'public'.
 		if ( null === $args['show_in_nav_menus'] ) {
 			$args['show_in_nav_menus'] = $args['public'];
 		}
 
-		// If not set, default to the setting for show_ui.
+		// If not set, default to the setting for 'show_ui'.
 		if ( null === $args['show_tagcloud'] ) {
 			$args['show_tagcloud'] = $args['show_ui'];
 		}
 
-		// If not set, default to the setting for show_ui.
+		// If not set, default to the setting for 'show_ui'.
 		if ( null === $args['show_in_quick_edit'] ) {
 			$args['show_in_quick_edit'] = $args['show_ui'];
 		}
@@ -334,7 +351,7 @@ final class WP_Taxonomy {
 
 		$args['object_type'] = array_unique( (array) $object_type );
 
-		// If not set, use the default meta box
+		// If not set, use the default meta box.
 		if ( null === $args['meta_box_cb'] ) {
 			if ( $args['hierarchical'] ) {
 				$args['meta_box_cb'] = 'post_categories_meta_box';
@@ -345,12 +362,26 @@ final class WP_Taxonomy {
 
 		$args['name'] = $this->name;
 
+		// Default meta box sanitization callback depends on the value of 'meta_box_cb'.
+		if ( null === $args['meta_box_sanitize_cb'] ) {
+			switch ( $args['meta_box_cb'] ) {
+				case 'post_categories_meta_box':
+					$args['meta_box_sanitize_cb'] = 'taxonomy_meta_box_sanitize_cb_checkboxes';
+					break;
+
+				case 'post_tags_meta_box':
+				default:
+					$args['meta_box_sanitize_cb'] = 'taxonomy_meta_box_sanitize_cb_input';
+					break;
+			}
+		}
+
 		foreach ( $args as $property_name => $property_value ) {
 			$this->$property_name = $property_value;
 		}
 
 		$this->labels = get_taxonomy_labels( $this );
-		$this->label = $this->labels->name;
+		$this->label  = $this->labels->name;
 	}
 
 	/**

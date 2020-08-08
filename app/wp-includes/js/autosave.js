@@ -1,11 +1,15 @@
+/**
+ * @output wp-includes/js/autosave.js
+ */
+
 /* global tinymce, wpCookies, autosaveL10n, switchEditors */
-// Back-compat
+// Back-compat.
 window.autosave = function() {
 	return true;
 };
 
 /**
- * @summary Adds autosave to the window object on dom ready.
+ * Adds autosave to the window object on dom ready.
  *
  * @since 3.9.0
  *
@@ -15,11 +19,11 @@ window.autosave = function() {
  */
 ( function( $, window ) {
 	/**
-	 * @summary Auto saves the post.
+	 * Auto saves the post.
 	 *
 	 * @since 3.9.0
 	 *
-	 * @returns {Object}
+	 * @return {Object}
 	 * 	{{
 	 * 		getPostData: getPostData,
 	 * 		getCompareString: getCompareString,
@@ -36,13 +40,13 @@ window.autosave = function() {
 			$document = $(document);
 
 		/**
-		 * @summary Returns the data saved in both local and remote autosave.
+		 * Returns the data saved in both local and remote autosave.
 		 *
 		 * @since 3.9.0
 		 *
 		 * @param {string} type The type of autosave either local or remote.
 		 *
-		 * @returns {Object} Object containing the post data.
+		 * @return {Object} Object containing the post data.
 		 */
 		function getPostData( type ) {
 			var post_name, parent_id, data,
@@ -99,15 +103,14 @@ window.autosave = function() {
 		}
 
 		/**
-		 * @summary Concatenates the title, content and excerpt.
-		 *
-		 * This is used to track changes when auto-saving.
+		 * Concatenates the title, content and excerpt. This is used to track changes
+		 * when auto-saving.
 		 *
 		 * @since 3.9.0
 		 *
 		 * @param {Object} postData The object containing the post data.
 		 *
-		 * @returns {string} A concatenated string with title, content and excerpt.
+		 * @return {string} A concatenated string with title, content and excerpt.
 		 */
 		function getCompareString( postData ) {
 			if ( typeof postData === 'object' ) {
@@ -118,11 +121,11 @@ window.autosave = function() {
 		}
 
 		/**
-		 * @summary Disables save buttons.
+		 * Disables save buttons.
 		 *
 		 * @since 3.9.0
 		 *
-		 * @returns {void}
+		 * @return {void}
 		 */
 		function disableButtons() {
 			$document.trigger('autosave-disable-buttons');
@@ -132,34 +135,34 @@ window.autosave = function() {
 		}
 
 		/**
-		 * @summary Enables save buttons.
+		 * Enables save buttons.
 		 *
 		 * @since 3.9.0
 		 *
-		 * @returns {void}
+		 * @return {void}
 		 */
 		function enableButtons() {
 			$document.trigger( 'autosave-enable-buttons' );
 		}
 
 		/**
-		 * @summary Gets the content editor.
+		 * Gets the content editor.
 		 *
 		 * @since 4.6.0
 		 *
-		 * @returns {boolean|*} Returns either false if the editor is undefined,
-		 * 						or the instance of the content editor.
+		 * @return {boolean|*} Returns either false if the editor is undefined,
+		 *                     or the instance of the content editor.
 		 */
 		function getEditor() {
 			return typeof tinymce !== 'undefined' && tinymce.get('content');
 		}
 
 		/**
-		 * @summary Autosave in localStorage.
+		 * Autosave in localStorage.
 		 *
 		 * @since 3.9.0
 		 *
-		 * @returns {
+		 * @return {
 		 * {
 		 * 	hasStorage: *,
 		 * 	getSavedPostData: getSavedPostData,
@@ -176,11 +179,11 @@ window.autosave = function() {
 				isSuspended = false;
 
 			/**
-			 * @summary Checks if the browser supports sessionStorage and it's not disabled.
+			 * Checks if the browser supports sessionStorage and it's not disabled.
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {boolean} True if the sessionStorage is supported and enabled.
+			 * @return {boolean} True if the sessionStorage is supported and enabled.
 			 */
 			function checkStorage() {
 				var test = Math.random().toString(),
@@ -197,16 +200,16 @@ window.autosave = function() {
 			}
 
 			/**
-			 * @summary Initializes the local storage.
+			 * Initializes the local storage.
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {boolean|Object} False if no sessionStorage in the browser or an Object
-			 *                           containing all postData for this blog.
+			 * @return {boolean|Object} False if no sessionStorage in the browser or an Object
+			 *                          containing all postData for this blog.
 			 */
 			function getStorage() {
 				var stored_obj = false;
-				// Separate local storage containers for each blog_id
+				// Separate local storage containers for each blog_id.
 				if ( hasStorage && blog_id ) {
 					stored_obj = sessionStorage.getItem( 'wp-autosave-' + blog_id );
 
@@ -221,13 +224,12 @@ window.autosave = function() {
 			}
 
 			/**
-			 * @summary Sets the storage for this blog.
-			 *
-			 * Confirms that the data was saved successfully.
+			 * Sets the storage for this blog. Confirms that the data was saved
+			 * successfully.
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {boolean} True if the data was saved successfully, false if it wasn't saved.
+			 * @return {boolean} True if the data was saved successfully, false if it wasn't saved.
 			 */
 			function setStorage( stored_obj ) {
 				var key;
@@ -242,11 +244,11 @@ window.autosave = function() {
 			}
 
 			/**
-			 * @summary Gets the saved post data for the current post.
+			 * Gets the saved post data for the current post.
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {boolean|Object} False if no storage or no data or the postData as an Object.
+			 * @return {boolean|Object} False if no storage or no data or the postData as an Object.
 			 */
 			function getSavedPostData() {
 				var stored = getStorage();
@@ -259,7 +261,7 @@ window.autosave = function() {
 			}
 
 			/**
-			 * @summary Sets (save or delete) post data in the storage.
+			 * Sets (save or delete) post data in the storage.
 			 *
 			 * If stored_data evaluates to 'false' the storage key for the current post will be removed.
 			 *
@@ -267,7 +269,7 @@ window.autosave = function() {
 			 *
 			 * @param {Object|boolean|null} stored_data The post data to store or null/false/empty to delete the key.
 			 *
-			 * @returns {boolean} True if data is stored, false if data was removed.
+			 * @return {boolean} True if data is stored, false if data was removed.
 			 */
 			function setData( stored_data ) {
 				var stored = getStorage();
@@ -288,38 +290,38 @@ window.autosave = function() {
 			}
 
 			/**
-			 * @summary Sets isSuspended to true.
+			 * Sets isSuspended to true.
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			function suspend() {
 				isSuspended = true;
 			}
 
 			/**
-			 * @summary Sets isSuspended to false.
+			 * Sets isSuspended to false.
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			function resume() {
 				isSuspended = false;
 			}
 
 			/**
-			 * @summary Saves post data for the current post.
+			 * Saves post data for the current post.
 			 *
-			 * Runs on a 15 sec. interval, saves when there are differences in the post title or content.
+			 * Runs on a 15 seconds interval, saves when there are differences in the post title or content.
 			 * When the optional data is provided, updates the last saved post data.
 			 *
 			 * @since 3.9.0
 			 *
 			 * @param {Object} data The post data for saving, minimum 'post_title' and 'content'.
 			 *
-			 * @returns {boolean} Returns true when data has been saved, otherwise it returns false.
+			 * @return {boolean} Returns true when data has been saved, otherwise it returns false.
 			 */
 			function save( data ) {
 				var postData, compareString,
@@ -359,7 +361,7 @@ window.autosave = function() {
 			}
 
 			/**
-			 * @summary Initializes the auto save function.
+			 * Initializes the auto save function.
 			 *
 			 * Checks whether the editor is active or not to use the editor events
 			 * to autosave, or uses the values from the elements to autosave.
@@ -368,7 +370,7 @@ window.autosave = function() {
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			function run() {
 				post_id = $('#post_ID').val() || 0;
@@ -376,9 +378,11 @@ window.autosave = function() {
 				// Check if the local post data is different than the loaded post data.
 				if ( $( '#wp-content-wrap' ).hasClass( 'tmce-active' ) ) {
 
-					// If TinyMCE loads first, check the post 1.5 sec. after it is ready.
-					// By this time the content has been loaded in the editor and 'saved' to the textarea.
-					// This prevents false positives.
+					/*
+					 * If TinyMCE loads first, check the post 1.5 seconds after it is ready.
+					 * By this time the content has been loaded in the editor and 'saved' to the textarea.
+					 * This prevents false positives.
+					 */
 					$document.on( 'tinymce-editor-init.autosave', function() {
 						window.setTimeout( function() {
 							checkPost();
@@ -388,7 +392,7 @@ window.autosave = function() {
 					checkPost();
 				}
 
-				// Save every 15 sec.
+				// Save every 15 seconds.
 				intervalTimer = window.setInterval( save, 15000 );
 
 				$( 'form#post' ).on( 'submit.autosave-local', function() {
@@ -419,15 +423,13 @@ window.autosave = function() {
 			}
 
 			/**
-			 * @summary Compares 2 strings.
-			 *
-			 * Removes whitespaces in the strings before comparing them.
+			 * Compares 2 strings. Removes whitespaces in the strings before comparing them.
 			 *
 			 * @since 3.9.0
 			 *
 			 * @param {string} str1 The first string.
 			 * @param {string} str2 The second string.
-			 * @returns {boolean} True if the strings are the same.
+			 * @return {boolean} True if the strings are the same.
 			 */
 			function compare( str1, str2 ) {
 				function removeSpaces( string ) {
@@ -438,14 +440,14 @@ window.autosave = function() {
 			}
 
 			/**
-			 * @summary Checks if the saved data for the current post (if any) is different
-			 * than the loaded post data on the screen.
+			 * Checks if the saved data for the current post (if any) is different than the
+			 * loaded post data on the screen.
 			 *
 			 * Shows a standard message letting the user restore the post data if different.
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			function checkPost() {
 				var content, post_title, excerpt, $notice,
@@ -456,7 +458,7 @@ window.autosave = function() {
 
 				if ( cookie === post_id + '-saved' ) {
 					wpCookies.remove( 'wp-saving-post' );
-					// The post was saved properly, remove old data and bail
+					// The post was saved properly, remove old data and bail.
 					setData( false );
 					return;
 				}
@@ -507,19 +509,19 @@ window.autosave = function() {
 			}
 
 			/**
-			 * @summary Restores the current title, content and excerpt from postData.
+			 * Restores the current title, content and excerpt from postData.
 			 *
 			 * @since 3.9.0
 			 *
 			 * @param {Object} postData The object containing all post data.
 			 *
-			 * @returns {boolean} True if the post is restored.
+			 * @return {boolean} True if the post is restored.
 			 */
 			function restorePost( postData ) {
 				var editor;
 
 				if ( postData ) {
-					// Set the last saved data
+					// Set the last saved data.
 					lastCompareString = getCompareString( postData );
 
 					if ( $( '#title' ).val() !== postData.post_title ) {
@@ -534,14 +536,14 @@ window.autosave = function() {
 							postData.content = switchEditors.wpautop( postData.content );
 						}
 
-						// Make sure there's an undo level in the editor
+						// Make sure there's an undo level in the editor.
 						editor.undoManager.transact( function() {
 							editor.setContent( postData.content || '' );
 							editor.nodeChanged();
 						});
 					} else {
 
-						// Make sure the Text editor is selected
+						// Make sure the Text editor is selected.
 						$( '#content-html' ).click();
 						$( '#content' ).focus();
 
@@ -558,9 +560,11 @@ window.autosave = function() {
 
 			blog_id = typeof window.autosaveL10n !== 'undefined' && window.autosaveL10n.blog_id;
 
-			// Check if the browser supports sessionStorage and it's not disabled,
-			// then initialize and run checkPost().
-			// Don't run if the post type supports neither 'editor' (textarea#content) nor 'excerpt'.
+			/*
+			 * Check if the browser supports sessionStorage and it's not disabled,
+			 * then initialize and run checkPost().
+			 * Don't run if the post type supports neither 'editor' (textarea#content) nor 'excerpt'.
+			 */
 			if ( checkStorage() && blog_id && ( $('#content').length || $('#excerpt').length ) ) {
 				$document.ready( run );
 			}
@@ -575,11 +579,11 @@ window.autosave = function() {
 		}
 
 		/**
-		 * @summary Auto saves the post on the server.
+		 * Auto saves the post on the server.
 		 *
 		 * @since 3.9.0
 		 *
-		 * @returns {Object} {
+		 * @return {Object} {
 		 * 	{
 		 * 		tempBlockSave: tempBlockSave,
 		 * 		triggerSave: triggerSave,
@@ -596,11 +600,11 @@ window.autosave = function() {
 
 
 			/**
-			 * @summary  Blocks saving for the next 10 seconds.
+			 * Blocks saving for the next 10 seconds.
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			function tempBlockSave() {
 				_blockSave = true;
@@ -612,35 +616,35 @@ window.autosave = function() {
 			}
 
 			/**
-			 * @summary Sets isSuspended to true.
+			 * Sets isSuspended to true.
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			function suspend() {
 				isSuspended = true;
 			}
 
 			/**
-			 * @summary Sets isSuspended to false.
+			 * Sets isSuspended to false.
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			function resume() {
 				isSuspended = false;
 			}
 
 			/**
-			 * @summary Triggers the autosave with the post data.
+			 * Triggers the autosave with the post data.
 			 *
 			 * @since 3.9.0
 			 *
 			 * @param {Object} data The post data.
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			function response( data ) {
 				_schedule();
@@ -652,19 +656,19 @@ window.autosave = function() {
 				enableButtons();
 
 				if ( data.success ) {
-					// No longer an auto-draft
+					// No longer an auto-draft.
 					$( '#auto_draft' ).val('');
 				}
 			}
 
 			/**
-			 * @summary Saves immediately.
+			 * Saves immediately.
 			 *
 			 * Resets the timing and tells heartbeat to connect now.
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			function triggerSave() {
 				nextRun = 0;
@@ -672,7 +676,7 @@ window.autosave = function() {
 			}
 
 			/**
-			 * @summary Checks if the post content in the textarea has changed since page load.
+			 * Checks if the post content in the textarea has changed since page load.
 			 *
 			 * This also happens when TinyMCE is active and editor.save() is triggered by
 			 * wp.autosave.getPostData().
@@ -686,19 +690,19 @@ window.autosave = function() {
 			}
 
 			/**
-			 * @summary Checks if the post can be saved or not.
+			 * Checks if the post can be saved or not.
 			 *
 			 * If the post hasn't changed or it cannot be updated,
 			 * because the autosave is blocked or suspended, the function returns false.
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {Object} Returns the post data.
+			 * @return {Object} Returns the post data.
 			 */
 			function save() {
 				var postData, compareString;
 
-				// window.autosave() used for back-compat
+				// window.autosave() used for back-compat.
 				if ( isSuspended || _blockSave || ! window.autosave() ) {
 					return false;
 				}
@@ -710,12 +714,12 @@ window.autosave = function() {
 				postData = getPostData();
 				compareString = getCompareString( postData );
 
-				// First check
+				// First check.
 				if ( typeof lastCompareString === 'undefined' ) {
 					lastCompareString = initialCompareString;
 				}
 
-				// No change
+				// No change.
 				if ( compareString === lastCompareString ) {
 					return false;
 				}
@@ -733,24 +737,24 @@ window.autosave = function() {
 			}
 
 			/**
-			 * @summary Sets the next run, based on the autosave interval.
+			 * Sets the next run, based on the autosave interval.
 			 *
 			 * @private
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			function _schedule() {
 				nextRun = ( new Date() ).getTime() + ( autosaveL10n.autosaveInterval * 1000 ) || 60000;
 			}
 
 			/**
-			 * @summary Sets the autosaveData on the autosave heartbeat.
+			 * Sets the autosaveData on the autosave heartbeat.
 			 *
 			 * @since 3.9.0
 			 *
-			 * @returns {void}
+			 * @return {void}
 			 */
 			$document.on( 'heartbeat-send.autosave', function( event, data ) {
 				var autosaveData = save();
@@ -760,23 +764,23 @@ window.autosave = function() {
 				}
 
 				/**
-				 * @summary Triggers the autosave of the post with the autosave data
-				 * on the autosave heartbeat.
+				 * Triggers the autosave of the post with the autosave data on the autosave
+				 * heartbeat.
 				 *
 				 * @since 3.9.0
 				 *
-				 * @returns {void}
+				 * @return {void}
 				 */
 			}).on( 'heartbeat-tick.autosave', function( event, data ) {
 				if ( data.wp_autosave ) {
 					response( data.wp_autosave );
 				}
 				/**
-				 * @summary Disables buttons and throws a notice when the connection is lost.
+				 * Disables buttons and throws a notice when the connection is lost.
 				 *
 				 * @since 3.9.0
 				 *
-				 * @returns {void}
+				 * @return {void}
 				 */
 			}).on( 'heartbeat-connection-lost.autosave', function( event, error, status ) {
 
@@ -793,11 +797,11 @@ window.autosave = function() {
 				}
 
 				/**
-				 * @summary Enables buttons when the connection is restored.
+				 * Enables buttons when the connection is restored.
 				 *
 				 * @since 3.9.0
 				 *
-				 * @returns {void}
+				 * @return {void}
 				 */
 			}).on( 'heartbeat-connection-restored.autosave', function() {
 				$('#lost-connection-notice').hide();
@@ -816,7 +820,7 @@ window.autosave = function() {
 		}
 
 		/**
-		 * @summary Sets the autosave time out.
+		 * Sets the autosave time out.
 		 *
 		 * Wait for TinyMCE to initialize plus 1 second. for any external css to finish loading,
 		 * then save to the textarea before setting initialCompareString.
@@ -825,7 +829,7 @@ window.autosave = function() {
 		 *
 		 * @since 3.9.0
 		 *
-		 * @returns {void}
+		 * @return {void}
 		 */
 		$document.on( 'tinymce-editor-init.autosave', function( event, editor ) {
 			if ( editor.id === 'content' ) {
@@ -836,7 +840,7 @@ window.autosave = function() {
 			}
 		}).ready( function() {
 
-			// Set the initial compare string in case TinyMCE is not used or not loaded first
+			// Set the initial compare string in case TinyMCE is not used or not loaded first.
 			initialCompareString = getCompareString();
 		});
 

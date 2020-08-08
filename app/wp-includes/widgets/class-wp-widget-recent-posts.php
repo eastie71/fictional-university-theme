@@ -23,8 +23,8 @@ class WP_Widget_Recent_Posts extends WP_Widget {
 	 */
 	public function __construct() {
 		$widget_ops = array(
-			'classname' => 'widget_recent_entries',
-			'description' => __( 'Your site&#8217;s most recent Posts.' ),
+			'classname'                   => 'widget_recent_entries',
+			'description'                 => __( 'Your site&#8217;s most recent Posts.' ),
 			'customize_selective_refresh' => true,
 		);
 		parent::__construct( 'recent-posts', __( 'Recent Posts' ), $widget_ops );
@@ -56,23 +56,29 @@ class WP_Widget_Recent_Posts extends WP_Widget {
 		}
 		$show_date = isset( $instance['show_date'] ) ? $instance['show_date'] : false;
 
-		/**
-		 * Filters the arguments for the Recent Posts widget.
-		 *
-		 * @since 3.4.0
-		 * @since 4.9.0 Added the `$instance` parameter.
-		 *
-		 * @see WP_Query::get_posts()
-		 *
-		 * @param array $args     An array of arguments used to retrieve the recent posts.
-		 * @param array $instance Array of settings for the current widget.
-		 */
-		$r = new WP_Query( apply_filters( 'widget_posts_args', array(
-			'posts_per_page'      => $number,
-			'no_found_rows'       => true,
-			'post_status'         => 'publish',
-			'ignore_sticky_posts' => true,
-		), $instance ) );
+		$r = new WP_Query(
+			/**
+			 * Filters the arguments for the Recent Posts widget.
+			 *
+			 * @since 3.4.0
+			 * @since 4.9.0 Added the `$instance` parameter.
+			 *
+			 * @see WP_Query::get_posts()
+			 *
+			 * @param array $args     An array of arguments used to retrieve the recent posts.
+			 * @param array $instance Array of settings for the current widget.
+			 */
+			apply_filters(
+				'widget_posts_args',
+				array(
+					'posts_per_page'      => $number,
+					'no_found_rows'       => true,
+					'post_status'         => 'publish',
+					'ignore_sticky_posts' => true,
+				),
+				$instance
+			)
+		);
 
 		if ( ! $r->have_posts() ) {
 			return;
@@ -87,11 +93,16 @@ class WP_Widget_Recent_Posts extends WP_Widget {
 		<ul>
 			<?php foreach ( $r->posts as $recent_post ) : ?>
 				<?php
-				$post_title = get_the_title( $recent_post->ID );
-				$title      = ( ! empty( $post_title ) ) ? $post_title : __( '(no title)' );
+				$post_title   = get_the_title( $recent_post->ID );
+				$title        = ( ! empty( $post_title ) ) ? $post_title : __( '(no title)' );
+				$aria_current = '';
+
+				if ( get_queried_object_id() === $recent_post->ID ) {
+					$aria_current = ' aria-current="page"';
+				}
 				?>
 				<li>
-					<a href="<?php the_permalink( $recent_post->ID ); ?>"><?php echo $title ; ?></a>
+					<a href="<?php the_permalink( $recent_post->ID ); ?>"<?php echo $aria_current; ?>><?php echo $title; ?></a>
 					<?php if ( $show_date ) : ?>
 						<span class="post-date"><?php echo get_the_date( '', $recent_post->ID ); ?></span>
 					<?php endif; ?>
@@ -113,9 +124,9 @@ class WP_Widget_Recent_Posts extends WP_Widget {
 	 * @return array Updated settings to save.
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance = $old_instance;
-		$instance['title'] = sanitize_text_field( $new_instance['title'] );
-		$instance['number'] = (int) $new_instance['number'];
+		$instance              = $old_instance;
+		$instance['title']     = sanitize_text_field( $new_instance['title'] );
+		$instance['number']    = (int) $new_instance['number'];
 		$instance['show_date'] = isset( $new_instance['show_date'] ) ? (bool) $new_instance['show_date'] : false;
 		return $instance;
 	}
@@ -131,7 +142,7 @@ class WP_Widget_Recent_Posts extends WP_Widget {
 		$title     = isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
 		$number    = isset( $instance['number'] ) ? absint( $instance['number'] ) : 5;
 		$show_date = isset( $instance['show_date'] ) ? (bool) $instance['show_date'] : false;
-?>
+		?>
 		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
 		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" /></p>
 
@@ -140,6 +151,6 @@ class WP_Widget_Recent_Posts extends WP_Widget {
 
 		<p><input class="checkbox" type="checkbox"<?php checked( $show_date ); ?> id="<?php echo $this->get_field_id( 'show_date' ); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" />
 		<label for="<?php echo $this->get_field_id( 'show_date' ); ?>"><?php _e( 'Display post date?' ); ?></label></p>
-<?php
+		<?php
 	}
 }

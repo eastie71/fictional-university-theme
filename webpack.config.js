@@ -21,8 +21,7 @@ class RunAfterCompile {
   apply(compiler) {
     compiler.hooks.done.tap("Update functions.php", function () {
       // update functions php here
-      const manifest = fse.readJsonSync("./bundled-assets/manifest.json")
-
+      const manifest = fse.readJsonSync("./app/wp-content/themes/fictional-university-theme/bundled-assets/manifest.json")
       fse.readFile("./app/wp-content/themes/fictional-university-theme/functions.php", "utf8", function (err, data) {
         if (err) {
           console.log(err)
@@ -34,7 +33,7 @@ class RunAfterCompile {
 
         let result = data.replace(scriptsRegEx, `/bundled-assets/${manifest["scripts.js"]}'`).replace(vendorsRegEx, `/bundled-assets/${manifest["vendors~scripts.js"]}'`).replace(cssRegEx, `/bundled-assets/${manifest["scripts.css"]}'`)
 
-        fse.writeFile("./functions.php", result, "utf8", function (err) {
+        fse.writeFile("./app/wp-content/themes/fictional-university-theme/functions.php", result, "utf8", function (err) {
           if (err) return console.log(err)
         })
       })
@@ -93,7 +92,7 @@ if (currentTask == "devFast") {
         */
 
       // server._watch(["./**/*.php", "./**/*.js"])
-      server._watch(["./**/*.php", "!./functions.php"])
+      server._watch(["./**/*.php", "!./app/wp-content/themes/fictional-university-theme/functions.php"])
     },
     public: "http://localhost:3000",
     publicPath: "http://localhost:3000/",
@@ -116,7 +115,7 @@ if (currentTask == "build" || currentTask == "buildWatch") {
     publicPath: "/app/wp-content/themes/fictional-university-theme/bundled-assets/",
     filename: "[name].[chunkhash].js",
     chunkFilename: "[name].[chunkhash].js",
-    path: path.resolve(__dirname, "bundled-assets")
+    path: path.resolve(__dirname, "app/wp-content/themes/fictional-university-theme/bundled-assets")
   }
   config.mode = "production"
   config.optimization = {

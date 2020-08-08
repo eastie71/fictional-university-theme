@@ -1,15 +1,15 @@
-/* global postL10n, ajaxurl, wpAjax, setPostThumbnailL10n, postboxes, pagenow, tinymce, alert, deleteUserSetting */
-/* global theList:true, theExtraList:true, getUserSetting, setUserSetting, commentReply */
-
 /**
- * Contains all dynamic functionality needed on post and term pages.
+ * @file Contains all dynamic functionality needed on post and term pages.
  *
- * @summary Control page and term functionality.
+ * @output wp-admin/js/post.js
  */
 
-var commentsBox, WPSetThumbnailHTML, WPSetThumbnailID, WPRemoveThumbnail, wptitlehint, makeSlugeditClickable, editPermalink;
+ /* global postL10n, ajaxurl, wpAjax, setPostThumbnailL10n, postboxes, pagenow, tinymce, alert, deleteUserSetting */
+ /* global theList:true, theExtraList:true, getUserSetting, setUserSetting, commentReply, commentsBox */
+ /* global WPSetThumbnailHTML, wptitlehint */
+
 // Backwards compatibility: prevent fatal errors.
-makeSlugeditClickable = editPermalink = function(){};
+window.makeSlugeditClickable = window.editPermalink = function(){};
 
 // Make sure the wp object exists.
 window.wp = window.wp || {};
@@ -24,18 +24,18 @@ window.wp = window.wp || {};
 	 *
 	 * @namespace commentsBox
 	 */
-	commentsBox = {
+	window.commentsBox = {
 		// Comment offset to use when fetching new comments.
 		st : 0,
 
 		/**
 		 * Fetch comments using AJAX and display them in the box.
 		 *
+		 * @memberof commentsBox
+		 *
 		 * @param {int} total Total number of comments for this post.
 		 * @param {int} num   Optional. Number of comments to fetch, defaults to 20.
-		 * @returns {boolean} Always returns false.
-		 *
-		 * @memberof commentsBox
+		 * @return {boolean} Always returns false.
 		 */
 		get : function(total, num) {
 			var st = this.st, data;
@@ -91,9 +91,9 @@ window.wp = window.wp || {};
 		/**
 		 * Load the next batch of comments.
 		 *
-		 * @param {int} total Total number of comments to load.
-		 *
 		 * @memberof commentsBox
+		 *
+		 * @param {int} total Total number of comments to load.
 		 */
 		load: function(total){
 			this.st = jQuery('#the-comment-list tr.comment:visible').length;
@@ -108,7 +108,7 @@ window.wp = window.wp || {};
 	 *
 	 * @global
 	 */
-	WPSetThumbnailHTML = function(html){
+	window.WPSetThumbnailHTML = function(html){
 		$('.inside', '#postimagediv').html(html);
 	};
 
@@ -119,7 +119,7 @@ window.wp = window.wp || {};
 	 *
 	 * @global
 	 */
-	WPSetThumbnailID = function(id){
+	window.WPSetThumbnailID = function(id){
 		var field = $('input[value="_thumbnail_id"]', '#list-table');
 		if ( field.length > 0 ) {
 			$('#meta\\[' + field.attr('id').match(/[0-9]+/) + '\\]\\[value\\]').text(id);
@@ -133,7 +133,7 @@ window.wp = window.wp || {};
 	 *
 	 * @global
 	 */
-	WPRemoveThumbnail = function(nonce){
+	window.WPRemoveThumbnail = function(nonce){
 		$.post(ajaxurl, {
 			action: 'set-post-thumbnail', post_id: $( '#post_ID' ).val(), thumbnail_id: -1, _ajax_nonce: nonce, cookie: encodeURIComponent( document.cookie )
 		},
@@ -309,24 +309,24 @@ jQuery(document).ready( function($) {
 
 	// Post locks: contain focus inside the dialog. If the dialog is shown, focus the first item.
 	$('#post-lock-dialog .notification-dialog').on( 'keydown', function(e) {
-		// Don't do anything when [tab] is pressed.
+		// Don't do anything when [Tab] is pressed.
 		if ( e.which != 9 )
 			return;
 
 		var target = $(e.target);
 
-		// [shift] + [tab] on first tab cycles back to last tab.
+		// [Shift] + [Tab] on first tab cycles back to last tab.
 		if ( target.hasClass('wp-tab-first') && e.shiftKey ) {
 			$(this).find('.wp-tab-last').focus();
 			e.preventDefault();
-		// [tab] on last tab cycles back to first tab.
+		// [Tab] on last tab cycles back to first tab.
 		} else if ( target.hasClass('wp-tab-last') && ! e.shiftKey ) {
 			$(this).find('.wp-tab-first').focus();
 			e.preventDefault();
 		}
 	}).filter(':visible').find('.wp-tab-first').focus();
 
-	// Set the heartbeat interval to 15 sec. if post lock dialogs are enabled.
+	// Set the heartbeat interval to 15 seconds if post lock dialogs are enabled.
 	if ( wp.heartbeat && $('#post-lock-dialog').length ) {
 		wp.heartbeat.interval( 15 );
 	}
@@ -385,7 +385,7 @@ jQuery(document).ready( function($) {
 		});
 	});
 
-	// Submit the form saving a draft or an autosave, and show a preview in a new tab
+	// Submit the form saving a draft or an autosave, and show a preview in a new tab.
 	$('#post-preview').on( 'click.post-preview', function( event ) {
 		var $this = $(this),
 			$form = $('form#post'),
@@ -534,7 +534,7 @@ jQuery(document).ready( function($) {
 		});
 	});
 
-	// Multiple Taxonomies.
+	// Multiple taxonomies.
 	if ( $('#tagsdiv-post_tag').length ) {
 		window.tagBox && window.tagBox.init();
 	} else {
@@ -559,7 +559,7 @@ jQuery(document).ready( function($) {
 			settingName = 'cats';
 		}
 
-		// TODO: move to jQuery 1.3+, support for multiple hierarchical taxonomies, see wp-lists.js
+		// @todo Move to jQuery 1.3+, support for multiple hierarchical taxonomies, see wp-lists.js.
 		$('a', '#' + taxonomy + '-tabs').click( function( e ) {
 			e.preventDefault();
 			var t = $(this).attr('href');
@@ -581,7 +581,7 @@ jQuery(document).ready( function($) {
 			$( this ).val( '' ).removeClass( 'form-input-tip' );
 		});
 
-		// On [enter] submit the taxonomy.
+		// On [Enter] submit the taxonomy.
 		$('#new' + taxonomy).keypress( function(event){
 			if( 13 === event.keyCode ) {
 				event.preventDefault();
@@ -599,7 +599,7 @@ jQuery(document).ready( function($) {
 		 *
 		 * @param {Object} s Taxonomy object which will be added.
 		 *
-		 * @returns {Object}
+		 * @return {Object}
 		 */
 		catAddBefore = function( s ) {
 			if ( !$('#new'+taxonomy).val() ) {
@@ -620,7 +620,7 @@ jQuery(document).ready( function($) {
 		 * @param {Object} r Response.
 		 * @param {Object} s Taxonomy data.
 		 *
-		 * @returns void
+		 * @return {void}
 		 */
 		catAddAfter = function( r, s ) {
 			var sup, drop = $('#new'+taxonomy+'_parent');
@@ -654,7 +654,7 @@ jQuery(document).ready( function($) {
 				$('#in-' + taxonomy + '-' + id + ', #in-popular-' + taxonomy + '-' + id).prop( 'checked', c );
 		});
 
-	}); // end cats
+	}); // End cats.
 
 	// Custom Fields postbox.
 	if ( $('#postcustom').length ) {
@@ -662,9 +662,11 @@ jQuery(document).ready( function($) {
 			/**
 			 * Add current post_ID to request to fetch custom fields
 			 *
+			 * @ignore
+			 *
 			 * @param {Object} s Request object.
 			 *
-			 * @returns {Object} Data modified with post_ID attached.
+			 * @return {Object} Data modified with post_ID attached.
 			 */
 			addBefore: function( s ) {
 				s.data += '&post_id=' + $('#post_ID').val();
@@ -672,6 +674,8 @@ jQuery(document).ready( function($) {
 			},
 			/**
 			 * Show the listing of custom fields after fetching.
+			 *
+			 * @ignore
 			 */
 			addAfter: function() {
 				$('table#list-table').show();
@@ -689,7 +693,9 @@ jQuery(document).ready( function($) {
 		/**
 		 * When the visibility of a post changes sub-options should be shown or hidden.
 		 *
-		 * @returns void
+		 * @ignore
+		 *
+		 * @return {void}
 		 */
 		updateVisibility = function() {
 			// Show sticky for public posts.
@@ -711,7 +717,9 @@ jQuery(document).ready( function($) {
 		/**
 		 * Make sure all labels represent the current settings.
 		 *
-		 * @returns {boolean} False when an invalid timestamp has been selected, otherwise True.
+		 * @ignore
+		 *
+		 * @return {boolean} False when an invalid timestamp has been selected, otherwise True.
 		 */
 		updateText = function() {
 
@@ -787,7 +795,10 @@ jQuery(document).ready( function($) {
 			}
 
 			// Update "Status:" to currently selected status.
-			$('#post-status-display').html($('option:selected', postStatus).text());
+			$('#post-status-display').text(
+				// Remove any potential tags from post status text.
+				wp.sanitize.stripTagsAndEncodeText( $('option:selected', postStatus).text() )
+			);
 
 			// Show or hide the "Save Draft" button.
 			if ( $('option:selected', postStatus).val() == 'private' || $('option:selected', postStatus).val() == 'publish' ) {
@@ -828,7 +839,7 @@ jQuery(document).ready( function($) {
 		});
 
 		// Set the selected visibility as current.
-		$postVisibilitySelect.find('.save-post-visibility').click( function( event ) { // crazyhorse - multiple ok cancels
+		$postVisibilitySelect.find('.save-post-visibility').click( function( event ) { // Crazyhorse - multiple OK cancels.
 			$postVisibilitySelect.slideUp('fast');
 			$('#visibility .edit-visibility').show().focus();
 			updateText();
@@ -876,7 +887,7 @@ jQuery(document).ready( function($) {
 		});
 
 		// Save the changed timestamp.
-		$timestampdiv.find('.save-timestamp').click( function( event ) { // crazyhorse - multiple ok cancels
+		$timestampdiv.find('.save-timestamp').click( function( event ) { // Crazyhorse - multiple OK cancels.
 			if ( updateText() ) {
 				$timestampdiv.slideUp('fast');
 				$timestampdiv.siblings('a.edit-timestamp').show().focus();
@@ -926,13 +937,12 @@ jQuery(document).ready( function($) {
 	}
 
 	/**
-	 * Handle the editing of the post_name. Create the required HTML elements and update the changes via AJAX.
-	 *
-	 * @summary Permalink aka slug aka post_name editing
+	 * Handle the editing of the post_name. Create the required HTML elements and
+	 * update the changes via AJAX.
 	 *
 	 * @global
 	 *
-	 * @returns void
+	 * @return {void}
 	 */
 	function editPermalink() {
 		var i, slug_value,
@@ -1014,12 +1024,12 @@ jQuery(document).ready( function($) {
 
 		$el.html( '<input type="text" id="new-post-slug" value="' + slug_value + '" autocomplete="off" />' ).children( 'input' ).keydown( function( e ) {
 			var key = e.which;
-			// On [enter], just save the new slug, don't save the post.
+			// On [Enter], just save the new slug, don't save the post.
 			if ( 13 === key ) {
 				e.preventDefault();
 				buttons.children( '.save' ).click();
 			}
-			// On [esc] cancel the editing.
+			// On [Esc] cancel the editing.
 			if ( 27 === key ) {
 				buttons.children( '.cancel' ).click();
 			}
@@ -1033,38 +1043,34 @@ jQuery(document).ready( function($) {
 	});
 
 	/**
-	 * Add screen reader text to the title prompt when needed.
+	 * Adds screen reader text to the title label when needed.
 	 *
-	 * @summary Title screen reader text handler.
+	 * Use the 'screen-reader-text' class to emulate a placeholder attribute
+	 * and hide the label when entering a value.
 	 *
 	 * @param {string} id Optional. HTML ID to add the screen reader helper text to.
 	 *
 	 * @global
 	 *
-	 * @returns void
+	 * @return {void}
 	 */
-	wptitlehint = function(id) {
+	window.wptitlehint = function( id ) {
 		id = id || 'title';
 
-		var title = $('#' + id), titleprompt = $('#' + id + '-prompt-text');
+		var title = $( '#' + id ), titleprompt = $( '#' + id + '-prompt-text' );
 
-		if ( '' === title.val() )
-			titleprompt.removeClass('screen-reader-text');
+		if ( '' === title.val() ) {
+			titleprompt.removeClass( 'screen-reader-text' );
+		}
 
-		titleprompt.click(function(){
-			$(this).addClass('screen-reader-text');
-			title.focus();
-		});
+		title.on( 'input', function() {
+			if ( '' === this.value ) {
+				titleprompt.removeClass( 'screen-reader-text' );
+				return;
+			}
 
-		title.blur(function(){
-			if ( '' === this.value )
-				titleprompt.removeClass('screen-reader-text');
-		}).focus(function(){
-			titleprompt.addClass('screen-reader-text');
-		}).keydown(function(e){
-			titleprompt.addClass('screen-reader-text');
-			$(this).unbind(e);
-		});
+			titleprompt.addClass( 'screen-reader-text' );
+		} );
 	};
 
 	wptitlehint();
@@ -1168,7 +1174,7 @@ jQuery(document).ready( function($) {
 			}
 		});
 
-		// When changing page template, change the editor body class
+		// When changing page template, change the editor body class.
 		$( '#page_template' ).on( 'change.set-editor-class', function() {
 			var editor, body, pageTemplate = $( this ).val() || '';
 
@@ -1186,9 +1192,9 @@ jQuery(document).ready( function($) {
 
 	}
 
-	// Save on pressing [ctrl]/[command] + [s] in the Text editor.
+	// Save on pressing [Ctrl]/[Command] + [S] in the Text editor.
 	$textarea.on( 'keydown.wp-autosave', function( event ) {
-		// Key [s] has code 83.
+		// Key [S] has code 83.
 		if ( event.which === 83 ) {
 			if ( event.shiftKey || event.altKey || ( isMac && ( ! event.metaKey || event.ctrlKey ) ) || ( ! isMac && ! event.ctrlKey ) ) {
 				return;
@@ -1264,4 +1270,5 @@ jQuery(document).ready( function($) {
 
 		update();
 	} );
+
 } )( jQuery, new wp.utils.WordCounter() );

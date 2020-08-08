@@ -1,3 +1,4 @@
+/*! This file is auto-generated */
 /*------------------------------------------------------------------------------
   14.0 - Media Screen
 ------------------------------------------------------------------------------*/
@@ -100,7 +101,7 @@
 .describe-toggle-on,
 .describe-toggle-off {
 	display: block;
-	line-height: 36px;
+	line-height: 2.76923076;
 	float: left;
 	margin-left: 10px;
 }
@@ -132,7 +133,7 @@
 }
 
 .media-item .filename {
-	line-height: 36px;
+	line-height: 2.76923076;
 	overflow: hidden;
 	margin-right: 6px;
 }
@@ -164,7 +165,7 @@
 	overflow: hidden;
 	border-radius: 22px;
 	background: #ddd;
-	box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .media-item .bar {
@@ -174,7 +175,7 @@
 	margin-top: -22px;
 	border-radius: 22px;
 	background-color: #0073aa;
-	box-shadow: inset 0 0 2px rgba(0,0,0,0.3);
+	box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
 }
 
 .media-item .progress .percent {
@@ -186,7 +187,7 @@
 	text-align: center;
 	line-height: 22px;
 	font-weight: 400;
-	text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .upload-php .fixed .column-parent {
@@ -211,8 +212,7 @@
 	padding: 10px 14px 10px 0;
 }
 
-.media-item .error-div a.dismiss {
-	display: block;
+.media-item .error-div button.dismiss {
 	float: left;
 	margin: 0 15px 0 10px;
 }
@@ -223,7 +223,7 @@
 
 .find-box {
 	background-color: #fff;
-	box-shadow: 0 3px 6px rgba( 0, 0, 0, 0.3 );
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
 	width: 600px;
 	overflow: hidden;
 	margin-right: -300px;
@@ -240,7 +240,7 @@
 	height: 36px;
 	font-size: 18px;
 	font-weight: 600;
-	line-height: 36px;
+	line-height: 2;
 	padding: 0 16px 0 36px;
 	position: absolute;
 	top: 0;
@@ -311,10 +311,12 @@
 }
 
 #find-posts-close:focus {
-	outline: none;
 	box-shadow:
 		0 0 0 1px #5b9dd9,
-		0 0 2px 1px rgba(30, 140, 190, .8);
+		0 0 2px 1px rgba(30, 140, 190, 0.8);
+	/* Only visible in Windows High Contrast mode */
+	outline: 2px solid transparent;
+	outline-offset: -2px;
 }
 
 #find-posts-close:before {
@@ -336,13 +338,13 @@
 	left: 0;
 }
 
-@media screen and ( max-width: 782px ) {
+@media screen and (max-width: 782px) {
 	.find-box-inside {
 		bottom: 57px;
 	}
 }
 
-@media screen and ( max-width: 660px ) {
+@media screen and (max-width: 660px) {
 
 	.find-box {
 		top: 0;
@@ -367,40 +369,17 @@
 	z-index: 100100;
 }
 
-ul#dismissed-updates {
-	display: none;
-}
-
-form.upgrade {
-	margin-top: 8px;
-}
-
-form.upgrade .hint {
-	font-style: italic;
-	font-size: 85%;
-	margin: -0.5em 0 2em 0;
-}
-
-#poststuff .inside .the-tagcloud {
-	margin: 5px 0 10px;
-	padding: 8px;
-	border: 1px solid #ddd;
-	line-height: 1.8em;
-	word-spacing: 3px;
-}
-
 .drag-drop #drag-drop-area {
 	border: 4px dashed #b4b9be;
 	height: 200px;
 }
 
 .drag-drop .drag-drop-inside {
-	margin: 70px auto 0;
+	margin: 60px auto 0;
 	width: 250px;
 }
 
 .drag-drop-inside p {
-	color: #a0a5aa;
 	font-size: 14px;
 	margin: 5px 0;
 	display: none;
@@ -461,7 +440,7 @@ border color while dragging a file over the uploader drop area */
 	margin-top: 12px;
 	padding: 0 16px;
 	border-right: 4px solid #dd3d36;
- 	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+	box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
 	background-color: #fff;
 }
 
@@ -501,7 +480,6 @@ border color while dragging a file over the uploader drop area */
 	color: #c00;
 }
 
-.upload-php .mode-grid .media-sidebar .media-uploader-status.errors h3, /* Back-compat for pre-4.4 */
 .upload-php .mode-grid .media-sidebar .media-uploader-status.errors h2 {
 	display: none;
 }
@@ -529,7 +507,9 @@ border color while dragging a file over the uploader drop area */
 	box-shadow:
 		inset 0 0 2px 3px #f1f1f1,
 		inset 0 0 0 7px #5b9dd9;
-	outline: none;
+	/* Only visible in Windows High Contrast mode */
+	outline: 2px solid transparent;
+	outline-offset: -6px;
 }
 
 .media-frame.mode-grid .selected.attachment {
@@ -559,7 +539,6 @@ border color while dragging a file over the uploader drop area */
 
 .media-frame.mode-grid .media-toolbar select {
 	margin: 0 0 0 10px;
-	font-size: 14px;
 }
 
 .media-frame.mode-grid.mode-edit .media-toolbar-secondary > .select-mode-toggle-button {
@@ -576,8 +555,14 @@ border color while dragging a file over the uploader drop area */
 	margin-top: 0;
 }
 
-.media-frame.mode-grid .spinner {
-	margin-top: 16px;
+.media-search-input-label {
+	margin: 0 0 0 .2em;
+	vertical-align: baseline;
+}
+
+.media-frame.mode-grid .media-search-input-label {
+	position: static;
+	margin: 0 0 0 .5em;
 }
 
 .attachments-browser .media-toolbar-secondary > .media-button {
@@ -682,29 +667,32 @@ border color while dragging a file over the uploader drop area */
 	box-shadow: none;
 }
 
+.upload-php .media-modal-close:focus,
+.edit-attachment-frame .edit-media-header .left:focus,
+.edit-attachment-frame .edit-media-header .right:focus {
+	/* Only visible in Windows High Contrast mode */
+	outline: 2px solid transparent;
+	outline-offset: -2px;
+}
+
 .upload-php .media-modal-close:focus .media-modal-icon:before,
 .upload-php .media-modal-close:hover .media-modal-icon:before {
 	color: #000;
 }
 
-.edit-attachment-frame .edit-media-header .left:before,
-.rtl .edit-attachment-frame .edit-media-header .right:before {
+.edit-attachment-frame .edit-media-header .left:before {
 	content: "\f345";
 }
 
-.edit-attachment-frame .edit-media-header .right:before,
-.rtl .edit-attachment-frame .edit-media-header .left:before {
+.edit-attachment-frame .edit-media-header .right:before {
 	content: "\f341";
 }
 
-.edit-attachment-frame .edit-media-header .left.disabled,
-.edit-attachment-frame .edit-media-header .right.disabled,
-.edit-attachment-frame .edit-media-header .left.disabled:hover,
-.edit-attachment-frame .edit-media-header .right.disabled:hover {
+.edit-attachment-frame .edit-media-header [disabled],
+.edit-attachment-frame .edit-media-header [disabled]:hover {
 	color: #ccc;
 	background: inherit;
 	cursor: default;
-	pointer-events: none;
 }
 
 .edit-attachment-frame .media-frame-content,
@@ -751,6 +739,10 @@ border color while dragging a file over the uploader drop area */
 	background-size: 20px 20px;
 }
 
+.edit-attachment-frame .attachment-media-view .details-image.icon {
+	background: none;
+}
+
 .edit-attachment-frame .attachment-media-view .attachment-actions {
 	text-align: center;
 }
@@ -762,7 +754,7 @@ border color while dragging a file over the uploader drop area */
 .edit-attachment-frame input,
 .edit-attachment-frame textarea {
 	padding: 6px 8px;
-	line-height: 16px;
+	line-height: 1.14285714;
 }
 
 .edit-attachment-frame .attachment-info {
@@ -810,6 +802,13 @@ border color while dragging a file over the uploader drop area */
 /*------------------------------------------------------------------------------
   14.2 - Image Editor
 ------------------------------------------------------------------------------*/
+.wp_attachment_details .attachment-alt-text {
+	margin-bottom: 5px;
+}
+
+.wp_attachment_details .attachment-alt-text-description {
+	margin-top: 5px;
+}
 
 .wp_attachment_details label[for="content"] {
 	font-size: 13px;
@@ -852,8 +851,10 @@ border color while dragging a file over the uploader drop area */
 }
 
 .wp_attachment_holder .imgedit-wrap .imgedit-panel-content {
-	padding: 3px 0 0 16px;
 	float: right;
+	padding: 3px 0 0 16px;
+	min-width: 400px;
+	max-width: calc( 100% - 266px );
 }
 
 .wp_attachment_holder .imgedit-wrap .imgedit-settings {
@@ -888,7 +889,6 @@ border color while dragging a file over the uploader drop area */
 	margin: -10px -10px 0 0;
 	background: transparent url(../images/spinner.gif) no-repeat center;
 	background-size: 20px 20px;
-	-webkit-transform: translateZ(0);
 	transform: translateZ(0);
 }
 
@@ -922,7 +922,6 @@ border color while dragging a file over the uploader drop area */
 }
 
 .imgedit-menu {
-	min-width: 300px;
 	margin: 0 0 12px;
 }
 
@@ -933,31 +932,34 @@ border color while dragging a file over the uploader drop area */
 }
 
 .image-editor .imgedit-menu .button {
-	float: right;
-	width: 32px;
-	height: 32px;
-	margin: 0 0 0 8px;
-	padding: 0;
-	background: #f1f1f1;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-	line-height: 16px;
-	color: #72777c;
+	display: inline-block;
+	width: auto;
+	min-height: 28px;
+	font-size: 13px;
+	line-height: 2;
+	margin: 0 0 8px 8px;
+	padding: 0 10px;
 }
 
 .imgedit-menu .button:before {
-	font: normal 20px/1 dashicons;
+	font: normal 16px/1 dashicons;
+	margin-left: 8px;
 	speak: none;
 	vertical-align: middle;
+	position: relative;
+	top: -2px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 .imgedit-menu .button.disabled {
-	border-color: #ccc;
-	background-color: #ddd;
-	color: #72777c;
-	filter: alpha(opacity=50);
-	opacity: 0.5;
+	color: #a0a5aa;
+	border-color: #ddd;
+	background: #f7f7f7;
+	box-shadow: none;
+	text-shadow: 0 1px 0 #fff;
 	cursor: default;
+	transform: none;
 }
 
 .imgedit-crop:before {
@@ -1034,7 +1036,6 @@ border color while dragging a file over the uploader drop area */
 	display: block;
 }
 
-#poststuff .imgedit-group-top h3, /* Back-compat for pre-4.4 */
 #poststuff .imgedit-group-top h2 {
 	display: inline-block;
 	margin: 0;
@@ -1055,7 +1056,11 @@ border color while dragging a file over the uploader drop area */
 
 .imgedit-help {
 	display: none;
-	font-style: italic;
+	padding-bottom: 8px;
+}
+
+.imgedit-help.imgedit-restore {
+	padding-bottom: 0;
 }
 
 /* higher specificity than buttons */
@@ -1077,8 +1082,9 @@ border color while dragging a file over the uploader drop area */
 .image-editor .imgedit-settings .imgedit-help-toggle:focus {
 	color: #0074a2;
 	border-color: #5b9dd9;
-	outline: none;
-	box-shadow: 0 0 3px rgba( 0, 115, 170, .8 );
+	box-shadow: 0 0 3px rgba(0, 115, 170, 0.8);
+	/* Only visible in Windows High Contrast mode */
+	outline: 2px solid transparent;
 }
 
 .form-table td.imgedit-response {
@@ -1111,26 +1117,38 @@ span.imgedit-scale-warn {
 	margin: 8px 0;
 }
 
+.imgedit-save-target legend {
+	font-weight: 600;
+}
+
 .imgedit-group {
 	margin-bottom: 8px;
 	padding: 10px;
 }
 
+.imgedit-settings .imgedit-original-dimensions {
+	display: inline-block;
+}
+
 .imgedit-settings .imgedit-scale input[type="text"],
 .imgedit-settings .imgedit-crop-ratio input[type="text"],
 .imgedit-settings .imgedit-crop-sel input[type="text"] {
-	width: 50px;
+	width: 80px;
 	font-size: 14px;
-	padding: 5px 8px;
+	padding: 0 8px;
 }
 
 .imgedit-separator {
 	display: inline-block;
 	width: 7px;
 	text-align: center;
-	vertical-align: middle;
 	font-size: 13px;
 	color: #444;
+}
+
+.imgedit-settings .imgedit-scale-button-wrapper {
+	margin-top: 0.3077em;
+	display: block;
 }
 
 .imgedit-settings .imgedit-scale .button {
@@ -1147,6 +1165,10 @@ audio, video {
 	max-width: 100%;
 }
 
+.mejs-container .mejs-controls {
+	box-sizing: border-box;
+}
+
 /* =Media Queries
 -------------------------------------------------------------- */
 
@@ -1161,10 +1183,10 @@ audio, video {
 	}
 }
 
-@media screen and ( max-width: 782px ) {
+@media screen and (max-width: 782px) {
 	.wp_attachment_details label[for="content"] {
 		font-size: 14px;
-		line-height: 1.5em;
+		line-height: 1.5;
 	}
 
 	.media-upload-form .media-item.error,
@@ -1184,13 +1206,15 @@ audio, video {
 	.imgedit-settings .imgedit-scale input[type="text"],
 	.imgedit-settings .imgedit-crop-ratio input[type="text"],
 	.imgedit-settings .imgedit-crop-sel input[type="text"] {
-		width: 60px;
 		font-size: 16px;
 		padding: 6px 10px;
 	}
 
-	.imgedit-applyto .imgedit-label {
-		vertical-align: middle;
+	.wp_attachment_holder .imgedit-wrap .imgedit-panel-content,
+	.wp_attachment_holder .imgedit-wrap .imgedit-settings {
+		float: none;
+		width: auto;
+		max-width: none;
 	}
 }
 
@@ -1205,7 +1229,7 @@ audio, video {
 	}
 }
 
-@media only screen and ( max-width: 782px ) {
+@media only screen and (max-width: 782px) {
 	.media-frame.mode-select .attachments-browser.fixed .media-toolbar {
 		top: 46px;
 		left: 10px;
@@ -1228,10 +1252,6 @@ audio, video {
 	.edit-attachment-frame .edit-media-header .right {
 		width: 40px;
 		height: 40px;
-	}
-
-	.upload-php .media-modal-close .media-modal-icon {
-		margin: 9px 10px;
 	}
 
 	.edit-attachment-frame .edit-media-header .right:before,

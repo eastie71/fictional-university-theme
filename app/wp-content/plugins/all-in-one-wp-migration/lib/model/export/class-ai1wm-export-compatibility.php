@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2017 ServMask Inc.
+ * Copyright (C) 2014-2020 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,10 @@
  * ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	die( 'Kangaroos cannot jump here' );
+}
+
 class Ai1wm_Export_Compatibility {
 
 	public static function execute( $params ) {
@@ -38,27 +42,7 @@ class Ai1wm_Export_Compatibility {
 			return $params;
 		}
 
-		// Set progress
-		Ai1wm_Status::error( implode( $messages ) );
-
-		// Manual export
-		if ( empty( $params['ai1wm_manual_export'] ) ) {
-			if ( function_exists( 'wp_mail' ) ) {
-
-				// Set recipient
-				$recipient = get_option( 'admin_email', '' );
-
-				// Set subject
-				$subject = __( 'Unable to backup your site', AI1WM_PLUGIN_NAME );
-
-				// Set message
-				$message = sprintf( __( 'All-in-One WP Migration was unable to backup %s. %s', AI1WM_PLUGIN_NAME ), site_url(), implode( $messages ) );
-
-				// Send email
-				wp_mail( $recipient, $subject, $message );
-			}
-		}
-
-		exit;
+		// Error message
+		throw new Ai1wm_Compatibility_Exception( implode( $messages ) );
 	}
 }

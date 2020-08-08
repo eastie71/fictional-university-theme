@@ -7,7 +7,7 @@
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
  *
- * http://odyniec.net/projects/imgareaselect/
+ * https://github.com/odyniec/imgareaselect
  *
  */
 
@@ -748,7 +748,7 @@ $.imgAreaSelect = function (img, options) {
      */
     function imgMouseDown(event) {
         /* Ignore the event if animation is in progress */
-        if (event.which != 1 || $outer.is(':animated')) return false;
+        if (event.which > 1 || $outer.is(':animated')) return false;
 
         adjust();
         startX = x1 = evX(event);

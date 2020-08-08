@@ -92,11 +92,11 @@ class WP_Community_Events {
 			return $cached_events;
 		}
 
-		// include an unmodified $wp_version
-		include( ABSPATH . WPINC . '/version.php' );
+		// Include an unmodified $wp_version.
+		require ABSPATH . WPINC . '/version.php';
 
-		$api_url      = 'http://api.wordpress.org/events/1.0/';
-		$request_args = $this->get_request_args( $location_search, $timezone );
+		$api_url                    = 'http://api.wordpress.org/events/1.0/';
+		$request_args               = $this->get_request_args( $location_search, $timezone );
 		$request_args['user-agent'] = 'WordPress/' . $wp_version . '; ' . home_url( '/' );
 
 		if ( wp_http_supports( array( 'ssl' ) ) ) {
@@ -113,8 +113,8 @@ class WP_Community_Events {
 		} elseif ( 200 !== $response_code ) {
 			$response_error = new WP_Error(
 				'api-error',
-				/* translators: %d: numeric HTTP status code, e.g. 400, 403, 500, 504, etc. */
-				sprintf( __( 'Invalid API response code (%d)' ), $response_code )
+				/* translators: %d: Numeric HTTP status code, e.g. 400, 403, 500, 504, etc. */
+				sprintf( __( 'Invalid API response code (%d).' ), $response_code )
 			);
 		} elseif ( ! isset( $response_body['location'], $response_body['events'] ) ) {
 			$response_error = new WP_Error(
@@ -203,7 +203,7 @@ class WP_Community_Events {
 
 		// Wrap the args in an array compatible with the second parameter of `wp_remote_get()`.
 		return array(
-			'body' => $args
+			'body' => $args,
 		);
 	}
 
@@ -229,12 +229,11 @@ class WP_Community_Events {
 	 *
 	 * @since 4.8.0
 	 *
-	 * @return false|string The anonymized address on success; the given address
+	 * @return string|false The anonymized address on success; the given address
 	 *                      or false on failure.
 	 */
 	public static function get_unsafe_client_ip() {
-		$client_ip = $netmask = false;
-		$ip_prefix = '';
+		$client_ip = false;
 
 		// In order of preference, with the best ones for this purpose first.
 		$address_headers = array(
@@ -265,43 +264,13 @@ class WP_Community_Events {
 			return false;
 		}
 
-		// Detect what kind of IP address this is.
-		$is_ipv6 = substr_count( $client_ip, ':' ) > 1;
-		$is_ipv4 = ( 3 === substr_count( $client_ip, '.' ) );
+		$anon_ip = wp_privacy_anonymize_ip( $client_ip, true );
 
-		if ( $is_ipv6 && $is_ipv4 ) {
-			// IPv6 compatibility mode, temporarily strip the IPv6 part, and treat it like IPv4.
-			$ip_prefix = '::ffff:';
-			$client_ip = preg_replace( '/^\[?[0-9a-f:]*:/i', '', $client_ip );
-			$client_ip = str_replace( ']', '', $client_ip );
-			$is_ipv6   = false;
-		}
-
-		if ( $is_ipv6 ) {
-			// IPv6 addresses will always be enclosed in [] if there's a port.
-			$ip_start = 1;
-			$ip_end   = (int) strpos( $client_ip, ']' ) - 1;
-			$netmask  = 'ffff:ffff:ffff:ffff:0000:0000:0000:0000';
-
-			// Strip the port (and [] from IPv6 addresses), if they exist.
-			if ( $ip_end > 0 ) {
-				$client_ip = substr( $client_ip, $ip_start, $ip_end );
-			}
-
-			// Partially anonymize the IP by reducing it to the corresponding network ID.
-			if ( function_exists( 'inet_pton' ) && function_exists( 'inet_ntop' ) ) {
-				$client_ip = inet_ntop( inet_pton( $client_ip ) & inet_pton( $netmask ) );
-			}
-		} elseif ( $is_ipv4 ) {
-			// Strip any port and partially anonymize the IP.
-			$last_octet_position = strrpos( $client_ip, '.' );
-			$client_ip           = substr( $client_ip, 0, $last_octet_position ) . '.0';
-		} else {
+		if ( '0.0.0.0' === $anon_ip || '::' === $anon_ip ) {
 			return false;
 		}
 
-		// Restore the IPv6 prefix to compatibility mode addresses.
-		return $ip_prefix . $client_ip;
+		return $anon_ip;
 	}
 
 	/**
@@ -339,7 +308,7 @@ class WP_Community_Events {
 
 		if ( isset( $location['ip'] ) ) {
 			$key = 'community-events-' . md5( $location['ip'] );
-		} else if ( isset( $location['latitude'], $location['longitude'] ) ) {
+		} elseif ( isset( $location['latitude'], $location['longitude'] ) ) {
 			$key = 'community-events-' . md5( $location['latitude'] . $location['longitude'] );
 		}
 
@@ -372,8 +341,8 @@ class WP_Community_Events {
 	 *
 	 * @since 4.8.0
 	 *
-	 * @return false|array false on failure; an array containing `location`
-	 *                     and `events` items on success.
+	 * @return array|false An array containing `location` and `events` items
+	 *                     on success, false on failure.
 	 */
 	public function get_cached_events() {
 		$cached_response = get_site_transient( $this->get_events_transient_key( $this->user_location ) );
@@ -406,9 +375,48 @@ class WP_Community_Events {
 				 * so that users can tell at a glance if the event is on a day they
 				 * are available, without having to open the link.
 				 */
-				/* translators: Date format for upcoming events on the dashboard. Include the day of the week. See https://secure.php.net/date. */
-				$response_body['events'][ $key ]['formatted_date'] = date_i18n( __( 'l, M j, Y' ), $timestamp );
-				$response_body['events'][ $key ]['formatted_time'] = date_i18n( get_option( 'time_format' ), $timestamp );
+				/* translators: Date format for upcoming events on the dashboard. Include the day of the week. See https://www.php.net/date */
+				$formatted_date = date_i18n( __( 'l, M j, Y' ), $timestamp );
+				$formatted_time = date_i18n( get_option( 'time_format' ), $timestamp );
+
+				if ( isset( $event['end_date'] ) ) {
+					$end_timestamp      = strtotime( $event['end_date'] );
+					$formatted_end_date = date_i18n( __( 'l, M j, Y' ), $end_timestamp );
+
+					if ( 'meetup' !== $event['type'] && $formatted_end_date !== $formatted_date ) {
+						/* translators: Upcoming events month format. See https://www.php.net/date */
+						$start_month = date_i18n( _x( 'F', 'upcoming events month format' ), $timestamp );
+						$end_month   = date_i18n( _x( 'F', 'upcoming events month format' ), $end_timestamp );
+
+						if ( $start_month === $end_month ) {
+							$formatted_date = sprintf(
+								/* translators: Date string for upcoming events. 1: Month, 2: Starting day, 3: Ending day, 4: Year. */
+								__( '%1$s %2$d–%3$d, %4$d' ),
+								$start_month,
+								/* translators: Upcoming events day format. See https://www.php.net/date */
+								date_i18n( _x( 'j', 'upcoming events day format' ), $timestamp ),
+								date_i18n( _x( 'j', 'upcoming events day format' ), $end_timestamp ),
+								/* translators: Upcoming events year format. See https://www.php.net/date */
+								date_i18n( _x( 'Y', 'upcoming events year format' ), $timestamp )
+							);
+						} else {
+							$formatted_date = sprintf(
+								/* translators: Date string for upcoming events. 1: Starting month, 2: Starting day, 3: Ending month, 4: Ending day, 5: Year. */
+								__( '%1$s %2$d – %3$s %4$d, %5$d' ),
+								$start_month,
+								date_i18n( _x( 'j', 'upcoming events day format' ), $timestamp ),
+								$end_month,
+								date_i18n( _x( 'j', 'upcoming events day format' ), $end_timestamp ),
+								date_i18n( _x( 'Y', 'upcoming events year format' ), $timestamp )
+							);
+						}
+
+						$formatted_date = wp_maybe_decline_date( $formatted_date, 'F j, Y' );
+					}
+				}
+
+				$response_body['events'][ $key ]['formatted_date'] = $formatted_date;
+				$response_body['events'][ $key ]['formatted_time'] = $formatted_time;
 			}
 		}
 
@@ -416,31 +424,52 @@ class WP_Community_Events {
 	}
 
 	/**
-	 * Discards expired events, and reduces the remaining list.
+	 * Prepares the event list for presentation.
+	 *
+	 * Discards expired events, and makes WordCamps "sticky." Attendees need more
+	 * advanced notice about WordCamps than they do for meetups, so camps should
+	 * appear in the list sooner. If a WordCamp is coming up, the API will "stick"
+	 * it in the response, even if it wouldn't otherwise appear. When that happens,
+	 * the event will be at the end of the list, and will need to be moved into a
+	 * higher position, so that it doesn't get trimmed off.
 	 *
 	 * @since 4.8.0
+	 * @since 4.9.7 Stick a WordCamp to the final list.
 	 *
 	 * @param  array $response_body The response body which contains the events.
 	 * @return array The response body with events trimmed.
 	 */
 	protected function trim_events( $response_body ) {
 		if ( isset( $response_body['events'] ) ) {
-			$current_timestamp = current_time( 'timestamp' );
+			$wordcamps = array();
+			$today     = current_time( 'Y-m-d' );
 
 			foreach ( $response_body['events'] as $key => $event ) {
-				// Skip WordCamps, because they might be multi-day events.
-				if ( 'meetup' !== $event['type'] ) {
+				/*
+				 * Skip WordCamps, because they might be multi-day events.
+				 * Save a copy so they can be pinned later.
+				 */
+				if ( 'wordcamp' === $event['type'] ) {
+					$wordcamps[] = $event;
 					continue;
 				}
 
-				$event_timestamp = strtotime( $event['date'] );
+				// We don't get accurate time with timezone from API, so we only take the date part (Y-m-d).
+				$event_date = substr( $event['date'], 0, 10 );
 
-				if ( $current_timestamp > $event_timestamp && ( $current_timestamp - $event_timestamp ) > DAY_IN_SECONDS ) {
+				if ( $today > $event_date ) {
 					unset( $response_body['events'][ $key ] );
 				}
 			}
 
 			$response_body['events'] = array_slice( $response_body['events'], 0, 3 );
+			$trimmed_event_types     = wp_list_pluck( $response_body['events'], 'type' );
+
+			// Make sure the soonest upcoming WordCamp is pinned in the list.
+			if ( ! in_array( 'wordcamp', $trimmed_event_types ) && $wordcamps ) {
+				array_pop( $response_body['events'] );
+				array_push( $response_body['events'], $wordcamps[0] );
+			}
 		}
 
 		return $response_body;
@@ -463,11 +492,13 @@ class WP_Community_Events {
 			return;
 		}
 
-		error_log( sprintf(
-			'%s: %s. Details: %s',
-			__METHOD__,
-			trim( $message, '.' ),
-			wp_json_encode( $details )
-		) );
+		error_log(
+			sprintf(
+				'%s: %s. Details: %s',
+				__METHOD__,
+				trim( $message, '.' ),
+				wp_json_encode( $details )
+			)
+		);
 	}
 }
