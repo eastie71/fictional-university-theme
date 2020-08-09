@@ -72,9 +72,9 @@
 			// This is the Local by Flywheel reference
 			wp_enqueue_script('main-university-js', 'http://localhost:3000/bundled.js', NULL, '1.0', true);
 		} else {
-			wp_enqueue_script('our-vendors-js', get_theme_file_uri('/bundled-assets/vendors~scripts.571ee4c226fb3e617931.js'), NULL, '1.0', true);
-			wp_enqueue_script('main-university-js', get_theme_file_uri('/bundled-assets/scripts.6fe5cfe07af43a3afb1a.js'), NULL, '1.0', true);
-			wp_enqueue_style('our-main-styles', get_theme_file_uri('/bundled-assets/styles.6fe5cfe07af43a3afb1a.css'));
+			wp_enqueue_script('our-vendors-js', get_theme_file_uri('/bundled-assets/vendors~scripts.c9d3b28440b9a35ba1fe.js'), NULL, '1.0', true);
+			wp_enqueue_script('main-university-js', get_theme_file_uri('/bundled-assets/scripts.41c5f22f94e150bf7fc9.js'), NULL, '1.0', true);
+			wp_enqueue_style('our-main-styles', get_theme_file_uri('/bundled-assets/styles.41c5f22f94e150bf7fc9.css'));
 		}
 		// inside the main js file setup some global vars for quick access
 		wp_localize_script('main-university-js', 'universityData', array(
@@ -156,12 +156,14 @@
 
 	// Customize Login Screen
 	function ourHeaderUrl() {
+		// This is to overwrite the the Link so it doesnt point to Wordpress...
 		return esc_url(site_url("/"));
 	}
 	add_filter('login_headerurl', 'ourHeaderUrl');
 
 	function ourLoginCSS() {
-		wp_enqueue_style('university_main_styles', get_stylesheet_uri());
+		// Overwrite the default Wordpress Styles with our own for the Login Screen
+		wp_enqueue_style('our-main-styles', get_theme_file_uri('/bundled-assets/styles.41c5f22f94e150bf7fc9.css'));
 		wp_enqueue_style('custom-google-font', '//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i');
 	}
 	add_action('login_enqueue_scripts', 'ourLoginCSS');

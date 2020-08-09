@@ -3,12 +3,13 @@
 		// Custom Event Post Type
 		register_post_type('event', array(
 			'show_in_rest' => true, 
+			// Working with the "Members" plugin here
 			// default for capability type is "post" - which means an editor will have access to this type
 			// unless you set a specific capability type (such as'event' here)
-// For some reason Admin cannot see this type now!?!
-			//'capability_type' => 'event',
+			// Note: If you cannot see the Events Post type as Admin - then you need to grant permission in the Members Plugin
+			'capability_type' => 'event',
 			// without setting the map-meta-cap to true we would need to create our own custom logic for when the new capability is required. 
-			//'map_meta_cap' => true,
+			'map_meta_cap' => true,
 			'has_archive' => true,
 			// by default slug would be 'event' so override to 'events' instead
 			'rewrite' => array('slug' => 'events'),
@@ -64,8 +65,9 @@
 		// Custom Campus Post Type
 		register_post_type('campus', array(
 			'show_in_rest' => true,
-			// 'capability_type' => 'campus',
-			// 'map_meta_cap' => true,
+			// Note: If you cannot see the Campuses Post type as Admin - then you need to grant permission in the Members Plugin
+			'capability_type' => 'campus',
+			'map_meta_cap' => true,
 			// by default post types get title and editor - add excerpt as well
 			'supports' => array('title', 'editor', 'excerpt'),
 			// by default slug would be 'program' so override to 'programs' instead
