@@ -62,7 +62,7 @@
 	}  
 	function university_files()
 	{
-		wp_enqueue_script('googleMap', '//maps.googleapis.com/maps/api/js?key=AIzaSyBeuIrRBsTSpDg8QDJGZPVYjKEyg2zrWjs', NULL, '1.0', true);
+		wp_enqueue_script('googleMap', '//maps.googleapis.com/maps/api/js?key=AIzaSyCT-QAxH9JGB4DbEOGwHgiG9xb8yWhaYT0', NULL, '1.0', true);
 		//wp_enqueue_script('main-university-js', get_theme_file_uri('js/scripts-bundled.js'), NULL, filemtime(get_theme_file_path().'/js/scripts-bundled.js'), true);
 		wp_enqueue_style('custom-google-font', '//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i');
 		wp_enqueue_style('font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
@@ -73,8 +73,8 @@
 			wp_enqueue_script('main-university-js', 'http://localhost:3000/bundled.js', NULL, '1.0', true);
 		} else {
 			wp_enqueue_script('our-vendors-js', get_theme_file_uri('/bundled-assets/vendors~scripts.571ee4c226fb3e617931.js'), NULL, '1.0', true);
-			wp_enqueue_script('main-university-js', get_theme_file_uri('/bundled-assets/scripts.2c692d74997d217483a0.js'), NULL, '1.0', true);
-			wp_enqueue_style('our-main-styles', get_theme_file_uri('/bundled-assets/styles.2c692d74997d217483a0.css'));
+			wp_enqueue_script('main-university-js', get_theme_file_uri('/bundled-assets/scripts.6fe5cfe07af43a3afb1a.js'), NULL, '1.0', true);
+			wp_enqueue_style('our-main-styles', get_theme_file_uri('/bundled-assets/styles.6fe5cfe07af43a3afb1a.css'));
 		}
 		// inside the main js file setup some global vars for quick access
 		wp_localize_script('main-university-js', 'universityData', array(
@@ -122,6 +122,7 @@
 			$query->set('order', 'ASC');
 			$query->set('posts_per_page', -1);
 		}
+		// Load ALL of the campus posts so that it will show ALL pins for locations on the Google Map
 		if (!is_admin() and is_post_type_archive('campus') and is_main_query()) {
 			$query->set('posts_per_page', -1);
 		}
@@ -129,7 +130,7 @@
 	add_action('pre_get_posts', 'university_adjust_queries');
 
 	function university_map_key($api) {
-		$api['key'] = 'AIzaSyBeuIrRBsTSpDg8QDJGZPVYjKEyg2zrWjs';
+		$api['key'] = 'AIzaSyCT-QAxH9JGB4DbEOGwHgiG9xb8yWhaYT0';
 		return $api;
 	}
 	add_filter('acf/fields/google_map/api', 'university_map_key');
