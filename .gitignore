@@ -40,6 +40,9 @@ app/wp-content/upgrade/
 app/wp-content/wp-cache-config.php
 app/wp-content/plugins/
 !app/wp-content/plugins/my-first-plugin/
+app/wp-content/vendor/
+app/wp-content/wflogs/
+app/wp/
 app/.user.ini
 
 /.htaccess
