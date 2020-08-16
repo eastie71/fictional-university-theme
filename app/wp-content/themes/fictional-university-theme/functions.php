@@ -73,8 +73,8 @@
 			wp_enqueue_script('main-university-js', 'http://localhost:3000/bundled.js', NULL, '1.0', true);
 		} else {
 			wp_enqueue_script('our-vendors-js', get_theme_file_uri('/bundled-assets/vendors~scripts.c9d3b28440b9a35ba1fe.js'), NULL, '1.0', true);
-			wp_enqueue_script('main-university-js', get_theme_file_uri('/bundled-assets/scripts.41c5f22f94e150bf7fc9.js'), NULL, '1.0', true);
-			wp_enqueue_style('our-main-styles', get_theme_file_uri('/bundled-assets/styles.41c5f22f94e150bf7fc9.css'));
+			wp_enqueue_script('main-university-js', get_theme_file_uri('/bundled-assets/scripts.2b12d491a2d279788a64.js'), NULL, '1.0', true);
+			wp_enqueue_style('our-main-styles', get_theme_file_uri('/bundled-assets/styles.2b12d491a2d279788a64.css'));
 		}
 		// inside the main js file setup some global vars for quick access
 		wp_localize_script('main-university-js', 'universityData', array(
@@ -163,7 +163,7 @@
 
 	function ourLoginCSS() {
 		// Overwrite the default Wordpress Styles with our own for the Login Screen
-		wp_enqueue_style('our-main-styles', get_theme_file_uri('/bundled-assets/styles.41c5f22f94e150bf7fc9.css'));
+		wp_enqueue_style('our-main-styles', get_theme_file_uri('/bundled-assets/styles.2b12d491a2d279788a64.css'));
 		wp_enqueue_style('custom-google-font', '//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i');
 	}
 	add_action('login_enqueue_scripts', 'ourLoginCSS');
@@ -178,12 +178,13 @@
 	// Also remove any HTML from the content
 	// Also limit number of Notes posted to $maxNotePosts
 	function validateNotePosts($data, $postarr) {
-		$maxNoPosts = 20;
+		$maxNoPosts = 8;
 		if ($data['post_type'] == 'note') {
 			// The postarr ID will be empty on creating NEW post
 			if (count_user_posts(get_current_user_id(), 'note') > $maxNoPosts && !$postarr['ID']) {
-				die("Sorry, Note limit (".$maxNoPosts.") reached. Delete existing note to add this note.");
+				die("Sorry, Note limit (".$maxNoPosts.") reached. Delete an existing note to add this note.");
 			}
+			// Strip out any HTML entered by the user
 			$data['post_content'] = sanitize_textarea_field($data['post_content']);
 			$data['post_title'] = sanitize_text_field($data['post_title']);
 		}
