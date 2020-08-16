@@ -2,8 +2,11 @@
 	function university_post_types() {
 		// Custom Event Post Type
 		register_post_type('event', array(
+			'show_in_rest' => true, 
+			// Working with the "Members" plugin here
 			// default for capability type is "post" - which means an editor will have access to this type
 			// unless you set a specific capability type (such as'event' here)
+			// Note: If you cannot see the Events Post type as Admin - then you need to grant permission in the Members Plugin
 			'capability_type' => 'event',
 			// without setting the map-meta-cap to true we would need to create our own custom logic for when the new capability is required. 
 			'map_meta_cap' => true,
@@ -25,6 +28,7 @@
 
 		// Custom Program Post Type
 		register_post_type('program', array(
+			'show_in_rest' => true,
 			'has_archive' => true,
 			// by default slug would be 'program' so override to 'programs' instead
 			'rewrite' => array('slug' => 'programs'),
@@ -44,6 +48,7 @@
 
 		// Custom Professor Post Type
 		register_post_type('professor', array(
+			'show_in_rest' => true,
 			// by default post types get title and editor - needed to add thumbnail for Professor image
 			'supports' => array('title', 'editor', 'thumbnail'),
 			'public' => true,
@@ -59,6 +64,8 @@
 
 		// Custom Campus Post Type
 		register_post_type('campus', array(
+			'show_in_rest' => true,
+			// Note: If you cannot see the Campuses Post type as Admin - then you need to grant permission in the Members Plugin
 			'capability_type' => 'campus',
 			'map_meta_cap' => true,
 			// by default post types get title and editor - add excerpt as well

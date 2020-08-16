@@ -1,4 +1,5 @@
-import $ from 'jquery';
+//import $ from 'jquery';
+import axios from "axios"
 
 class Search {
 	// 1) Describe and initiate the object
@@ -6,11 +7,11 @@ class Search {
 		// append the HTML associated with the Search overlay to the end of the html body
 		this.addSearchHTML();
 
-		this.openButton = $(".js-search-trigger");
-		this.closeButton = $(".search-overlay__close");
-		this.searchOverlay = $(".search-overlay");
-		this.searchField = $("#search-term");
-		this.searchResults = $("#search-overlay__results");
+		this.openButton = document.querySelectorAll(".js-search-trigger");
+		this.closeButton = document.querySelector(".search-overlay__close");
+		this.searchOverlay = document.querySelector(".search-overlay");
+		this.searchField = document.querySelector("#search-term");
+		this.searchResults = document.querySelector("#search-overlay__results");
 		this.events();
 		this.isSearchOverlayOpen = false;
 		this.isSpinnerVisible = false;
@@ -20,19 +21,24 @@ class Search {
 
 	// 2) Events
 	events() {
-		this.openButton.on("click", this.openOverlay.bind(this));
-		this.closeButton.on("click", this.closeOverlay.bind(this));
-		$(document).on("keydown", this.keyPressHandler.bind(this));
-		this.searchField.on("keyup", this.searchText.bind(this))
+		this.openButton.forEach(el => {
+			el.addEventListener("click", e => {
+				e.preventDefault()
+			  	this.openOverlay()
+			})
+		})
+		this.closeButton.addEventListener("click", () => this.closeOverlay());
+		document.addEventListener("keydown", e => this.keyPressHandler(e));
+		this.searchField.addEventListener("keyup", () => this.searchText());
 	}
 	
 	// 3) Methods (function, action...)
 	openOverlay() {
-		this.searchOverlay.addClass("search-overlay--active");
+		this.searchOverlay.classList.add("search-overlay--active");
 		// remove the scrolling of the page when search overlay modal opens
-		$("body").addClass("body-no-scroll");
+		document.body.classList.add("body-no-scroll");
 		// Clear the search field of any previous search entry
-		this.searchField.val('');
+		this.searchField.valule = "";
 		// Set the focus on to the search field after 301 miliseconds (allowing for overlay to load)
 		// Shorthand code here for an anonymous function using ES6 arrow function
 		setTimeout( () => this.searchField.focus(), 301);
@@ -42,15 +48,15 @@ class Search {
 	}
 
 	closeOverlay() {
-		this.searchOverlay.removeClass("search-overlay--active");
+		this.searchOverlay.classList.remove("search-overlay--active");
 		// re-enable the scrolling of the page when search overlay modal is closed
-		$("body").removeClass("body-no-scroll");
+		document.body.classList.remove("body-no-scroll");
 		this.isSearchOverlayOpen = false;
 	}
 
 	keyPressHandler(e) {
 		// Open the Search window if 's' key is pressed and NOT inside a text input field
-		if (e.keyCode == 83 && !this.isSearchOverlayOpen && !$("input, textarea").is(':focus')) {
+		if (e.keyCode == 83 && !this.isSearchOverlayOpen && document.activeElement.tagName != "INPUT" && document.activeElement.tagName != "TEXTAREA") {
 			this.openOverlay();
 		// Close the search window if ESC key is pressed
 		} else if (e.keyCode == 27 && this.isSearchOverlayOpen) {
@@ -59,30 +65,32 @@ class Search {
 	}
 
 	searchText() {
-		if (this.searchField.val() != this.previousSearchText) {
+		if (this.searchField.value != this.previousSearchText) {
 			clearTimeout(this.typingTimer);
-			if (this.searchField.val()) {
+			if (this.searchField.value) {
 				if (!this.isSpinnerVisible) {
-					this.searchResults.html('<div class="spinner-loader"></div>')
+					this.searchResults.innerHTML = '<div class="spinner-loader"></div>';
 					this.isSpinnerVisible = true;
 				}
 				this.typingTimer = setTimeout(this.getSearchResults.bind(this), 750);
 			} else {
-				this.searchResults.html('');
+				this.searchResults.innerHTML = "";
 				this.isSpinnerVisible = false;
 			}
 		}
-		this.previousSearchText = this.searchField.val();
+		this.previousSearchText = this.searchField.value;
 	}
 
-	getSearchResults() {
-		// (results) => is equivalent to function(results){}.bind() (ES6 arrow function)
-		$.getJSON(universityData.root_url + '/wp-json/university/v1/search?data=' + this.searchField.val(), (results) => {
+	async getSearchResults() {
+		try {
+			const response = await axios.get(universityData.root_url + '/wp-json/university/v1/search?data=' + this.searchField.value);
+			const results = response.data;
+
 			// Below is using 'template literals' (``) for creating HTML, and anything within ${} is Javascript
 			// Cannot perform "if conditions" inside ${}, but can use ternary operator
 			// It checks if any results (posts) are found and displays the title with a link for each post found, 
 			// otherwise reports no results found
-			this.searchResults.html(`
+			this.searchResults.innerHTML = `
 				<div class="row">
 					<div class="one-third">
 						<h2 class="search-overlay__section-title">General Information</h2>
@@ -100,11 +108,11 @@ class Search {
 						${results.professors.length ? '<ul class="professor-cards">' : '<p>No Professors Found.</p>'}
 							${results.professors.map(result => `
 								<li class="professor-card__list-item">
-	            					<a class="professor-card" href="${result.permalink}">
-	            						<img class="professor-card__image" src="${result.image}">
-	            						<span class="professor-card__name">${result.title}</span>
-	            					</a>
-	            				</li>
+									<a class="professor-card" href="${result.permalink}">
+										<img class="professor-card__image" src="${result.image}">
+										<span class="professor-card__name">${result.title}</span>
+									</a>
+								</li>
 							`).join('')}
 						${results.professors.length ? '</ul>' : ''}
 					</div>
@@ -118,54 +126,34 @@ class Search {
 						${results.events.length ? '' : `<p>No Events Found. <a href="${universityData.root_url}/events">View All Events</a></p>`}
 							${results.events.map(result => `
 								<div class="event-summary">
-								    <a class="event-summary__date t-center" href="${result.permalink}">
-								        <span class="event-summary__month">${result.month}</span>
-								        <span class="event-summary__day">${result.day}</span>  
-								    </a>
-								    <div class="event-summary__content">
-								        <h5 class="event-summary__title headline headline--tiny"><a href="${result.permalink}">${result.title}</a></h5>
-								        <p>
-								        	${result.excerpt}
-								            <a href="${result.permalink}" class="nu gray"> Learn more</a>
-								        </p>
-								    </div>
+									<a class="event-summary__date t-center" href="${result.permalink}">
+										<span class="event-summary__month">${result.month}</span>
+										<span class="event-summary__day">${result.day}</span>  
+									</a>
+									<div class="event-summary__content">
+										<h5 class="event-summary__title headline headline--tiny"><a href="${result.permalink}">${result.title}</a></h5>
+										<p>
+											${result.excerpt}
+											<a href="${result.permalink}" class="nu gray"> Learn more</a>
+										</p>
+									</div>
 								</div>
 							`).join('')}				
 		
 					</div>
 				</div>
-			`);
+			`;
 			this.isSpinnerVisible = false;
-		});
-
-		// delete this code later
-/**
-		$.when(
-			$.getJSON(universityData.root_url + '/wp-json/wp/v2/posts?search=' + this.searchField.val()),
-			$.getJSON(universityData.root_url + '/wp-json/wp/v2/pages?search=' + this.searchField.val())
-			// (posts, pages) => is equivalent to function(posts, pages){}.bind() (ES6 arrow function)
-			).then((posts, pages) => {
-			// Element zero(0) of posts and pages contains the JSON data we need
-			var combinedResults = posts[0].concat(pages[0]);
-			// Below is using 'template literals' (``) for creating HTML, and anything within ${} is Javascript
-			// Cannot perform "if conditions" inside ${}, but can use ternary operator
-			// It checks if any results (posts) are found and displays the title with a link for each post found, 
-			// otherwise reports no results found
-			this.searchResults.html(`
-				<h2 class="search-overlay__section-title">General Information</h2>
-				${combinedResults.length ? '<ul class="link-list min-list">' : '<p>No Search Results Found.</p>'}
-					${combinedResults.map(result => `<li><a href='${result.link}'>${result.title.rendered}</a> ${result.type == 'post' ? `by ${result.authorName}` : ''} </li>`).join('')}
-				${combinedResults.length ? '</ul>' : ''}
-			`);
-			this.isSpinnerVisible = false;
-		}, () => {
-			this.searchResults.html('<p>Unexpected error occurred. Please try again or contact Administrator.</p>')
-		});
-**/	
+		} catch(e) {
+			console.log(e);
+		}
+	
 	}
 
 	addSearchHTML() {
-		$("body").append(`
+		document.body.insertAdjacentHTML(
+			"beforeend",
+			`
 			<div class="search-overlay">
 			  <div class="search-overlay__top">
 			    <div class="container">

@@ -1,0 +1,43 @@
+{
+    "name": "eastie71/fictional-university",
+    "type": "project",
+    "description": "Fictional University Wordpress Website",
+    "keywords": [
+        "Wordpress",
+        "University",
+        "Javascript",
+        "Development"
+    ],
+    "homepage": "https://github.com/eastie71/fictional-university",
+    "authors": [
+        {
+            "name": "Craig Eastwood",
+            "email": "craig@craigeastwood.com",
+            "homepage": "https://craigeastwood.com"
+        }
+    ],
+    "config": {
+        "vendor-dir": "app/wp-content/vendor"
+    },
+    "extra": {
+        "wordpress-install-dir": "app/wp",
+        "installer-paths": {
+            "app/wp-content/plugins/{$name}/": ["type:wordpress-plugin"],
+            "app/wp-content/themes/{$name}/": ["type:wordpress-theme"],
+            "app/wp-content/mu-plugins/{$name}/": ["type:wordpress-muplugin"]
+        }
+    },
+    "require": {
+        "johnpbloch/wordpress": "*",
+        "wpackagist-plugin/advanced-custom-fields": "*",
+        "wpackagist-plugin/manual-image-crop": "*",
+        "wpackagist-plugin/members": "*",
+        "wpackagist-plugin/regenerate-thumbnails": "*"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url" : "https://wpackagist.org"
+        }
+    ]
+}

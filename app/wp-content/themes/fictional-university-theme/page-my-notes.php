@@ -1,7 +1,7 @@
 <?php
 	// Can only access my notes if you are logged in.
 	if (!is_user_logged_in()) {
-		wp_redirect(esc_url(site_url('/')));
+		wp_redirect(esc_url(home_url('/')));
 		// exit from server so doesnt use any more resources
 		exit;
 	} 

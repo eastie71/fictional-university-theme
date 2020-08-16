@@ -80,31 +80,31 @@
           echo '<hr class="section_break">';
           echo '<h2 class="headline headline--medium">Upcoming '.get_the_title().' Events</h2>';
           if ($homepageEvents->have_posts()) {
-	          while ($homepageEvents->have_posts()) {
-	            $homepageEvents->the_post();
-	        		get_template_part('template-parts/content-event');
-	          } 
-	        } else {
-	        	echo "None Found.";
-	        }
+			while ($homepageEvents->have_posts()) {
+			$homepageEvents->the_post();
+				get_template_part('template-parts/content-event');
+			} 
+		  } else {
+			echo "None Found.";
+		  }	
 
-	        wp_reset_postdata();
+	      wp_reset_postdata();
 
-	        $relatedCampuses = get_field('related_campus');
-	        echo '<hr class="section_break">';
-	        echo '<h2 class="headline headline--medium">Available at the following Campuses:</h2>';
-	        if ($relatedCampuses) {
-	        	echo '<ul class="min-list link-list">';
-	        	foreach ($relatedCampuses as $campus) {
-	        		?>
-	        		<li><a href="<?php echo get_the_permalink($campus); ?>"><?php echo get_the_title($campus); ?></a></li>
-	        		<?php
+	      $relatedCampuses = get_field('related_campus');
+	      echo '<hr class="section_break">';
+	      echo '<h2 class="headline headline--medium">Available at the following Campuses:</h2>';
+	      if ($relatedCampuses) {
+	        echo '<ul class="min-list link-list">';
+	        foreach ($relatedCampuses as $campus) {
+	    ?>
+	        	<li><a href="<?php echo get_the_permalink($campus); ?>"><?php echo get_the_title($campus); ?></a></li>
+	    <?php
 	        	}
 	        	echo '</ul>';
 	        } else {
 	        	echo "Currently Unavailable.";
 	        }
-	        ?>
+	    ?>
 		</div>
 <?php	}
 	get_footer();

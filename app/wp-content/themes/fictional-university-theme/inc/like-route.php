@@ -33,15 +33,16 @@ function createLike($data) {
 		// make sure the ID of the professor actually exists
 		if ($currentUserLikes->found_posts == 0 && get_post_type($prof_id) == 'professor') {
 			// create new like post
-			return wp_insert_post(array(
+			$result['success'] = true;
+			$result['id'] = wp_insert_post(array(
 				'post_type' => 'like',
 				'post_status' => 'publish',
-				//'post_title' => 'PHP title post test',
 				'post_title' => "Professor ID: ".$prof_id,
 				'meta_input' => array(
 					'liked_professor_id' => $prof_id
 				)
 			));
+			return $result;
 		} else {
 			die("Invalid Professor ID");
 		}
@@ -57,7 +58,8 @@ function removeLike($data) {
 	$likeId = sanitize_text_field($data['like']);
 	if (get_current_user_id() == get_post_field('post_author', $likeId) && get_post_type($likeId) == 'like') {
 		wp_delete_post($likeId, true);
-		return 'Successfully removed like';
+		$result['success'] = true;
+		return $result;
 	} else {
 		die("You do not have permission to remove this like");
 	}

@@ -1,5 +1,8 @@
 
 # BEGIN WordPress
+# The directives (lines) between "BEGIN WordPress" and "END WordPress" are
+# dynamically generated, and should only be modified via WordPress filters.
+# Any changes to the directives between these markers will be overwritten.
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteBase /
@@ -8,61 +11,5 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /index.php [L]
 </IfModule>
+
 # END WordPress
-
-<FilesMatch "^.*(error_log|wp-config\.php|php.ini|\.[hH][tT][aApP].*)$">
-Order deny,allow
-Deny from all
-</FilesMatch>
-
-# START EXPIRES CACHING #
-<ifModule mod_expires.c>
-ExpiresActive On
-# CSS and JS expiration: 1 month after request
-ExpiresByType text/css "access 1 month"
-ExpiresByType application/javascript "access 1 month"
-ExpiresByType application/x-javascript "access 1 month"
-# Images expiration: after 1 year
-ExpiresByType image/gif "access 1 year"
-ExpiresByType image/png "access 1 year"
-ExpiresByType image/jpg "access 1 year"
-ExpiresByType image/jpeg "access 1 year"
-ExpiresByType image/x-icon "access 1 year"
-ExpiresDefault "access 1 month"
-</ifModule>
-# END EXPIRES CACHING #
-
-# BEGIN Cache-Control Headers
-<ifModule mod_headers.c>
-<filesMatch "\.(ico|jpe?g|png|gif|swf)$">
-Header set Cache-Control "public"
-</filesMatch>
-<filesMatch "\.(css)$">
-Header set Cache-Control "public"
-</filesMatch>
-<filesMatch "\.(js)$">
-Header set Cache-Control "private"
-</filesMatch>
-<filesMatch "\.(x?html?|php)$">
- Header set Cache-Control "private, must-revalidate"
- </filesMatch>
-</ifModule>
-# END Cache-Control Headers
-
-# BEGIN Turn ETags Off
-FileETag None
-# END Turn ETags Off
-
-
-# Wordfence WAF
-<Files ".user.ini">
-<IfModule mod_authz_core.c>
-	Require all denied
-</IfModule>
-<IfModule !mod_authz_core.c>
-	Order deny,allow
-	Deny from all
-</IfModule>
-</Files>
-
-# END Wordfence WAF
