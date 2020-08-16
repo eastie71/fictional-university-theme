@@ -22,14 +22,13 @@
 
   &__overlay {
     margin: 0 auto;
-    background-color: rgba(0, 0, 0, .68);
+    background-color: rgba(0, 0, 0, 0.68);
     padding: 40px;
-    color: #FFF;
+    color: #fff;
     @mixin atMedium {
       width: 50%;
     }
   }
-
 }
 
 .slick-dots {
@@ -47,7 +46,6 @@
 }
 
 .slick-dots {
-
   li {
     list-style: none;
     display: inline;
@@ -60,19 +58,55 @@
     line-height: 0;
     width: 10px;
     height: 10px;
-    background-color: rgba(255, 255, 255, .5);
-    box-shadow: 1px 1px 1px rgba(0, 0, 0, .25);
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
     border-radius: 50%;
     border: none;
     margin: 0 4px;
     padding: 0;
     outline: none;
-    transition: background-color .3s ease-out;
+    transition: background-color 0.3s ease-out;
     cursor: pointer;
   }
 
   .slick-active button {
-    background-color: #FFF;
+    background-color: #fff;
+  }
+}
+
+/* GlideJS */
+.glide__bullets {
+  z-index: 100;
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  top: 15px;
+  @mixin atMedium {
+    top: 50px;
   }
 
+  button {
+    display: inline-block;
+    text-indent: -9999px;
+    font-size: 0;
+    line-height: 0;
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+    border-radius: 50%;
+    border: none;
+    margin: 0 3px;
+    padding: 0;
+    outline: none;
+    transition: background-color 0.3s ease-out;
+    cursor: pointer;
+  }
+
+  button.glide__bullet--active {
+    background-color: #fff;
+  }
 }

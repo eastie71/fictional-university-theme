@@ -88,9 +88,11 @@
     </div>
   </div>
 
-<div class="hero-slider">
+  <div class="hero-slider">
+    <div data-glide-el="track" class="glide__track">
+      <div class="glide__slides">
   <?php
-  // Perform a custom query for home page slides.
+    // Perform a custom query for home page slides.
     $homepageSlides = new WP_Query(array(
       'post_type' => 'homeslide',
       ));
@@ -99,21 +101,24 @@
         $sliderImage = get_field('hps_background_image');
 
   ?>
-      <div class="hero-slider__slide" style="background-image: url(<?php echo $sliderImage['url']; ?>);">
-        <div class="hero-slider__interior container">
-          <div class="hero-slider__overlay">
-            <h2 class="headline headline--medium t-center"><?php echo get_the_title(); ?></h2>
-            <p class="t-center"><?php echo get_field('hps_subtitle'); ?></p>
-            <p class="t-center no-margin"><a href="<?php echo get_field('hps_button_link'); ?>" class="btn btn--blue"><?php echo get_field('hps_button_text'); ?></a></p>
+        <div class="hero-slider__slide" style="background-image: url(<?php echo $sliderImage['url']; ?>);">
+          <div class="hero-slider__interior container">
+            <div class="hero-slider__overlay">
+              <h2 class="headline headline--medium t-center"><?php echo get_the_title(); ?></h2>
+              <p class="t-center"><?php echo get_field('hps_subtitle'); ?></p>
+              <p class="t-center no-margin"><a href="<?php echo get_field('hps_button_link'); ?>" class="btn btn--blue"><?php echo get_field('hps_button_text'); ?></a></p>
+            </div>
           </div>
         </div>
-      </div>
   <?php      
       }
       // Need to reset the post data after the custom query
       wp_reset_postdata(); 
   ?>
-</div>
+      </div>
+      <div class="slider__bullets glide__bullets" data-glide-el="controls[nav]"></div>
+    </div>
+  </div>
 
 <?php
 	get_footer();
