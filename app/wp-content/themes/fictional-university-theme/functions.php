@@ -78,7 +78,7 @@
 		}
 		// inside the main js file setup some global vars for quick access
 		wp_localize_script('main-university-js', 'universityData', array(
-			'root_url' => get_site_url(),
+			'root_url' => get_home_url(),
 			// create a unique id for this session used for validation
 			'nonce' => wp_create_nonce('wp_rest')
 		));
@@ -139,7 +139,7 @@
 	function redirectSubsToFrontend() {
 		$theCurrentUser = wp_get_current_user();
 		if (count($theCurrentUser->roles) == 1 AND $theCurrentUser->roles[0] == 'subscriber') {
-			wp_redirect(site_url("/"));
+			wp_redirect(home_url("/"));
 			exit;
 		}
 	}
@@ -157,7 +157,7 @@
 	// Customize Login Screen
 	function ourHeaderUrl() {
 		// This is to overwrite the the Link so it doesnt point to Wordpress...
-		return esc_url(site_url("/"));
+		return esc_url(home_url("/"));
 	}
 	add_filter('login_headerurl', 'ourHeaderUrl');
 

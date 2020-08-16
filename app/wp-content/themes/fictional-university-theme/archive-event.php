@@ -14,7 +14,7 @@
 			echo paginate_links();
 		?>
 		<hr class="section-break">
-		<p>Looking for events we have held in the past? <a href="<?php echo site_url('/past-events'); ?>">Check out our past events archive.</a></p>
+		<p>Looking for events we have held in the past? <a href="<?php echo home_url('/past-events'); ?>">Check out our past events archive.</a></p>
 	</div>
 
 <?php
