@@ -38,7 +38,7 @@ class Search {
 		// remove the scrolling of the page when search overlay modal opens
 		document.body.classList.add("body-no-scroll");
 		// Clear the search field of any previous search entry
-		this.searchField.valule = "";
+		this.searchField.value = "";
 		// Set the focus on to the search field after 301 miliseconds (allowing for overlay to load)
 		// Shorthand code here for an anonymous function using ES6 arrow function
 		setTimeout( () => this.searchField.focus(), 301);
