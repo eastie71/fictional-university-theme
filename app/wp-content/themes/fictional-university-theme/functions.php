@@ -169,10 +169,10 @@
 	add_action('login_enqueue_scripts', 'ourLoginCSS');
 
 	// Override the standard WP login info on "hover" with the actual site name.
-	function ourLoginTitle() {
+	function ourLoginText() {
 		return get_bloginfo('name');
 	}
-	add_filter('login_headertitle', 'ourLoginTitle');
+	add_filter('login_headertext', 'ourLoginText');
 
 	// Force note posts to be private - this should be done on bankend PHP as JS could get hacked
 	// Also remove any HTML from the content
