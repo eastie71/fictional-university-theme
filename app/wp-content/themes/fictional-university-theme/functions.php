@@ -24,13 +24,13 @@
 	    }
 	}
 	function pageBanner($args = NULL) {
-		if (!$args['title']) {
+		if (!isset($args['title'])) {
 			$args['title'] = get_the_title();
 		}
-		if (!$args['subtitle']) {
+		if (!isset($args['subtitle'])) {
 			$args['subtitle'] = get_field('page_banner_subtitle');
 		}
-		if (!$args['image']) {
+		if (!isset($args['image'])) {
 			$pageBannerImage = get_field('page_banner_background_image');
 			if ($pageBannerImage) {
 				$args['image'] = $pageBannerImage['sizes']['pageBanner']; 
@@ -117,13 +117,13 @@
               )
             ));
 		}
-		if (!is_admin() and is_post_type_archive('program') and is_main_query()) {
+		if (!is_admin() and is_post_type_archive('program') and $query->is_main_query()) {
 			$query->set('orderby', 'title');
 			$query->set('order', 'ASC');
 			$query->set('posts_per_page', -1);
 		}
 		// Load ALL of the campus posts so that it will show ALL pins for locations on the Google Map
-		if (!is_admin() and is_post_type_archive('campus') and is_main_query()) {
+		if (!is_admin() and is_post_type_archive('campus') and $query->is_main_query()) {
 			$query->set('posts_per_page', -1);
 		}
 	}
