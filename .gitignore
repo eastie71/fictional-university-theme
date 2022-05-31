@@ -38,8 +38,13 @@ app/wp-content/blogs.dir/
 app/wp-content/cache/
 app/wp-content/upgrade/
 app/wp-content/wp-cache-config.php
-app/wp-content/plugins/
+app/wp-content/plugins/*
 !app/wp-content/plugins/my-first-plugin/
+!app/wp-content/plugins/my-first-plugin/*
+!app/wp-content/plugins/craig-first-plugin/
+!app/wp-content/plugins/craig-first-plugin/*
+!app/wp-content/plugins/craig-post-statistics/
+!app/wp-content/plugins/craig-post-statistics/*
 app/wp-content/vendor/
 app/wp-content/wflogs/
 app/wp/

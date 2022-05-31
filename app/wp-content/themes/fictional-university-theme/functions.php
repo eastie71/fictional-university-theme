@@ -72,9 +72,9 @@
 			// This is the Local by Flywheel reference
 			wp_enqueue_script('main-university-js', 'http://localhost:3000/bundled.js', NULL, '1.0', true);
 		} else {
-			wp_enqueue_script('our-vendors-js', get_theme_file_uri('/bundled-assets/vendors~scripts.9e6f838f29d4e167feef.js'), NULL, '1.0', true);
-			wp_enqueue_script('main-university-js', get_theme_file_uri('/bundled-assets/scripts.c5005fd77df3ef0dcc8a.js'), NULL, '1.0', true);
-			wp_enqueue_style('our-main-styles', get_theme_file_uri('/bundled-assets/styles.c5005fd77df3ef0dcc8a.css'));
+			wp_enqueue_script('our-vendors-js', get_theme_file_uri('/bundled-assets/vendors~scripts.dc6122955d6bd376506a.js'), NULL, '1.0', true);
+			wp_enqueue_script('main-university-js', get_theme_file_uri('/bundled-assets/scripts.88a30020f2cee88d21e0.js'), NULL, '1.0', true);
+			wp_enqueue_style('our-main-styles', get_theme_file_uri('/bundled-assets/styles.88a30020f2cee88d21e0.css'));
 		}
 		// inside the main js file setup some global vars for quick access
 		wp_localize_script('main-university-js', 'universityData', array(
@@ -163,7 +163,7 @@
 
 	function ourLoginCSS() {
 		// Overwrite the default Wordpress Styles with our own for the Login Screen
-		wp_enqueue_style('our-main-styles', get_theme_file_uri('/bundled-assets/styles.c5005fd77df3ef0dcc8a.css'));
+		wp_enqueue_style('our-main-styles', get_theme_file_uri('/bundled-assets/styles.88a30020f2cee88d21e0.css'));
 		wp_enqueue_style('custom-google-font', '//fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,300,400,400i,700,700i');
 	}
 	add_action('login_enqueue_scripts', 'ourLoginCSS');
