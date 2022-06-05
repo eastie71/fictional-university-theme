@@ -6,6 +6,8 @@
     Version: 1.0
     Author: Craig Eastwood
     Author URI: https://craigeastwood.com
+    Text Domain: pspdomain
+    Domain Path: /languages
 */
 
 class PostStatsPlugin {
@@ -13,10 +15,11 @@ class PostStatsPlugin {
         add_action('admin_menu', array($this, 'adminSettings'));
         add_action('admin_init', array($this, 'settings'));
         add_filter('the_content', array($this, 'checkAdjustHTML'));
+        add_action('init', array($this, 'languages'));
     }
 
     function adminSettings() {
-        add_options_page('Post Stats Settings', 'Post Stats', 'manage_options', 'craig-post-stats-settings', array($this, 'settingsHTML'));
+        add_options_page('Post Stats Settings', esc_html__('Post Stats','pspdomain'), 'manage_options', 'craig-post-stats-settings', array($this, 'settingsHTML'));
     }
 
     function settings() {
@@ -48,6 +51,10 @@ class PostStatsPlugin {
         return $content;
     }
 
+    function languages() {
+        load_plugin_textdomain('pspdomain', false, dirname(plugin_basename(__FILE__)) . '/languages');
+    }
+
     function adjustHTML($content) {
         $html = '<h4>' . esc_html(get_option('psp_headline', 'Post Statistics')) . '</h4><p>';
 
@@ -55,7 +62,7 @@ class PostStatsPlugin {
             $wordCount = str_word_count(strip_tags($content));
         }
         if (get_option('psp_wordcount', '1') == '1') {
-            $html .= 'This post contains ' . $wordCount . ' words.<br>';
+            $html .= esc_html__('This post contains', 'pspdomain') . ' ' . $wordCount . ' ' . esc_html__('words.','pspdomain') . '<br>';
         }
         if (get_option('psp_charcount', '1') == '1') {
             $html .= 'This post contains ' . strlen(strip_tags($content)) . ' characters.<br>';

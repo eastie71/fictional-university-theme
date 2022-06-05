@@ -1,0 +1,46 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Craig Post Statistics\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-06-05 13:07+0000\n"
+"PO-Revision-Date: 2022-06-05 13:09+0000\n"
+"Last-Translator: Craig\n"
+"Language-Team: Spanish (Mexico)\n"
+"Language: es_MX\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.6.2; wp-6.0\n"
+"X-Domain: pspdomain"
+
+#. Author of the plugin
+msgid "Craig Eastwood"
+msgstr ""
+
+#. Name of the plugin
+msgid "Craig Post Statistics"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://craigeastwood.com"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Post Statistics - Character and Word Count. Estimated read time. All "
+"configurable!"
+msgstr ""
+
+#: ../../../../../src/fictional-university/app/wp-content/plugins/craig-post-statistics/craig-post-statistics.php:22
+msgid "Post Stats"
+msgstr "Publicar estadísticas"
+
+#: ../../../../../src/fictional-university/app/wp-content/plugins/craig-post-statistics/craig-post-statistics.php:65
+msgid "This post contains"
+msgstr "Esta publicación contiene"
+
+#: ../../../../../src/fictional-university/app/wp-content/plugins/craig-post-statistics/craig-post-statistics.php:65
+msgid "words."
+msgstr "palabras."
