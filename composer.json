@@ -32,7 +32,8 @@
         "wpackagist-plugin/advanced-custom-fields": "*",
         "wpackagist-plugin/manual-image-crop": "*",
         "wpackagist-plugin/members": "*",
-        "wpackagist-plugin/regenerate-thumbnails": "*"
+        "wpackagist-plugin/regenerate-thumbnails": "*",
+        "wpackagist-plugin/loco-translate": "*"
     },
     "repositories": [
         {
