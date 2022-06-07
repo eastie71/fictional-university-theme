@@ -16,9 +16,11 @@ class AreYouPayingAttention {
     }
 
     function adminAssets() {
-        wp_register_script('aypa-blocktype', plugin_dir_url(__FILE__) . 'build/index.js', array('wp-blocks', 'wp-element'));
+        wp_register_style('aypa-editcss', plugin_dir_url(__FILE__) . 'build/index.css');
+        wp_register_script('aypa-blocktype', plugin_dir_url(__FILE__) . 'build/index.js', array('wp-blocks', 'wp-element', 'wp-editor'));
         register_block_type('craigplugin/are-you-paying-attention', array(
             'editor_script' => 'aypa-blocktype',
+            'editor_style' => 'aypa-editcss',
             'render_callback' => array($this, 'renderHTML')
         ));
     }

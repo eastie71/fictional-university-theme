@@ -5,12 +5,14 @@ add_action('rest_api_init', 'universityRegisterLike');
 function universityRegisterLike() {
 	register_rest_route('university/v1', 'manageLike', array(
 		'methods' => 'POST',
-		'callback' => 'createLike'
+		'callback' => 'createLike',
+		'permission_callback' => '__return_true'
 	));
 
 	register_rest_route('university/v1', 'manageLike', array(
 		'methods' => "DELETE",
-		'callback' => 'removeLike'
+		'callback' => 'removeLike',
+		'permission_callback' => '__return_true'
 	));
 }
 

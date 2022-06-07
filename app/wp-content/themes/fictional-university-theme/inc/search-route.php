@@ -7,7 +7,8 @@ function universityRegisterSearch() {
 		// equivalent to 'GET' on any browser
 		'methods' => WP_REST_SERVER::READABLE,
 
-		'callback' => 'universitySearchResults'
+		'callback' => 'universitySearchResults',
+		'permission_callback' => '__return_true'
 	));
 }
 
