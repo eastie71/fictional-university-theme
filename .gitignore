@@ -47,6 +47,15 @@ app/wp-content/plugins/*
 !app/wp-content/plugins/craig-post-statistics/*
 !app/wp-content/plugins/craig-word-filter/
 !app/wp-content/plugins/craig-word-filter/*
+app/wp-content/plugins/craig-aypa/node_modules/
+!app/wp-content/plugins/craig-aypa/
+!app/wp-content/plugins/craig-aypa/*.php
+!app/wp-content/plugins/craig-aypa/package-lock.json
+!app/wp-content/plugins/craig-aypa/package.json
+!app/wp-content/plugins/craig-aypa/build
+!app/wp-content/plugins/craig-aypa/build/*
+!app/wp-content/plugins/craig-aypa/src
+!app/wp-content/plugins/craig-aypa/src/*
 app/wp-content/vendor/
 app/wp-content/wflogs/
 app/wp/
