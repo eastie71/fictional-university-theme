@@ -45,6 +45,8 @@ app/wp-content/plugins/*
 !app/wp-content/plugins/craig-first-plugin/*
 !app/wp-content/plugins/craig-post-statistics/
 !app/wp-content/plugins/craig-post-statistics/*
+!app/wp-content/plugins/craig-word-filter/
+!app/wp-content/plugins/craig-word-filter/*
 app/wp-content/vendor/
 app/wp-content/wflogs/
 app/wp/
